@@ -1,0 +1,22 @@
+<div class="barra">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    placeholder="Busca una canción, álbum o artista"
+    (keydown.enter)="onSearch()"
+  />
+  <button (click)="onSearch()">Buscar</button>
+</div>
+<div class="resultsbox">
+  <div *ngIf="searchResults && searchResults.length > 0">
+    <ul>
+      <li *ngFor="let result of searchResults">
+        <div class="results">
+          <a href="">{{ result.name }}</a>
+          <a href="./artista">{{ result.artists[0]?.name }}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<router-outlet></router-outlet>
