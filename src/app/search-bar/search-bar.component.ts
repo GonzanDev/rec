@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyService } from '../services/spotify.service';
 import {
   RouterOutlet,
   RouterModule,
@@ -14,7 +14,14 @@ import {
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RouterOutlet], // Add FormsModule here
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+  ], // Add FormsModule here
 })
 export class SearchBarComponent {
   searchTerm: string = '';

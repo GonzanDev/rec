@@ -9,7 +9,7 @@ import {
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { ArtistaComponent } from './artista/artista.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
-import { SpotifyService } from '../services/spotify.service';
+import { SpotifyService } from './services/spotify.service';
 
 @Component({
   selector: 'app-root',

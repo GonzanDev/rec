@@ -12,8 +12,9 @@
     <ul>
       <li *ngFor="let result of searchResults">
         <div class="results">
-          <a href="">{{ result.name }}</a>
-          <a href="./artista">{{ result.artists[0]?.name }}</a>
+          <a href="cancion">{{ result.name }}</a>
+
+          <a href="artista">{{ result.artist?.[0]?.name }}</a>
         </div>
       </li>
     </ul>

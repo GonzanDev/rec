@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class SpotifyService {
   private readonly API_URL = 'https://api.spotify.com/v1';
   private readonly TOKEN =
-    'BQCxbmo3P-WDkGrat3dYGbOkUjdRwKqpQKuTnap7ttnOTLPIIhTsijdcQDQeXQwPTXHVZwbZt4DjD1nEOKpTBQxLp82H39WydotAss7dJynCqjc6o48';
+    'BQCkZMYggfI4Vv36W1WkIIKfrvkcDM7g-IgEzH8NhoJYdA8ckGo-g_V4cq-PAD_snELzZafb0x3NK3n6WCPV4Fp051SNJO1eCYrjtoDdSl-iFkrDfxc';
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +20,7 @@ export class SpotifyService {
       headers,
       params: {
         q: query,
-        type: 'track',
+        type: ['track'],
       },
     });
   }
