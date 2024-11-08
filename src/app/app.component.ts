@@ -5,12 +5,18 @@ import {
   RouterModule,
   RouterLink,
   RouterLinkActive,
+  
 } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { ArtistaComponent } from './artista/artista.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SpotifyService } from './services/spotify.service';
 import { AlbumListComponent } from './album-list/album-list.component';
+import { LoginComponent } from './login/login.component';
+import { AuthService } from './services/auth.service';
+
+
+
 
 @Component({
   selector: 'app-root',

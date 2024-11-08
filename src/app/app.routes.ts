@@ -3,6 +3,8 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
 import { SongPageComponent } from './pages/song-page/song-page.component';
 import { ArtistPageComponent } from './pages/artist-page/artist-page.component';
+import { CallbackComponent } from './components/callback/callback.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +23,10 @@ export const routes: Routes = [
     path:'song/:songId',
     component:SongPageComponent
   },
+  { path: 'login', component: LoginComponent },
+  // Aquí puedes agregar la ruta de callback también
+  { path: 'callback', loadComponent: () => import('./components/callback/callback.component').then(m => m.CallbackComponent) },
+
   {
     path: `**`,
     redirectTo: `home`,
