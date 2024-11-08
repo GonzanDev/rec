@@ -3,13 +3,12 @@
     <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
     <div class="album-info">
       <h2>{{ album.name }}</h2>
-      <p>Artista: <span>{{ album.artists[0].name }}</span></p>
-      <p>Fecha de lanzamiento: <span>{{ album.release_date }}</span></p>
+      <span> <a [routerLink]="['/artist', album.artists[0]?.id]" class="artist-link" >{{ album.artists[0].name }} </a></span>
+      <p><span>{{ album.release_date }}</span></p>
     </div>
   </div>
 
   <div class="track-list">
-    <h3>Lista de Canciones</h3>
     <ul>
       <li *ngFor="let track of album.tracks.items">
         {{ track.track_number }}. {{ track.name }}

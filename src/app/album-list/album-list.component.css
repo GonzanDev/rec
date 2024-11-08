@@ -16,10 +16,11 @@
   padding: 10px;
   max-width: 100%;
 
+  /* Ocultar barra de desplazamiento */
+  scrollbar-width: none; /* Firefox */
 }
-
-::-webkit-scrollbar:horizontal{
-  display: none;
+.carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .album {

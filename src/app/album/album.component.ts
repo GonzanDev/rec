@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { switchMap } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
@@ -7,7 +7,7 @@ import { NgFor, NgIf } from '@angular/common';
 @Component({
   standalone: true,
   selector: 'app-album',
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, RouterLink],
   templateUrl: `./album.component.html`,
   styleUrl: `./album.component.css`,
 })
@@ -22,7 +22,6 @@ export class AlbumComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap
       .pipe(
-        // `switchMap` cambia la solicitud a una nueva cada vez que cambia el parámetro `albumId`
         switchMap((params) => {
           const albumId = params.get('albumId');
           if (albumId) {

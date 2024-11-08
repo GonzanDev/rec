@@ -20,14 +20,14 @@
           </button>
           <p class="album-info">
             <!-- Álbum -->
-            <span>Álbum:
+            <span>
               <a [routerLink]="['/album', result.album?.id]" class="album-link">
                 {{ result.album?.name }}
               </a>
             </span>
             <!-- Artista -->
-            <span>Artista:
-              <a [routerLink]="['/artista', result.artists[0]?.id]" class="artist-link">
+            <span>
+              <a [routerLink]="['/artist', result.artists[0]?.id]" class="artist-link">
                 {{ result.artists[0]?.name }}
               </a>
             </span>

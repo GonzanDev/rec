@@ -6,6 +6,8 @@ import { AlbumComponent } from './album/album.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
 import { CancionComponent } from './cancion/cancion.component';
+import { SongPageComponent } from './pages/song-page/song-page.component';
+import { ArtistPageComponent } from './pages/artist-page/artist-page.component';
 
 export const routes: Routes = [
   {
@@ -13,8 +15,8 @@ export const routes: Routes = [
     component: HomePageComponent,
   },
   {
-    path: 'artista',
-    component: ArtistaComponent,
+    path: 'artist/:artistId',
+    component: ArtistPageComponent,
   },
   {
     path: 'album/:albumId',
@@ -22,7 +24,7 @@ export const routes: Routes = [
   },
   {
     path:'song/:songId',
-    component:CancionComponent
+    component:SongPageComponent
   },
   {
     path: `**`,

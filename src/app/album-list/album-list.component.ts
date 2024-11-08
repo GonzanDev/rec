@@ -1,6 +1,6 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { SpotifyService } from '../services/spotify.service';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,20 +11,34 @@ import { Router } from '@angular/router';
   styleUrls: ['./album-list.component.css']
 })
 export class AlbumListComponent implements OnInit {
+  @Input() artistId?: string;  // Permite pasar un artistId como parámetro
   albums: any[] = [];
   @ViewChild('carousel') carousel!: ElementRef;
 
   constructor(private spotifyService: SpotifyService, private router: Router) {}
 
   ngOnInit() {
-    this.spotifyService.getTopAlbums().subscribe(
-      (albums) => {
-        this.albums = albums;
-      },
-      (error) => {
-        console.error('Error fetching albums:', error);
-      }
-    );
+    if (this.artistId) {
+      // Si hay un artistId, buscamos los álbumes de ese artista
+      this.spotifyService.getAlbumsByArtist(this.artistId).subscribe(
+        (albums) => {
+          this.albums = albums;
+        },
+        (error) => {
+          console.error('Error fetching albums:', error);
+        }
+      );
+    } else {
+
+      this.spotifyService.getTopAlbums().subscribe(
+        (albums) => {
+          this.albums = albums;
+        },
+        (error) => {
+          console.error('Error fetching albums:', error);
+        }
+      );
+    }
   }
 
   scrollLeft() {
@@ -36,7 +50,6 @@ export class AlbumListComponent implements OnInit {
   }
 
   viewAlbumDetails(albumId: string) {
-    this.router.navigate([`/album`, albumId]);
+    this.router.navigate([`/album`, albumId]); // Navega a la ruta del detalle del álbum
   }
 }
-

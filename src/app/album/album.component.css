@@ -63,3 +63,93 @@
   font-size: 14px;
   color: #666;
 }
+/* Estilo para el contenedor principal */
+.album-details {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Encabezado del álbum */
+.album-header {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.album-cover {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.album-info {
+  flex: 1;
+}
+
+.album-info h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.artist-link {
+  color: #1db954;
+  text-decoration: none;
+}
+
+.artist-link:hover {
+  text-decoration: underline;
+}
+
+.album-info p {
+  font-size: 1rem;
+  color: #777;
+  margin-top: 5px;
+}
+
+/* Estilo para la lista de canciones */
+.track-list {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.track-list h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.track-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.track-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.track-number {
+  color: #555;
+  font-weight: bold;
+}
+
+.track-name {
+  color: #444;
+}
