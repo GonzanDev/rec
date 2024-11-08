@@ -90,6 +90,17 @@ export class SpotifyService {
       })
     );
   }
+  getSongDetails(songId: string): Observable<any> {
+    return this.getAccessToken().pipe(
+      switchMap((TOKEN) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${TOKEN}`,
+        });
+
+        return this.http.get<any>(`${this.API_URL}/tracks/${songId}`, { headers });
+      })
+    );
+  }
 }
 
 

@@ -1,46 +1,92 @@
 .carousel-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
-  width: 100%;
-  overflow: hidden;
+  width: 90%;
+  max-width: 1000px;
+  margin: 20px auto;
 }
 
 .carousel {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
-  gap: 150px;
+  gap: 20px;
   padding: 10px;
-  scrollbar-width: none;
+  max-width: 100%;
+
 }
 
-.carousel::-webkit-scrollbar {
+::-webkit-scrollbar:horizontal{
   display: none;
 }
 
 .album {
-  min-width: 100px;
+  flex: 0 0 auto;
   text-align: center;
+  width: 200px;
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.album img {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.album-info {
+  margin-top: 10px;
+}
+
+.album h3 {
+  font-size: 16px;
+  margin: 5px 0;
+  color: #1db954;
+  font-weight: bold;
+}
+
+.album p {
+  font-size: 14px;
+  color: #555;
+}
+
+.album:hover {
+  transform: translateY(-10px);
+}
+
+.album:hover img {
+  transform: scale(1.05);
 }
 
 .carousel-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
   cursor: pointer;
-  padding: 10px;
-  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
 }
 
-.left {
-  left: 0;
+.carousel-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
-.right {
-  right: 0;
+.carousel-button.left {
+  position: absolute;
+  left: -50px;
+}
+
+.carousel-button.right {
+  position: absolute;
+  right: -50px;
 }

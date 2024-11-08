@@ -4,20 +4,38 @@
     [(ngModel)]="searchTerm"
     placeholder="Busca una canción, álbum o artista"
     (keydown.enter)="onSearch()"
+    aria-label="Buscar canción, álbum o artista"
   />
-  <button (click)="onSearch()">Buscar</button>
+  <button (click)="onSearch()" aria-label="Iniciar búsqueda">Buscar</button>
 </div>
+
 <div class="resultsbox">
   <div *ngIf="searchResults && searchResults.length > 0">
     <ul>
-      <li *ngFor="let result of searchResults">
-        <div class="results">
-          <a href="cancion">{{ result.name }}</a>
-
-          <a href="artista">{{ result.artist?.[0]?.name }}</a>
+      <li *ngFor="let result of searchResults" class="result-item">
+        <div class="song-details">
+          <!-- Canción -->
+          <button (click)="viewSongDetails(result.id)">
+            {{ result.name }}
+          </button>
+          <p class="album-info">
+            <!-- Álbum -->
+            <span>Álbum:
+              <a [routerLink]="['/album', result.album?.id]" class="album-link">
+                {{ result.album?.name }}
+              </a>
+            </span>
+            <!-- Artista -->
+            <span>Artista:
+              <a [routerLink]="['/artista', result.artists[0]?.id]" class="artist-link">
+                {{ result.artists[0]?.name }}
+              </a>
+            </span>
+          </p>
         </div>
       </li>
     </ul>
   </div>
 </div>
-<router-outlet></router-outlet>
+
+

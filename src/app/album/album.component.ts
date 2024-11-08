@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { switchMap } from 'rxjs';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-album',
-  imports: [NgIf],
+  imports: [NgIf, NgFor],
   templateUrl: `./album.component.html`,
   styleUrl: `./album.component.css`,
 })

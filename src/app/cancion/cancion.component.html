@@ -1,1 +1,22 @@
-<p>cancion works!</p>
+<div *ngIf="song" class="song-details">
+  <div class="album-cover">
+    <img [src]="song.album.images[0]?.url" alt="{{ song.name }}" />
+  </div>
+
+  <div class="song-info">
+    <h2 class="song-title">{{ song.name }}</h2>
+    <p class="artist-name">Artista:
+      <span *ngFor="let artist of song.artists; let isLast = last">
+        {{ artist.name }}<span *ngIf="!isLast">, </span>
+      </span>
+    </p>
+    <p class="album-name">Álbum: {{ song.album.name }}</p>
+    <p class="release-date">Fecha de Lanzamiento: {{ song.album.release_date }}</p>
+
+    <div class="song-controls">
+      <a [href]="song.external_urls.spotify" target="_blank" class="spotify-link">
+        Escuchar en Spotify
+      </a>
+    </div>
+  </div>
+</div>

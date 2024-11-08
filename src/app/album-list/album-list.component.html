@@ -3,11 +3,14 @@
 
   <div #carousel class="carousel">
     <div *ngFor="let album of albums" class="album" (click)="viewAlbumDetails(album.id)">
-      <img [src]="album.images[0]?.url" alt="{{ album.name }}" width="200" height="200"/>
-      <h3>{{ album.name }}</h3>
-      <p>{{ album.artists[0].name }}</p>
+      <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
+      <div class="album-info">
+        <h3>{{ album.name }}</h3>
+        <p>{{ album.artists[0].name }}</p>
+      </div>
     </div>
   </div>
 
   <button class="carousel-button right" (click)="scrollRight()">&#9654;</button>
 </div>
+

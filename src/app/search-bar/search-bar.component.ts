@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { SpotifyService } from '../services/spotify.service';
 import {
+  Router,
   RouterOutlet,
   RouterModule,
   RouterLink,
   RouterLinkActive,
 } from '@angular/router';
+
 
 @Component({
   selector: 'app-search-bar',
@@ -18,16 +20,14 @@ import {
     CommonModule,
     FormsModule,
     RouterModule,
-    RouterOutlet,
     RouterLink,
-    RouterLinkActive,
   ], // Add FormsModule here
 })
 export class SearchBarComponent {
   searchTerm: string = '';
   searchResults: any[] = []; // Initialize searchResults as an empty array
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(private spotifyService: SpotifyService, private router: Router) {}
 
   onSearch() {
     if (this.searchTerm.trim()) {
@@ -40,5 +40,8 @@ export class SearchBarComponent {
         }
       );
     }
+  }
+  viewSongDetails(songId: string){
+    this.router.navigate([`/song`, songId])
   }
 }
