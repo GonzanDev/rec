@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { ArtistaComponent } from './artista/artista.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SpotifyService } from './services/spotify.service';
+import { AlbumListComponent } from './album-list/album-list.component';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ import { SpotifyService } from './services/spotify.service';
     FormsModule, // Add FormsModule here
     ArtistaComponent,
     SearchBarComponent,
+    AlbumListComponent
   ],
   standalone: true,
 })
