@@ -1,155 +1,47 @@
-
 .album-details {
-  max-width: 600px;
-  margin: 40px auto;
+  font-family: Arial, sans-serif;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .album-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  margin-bottom: 20px;
 }
 
 .album-header img {
-  width: 150px;
-  height: 150px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  margin-right: 20px;
 }
 
 .album-info {
-  font-family: Arial, sans-serif;
-}
-
-.album-info h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #1db954;
-}
-
-.album-info p {
-  margin: 5px 0;
-  font-size: 16px;
-  color: #333;
-}
-
-.album-info p span {
-  font-weight: bold;
-  color: #555;
+  font-size: 1.1rem;
 }
 
 .track-list {
   margin-top: 20px;
 }
 
-.track-list h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-  color: #333;
+.track-item {
+  margin-bottom: 15px;
 }
 
-.track-list ul {
-  list-style: none;
-  padding: 0;
+.track-item span {
+  font-size: 1.2rem;
 }
 
-.track-list li {
-  padding: 5px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-  color: #666;
-}
-/* Estilo para el contenedor principal */
-.album-details {
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Encabezado del álbum */
-.album-header {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.album-cover {
-  width: 200px;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.album-info {
-  flex: 1;
-}
-
-.album-info h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.artist-link {
-  color: #1db954;
-  text-decoration: none;
-}
-
-.artist-link:hover {
-  text-decoration: underline;
-}
-
-.album-info p {
-  font-size: 1rem;
-  color: #777;
+.track-item audio {
   margin-top: 5px;
+  display: block;
 }
 
-/* Estilo para la lista de canciones */
-.track-list {
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
+.track-item div {
+  margin-top: 10px;
 }
 
-.track-list h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.track-list ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.track-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  font-size: 1rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.track-number {
-  color: #555;
-  font-weight: bold;
-}
-
-.track-name {
-  color: #444;
+.track-item div span {
+  color: #888;
+  font-style: italic;
 }

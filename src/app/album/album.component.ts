@@ -14,6 +14,7 @@ import { NgFor, NgIf } from '@angular/common';
 export class AlbumComponent implements OnInit {
   album: any;
 
+
   constructor(
     private route: ActivatedRoute,
     private spotifyService: SpotifyService
@@ -39,4 +40,6 @@ export class AlbumComponent implements OnInit {
         }
       );
   }
+
+
 }

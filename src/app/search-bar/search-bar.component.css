@@ -1,26 +1,36 @@
-/* Barra de búsqueda */
-.barra {
+*{
+  margin: 0 auto;
+}
+.search-bar {
   display: flex;
   gap: 10px;
   padding: 12px;
-  background-color: #f8f8f8;
-  border-radius: 6px;
-  margin: 0 auto 20px auto; /* Centramos la barra de búsqueda */
-  width: 40%; /* Ocupa el 40% del ancho */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  width: 50%;
+  height: 100%;
+  justify-content: center;
   align-items: center;
 }
 
-.barra input {
+.search-bar input {
   flex-grow: 1;
-  padding: 10px 12px;
+  padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
   color: #333;
+  width: 120%;
 }
 
-.barra button {
-  padding: 10px 16px;
+.search-bar input:focus {
+  border-color: #1db954;
+}
+
+.search-bar button {
+  padding: 10px 12px;
   background-color: #1db954;
   border: none;
   color: white;
@@ -28,67 +38,101 @@
   cursor: pointer;
   border-radius: 4px;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  width: 20%;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
 }
 
-.barra button:hover {
+.search-bar button:hover {
   background-color: #1aa34a;
+  transform: scale(1.05);
 }
 
-/* Caja de resultados */
-.resultsbox {
+.search-results {
+  position: absolute;
+  top: 80px; /* Ajusta esta propiedad para definir la distancia desde la parte superior de la página */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
   background-color: #fff;
-  border: 1px solid #e6e6e6;
-  border-radius: 6px;
-  padding: 15px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999; /* Asegura que el contenedor esté por encima de otros elementos */
+  max-height: 500px; /* Limita la altura de los resultados */
+  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+  scrollbar-width: none;
 }
 
-ul {
+.search-results::-webkit-scrollbar{
+  display: hidden;
+}
+
+/* Si quieres que los resultados se oculten hasta que el usuario busque algo */
+.search-results.hidden {
+  display: none;
+}
+
+/* Cada sección de resultados (Canciones, Álbumes, Artistas) */
+.result-column {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1; /* Hace que las columnas ocupen el mismo tamaño */
+  min-width: 250px; /* Evita que las columnas se encojan demasiado */
+}
+
+/* Títulos */
+.result-column h3 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* Estilo para la lista */
+.result-column ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.result-item {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
+/* Estilo de cada ítem de la lista */
+.result-column li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.result-item:last-child {
+.result-column li:last-child {
   border-bottom: none;
 }
 
-/* Estilos de resultados de canciones */
-.song-details button {
+/* Botón de detalle */
+button {
   background: none;
   border: none;
-  font-size: 1.1rem;
-  font-weight: bold;
+  color: #1db954;
+  font-size: 1rem;
+  font-weight: normal;
   cursor: pointer;
-  color: #1db954;
   text-align: left;
+  width: 100%;
   padding: 0;
+  transition: color 0.3s ease, text-decoration 0.2s ease;
 }
 
-.album-info {
-  font-size: 0.9rem;
-  color: #666;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.album-link, .artist-link {
-  color: #1db954;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.album-link:hover, .artist-link:hover {
+button:hover {
   color: #1aa34a;
   text-decoration: underline;
+}
+
+/* Media query para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .search-results {
+    flex-direction: column; /* Los resultados se apilan en una columna en pantallas pequeñas */
+    align-items: center;
+  }
+
+  .result-column {
+    min-width: 100%;
+  }
 }

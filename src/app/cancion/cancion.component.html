@@ -5,13 +5,15 @@
 
   <div class="song-info">
     <h2 class="song-title">{{ song.name }}</h2>
-    <p class="artist-name">Artista:
+    <p class="artist-name">
       <span *ngFor="let artist of song.artists; let isLast = last">
-        {{ artist.name }}<span *ngIf="!isLast">, </span>
+        <a [routerLink]="['/artist', artist.id]" class="artist-link">{{ artist.name }}</a><span *ngIf="!isLast">, </span>
       </span>
     </p>
-    <p class="album-name">Álbum: {{ song.album.name }}</p>
-    <p class="release-date">Fecha de Lanzamiento: {{ song.album.release_date }}</p>
+    <p class="album-name">
+      <a [routerLink]="['/album', song.album.id]" class="album-link">{{ song.album.name }}</a>
+    </p>
+    <p class="release-date">{{ song.album.release_date }}</p>
 
     <div class="song-controls">
       <a [href]="song.external_urls.spotify" target="_blank" class="spotify-link">

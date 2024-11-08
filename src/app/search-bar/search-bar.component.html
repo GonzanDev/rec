@@ -1,41 +1,47 @@
-<div class="barra">
+<div class="search-bar">
   <input
     type="text"
     [(ngModel)]="searchTerm"
     placeholder="Busca una canción, álbum o artista"
     (keydown.enter)="onSearch()"
-    aria-label="Buscar canción, álbum o artista"
   />
-  <button (click)="onSearch()" aria-label="Iniciar búsqueda">Buscar</button>
+  <button (click)="onSearch()">Buscar</button>
 </div>
 
-<div class="resultsbox">
-  <div *ngIf="searchResults && searchResults.length > 0">
+<!-- Resultados -->
+<div *ngIf="searchResults" class="search-results" [ngClass]="{'hidden': !searchResults.tracks.length}">
+  <div class="result-column">
+    <h3>Canciones</h3>
     <ul>
-      <li *ngFor="let result of searchResults" class="result-item">
-        <div class="song-details">
-          <!-- Canción -->
-          <button (click)="viewSongDetails(result.id)">
-            {{ result.name }}
-          </button>
-          <p class="album-info">
-            <!-- Álbum -->
-            <span>
-              <a [routerLink]="['/album', result.album?.id]" class="album-link">
-                {{ result.album?.name }}
-              </a>
-            </span>
-            <!-- Artista -->
-            <span>
-              <a [routerLink]="['/artist', result.artists[0]?.id]" class="artist-link">
-                {{ result.artists[0]?.name }}
-              </a>
-            </span>
-          </p>
-        </div>
+      <li *ngFor="let track of searchResults.tracks">
+        <button (click)="viewSongDetails(track.id)">
+          {{ track.name }} - {{ track.artists[0].name }}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Álbumes -->
+  <div *ngIf="searchResults.albums.length > 0" class="result-column">
+    <h3>Álbumes</h3>
+    <ul>
+      <li *ngFor="let album of searchResults.albums">
+        <button (click)="viewAlbumDetails(album.id)">
+          {{ album.name }} - {{ album.artists[0].name }}
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Artistas -->
+  <div *ngIf="searchResults.artists.length > 0" class="result-column">
+    <h3>Artistas</h3>
+    <ul>
+      <li *ngFor="let artist of searchResults.artists">
+        <button (click)="viewArtistDetails(artist.id)">
+          {{ artist.name }}
+        </button>
       </li>
     </ul>
   </div>
 </div>
-
-

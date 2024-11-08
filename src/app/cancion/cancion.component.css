@@ -34,6 +34,17 @@
   color: #555;
   margin: 4px 0;
 }
+.artist-link, .album-link {
+  color: #1db954;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.artist-link:hover, .album-link:hover {
+  color: #1aa34a;
+  text-decoration: underline;
+}
 
 .song-controls {
   margin-top: 20px;

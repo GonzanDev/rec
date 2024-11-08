@@ -57,7 +57,8 @@ export class SpotifyService {
           headers,
           params: {
             q: query,
-            type: 'track',
+            type: 'track,album,artist',  // Incluir 'album' y 'artist' en la búsqueda
+            limit: '10',  // Limitar los resultados si lo deseas (opcional)
           },
         });
       })
@@ -104,10 +105,13 @@ export class SpotifyService {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
-        return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers });
+        return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers }).pipe(
+          map((data) => data)
+        );
       })
     );
   }
+
   getSongDetails(songId: string): Observable<any> {
     return this.getAccessToken().pipe(
       switchMap((TOKEN) => {

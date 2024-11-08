@@ -1,13 +1,13 @@
 import { NgFor, NgIf } from '@angular/common';
 import { SpotifyService } from './../services/spotify.service';
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-cancion',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [NgIf, NgFor, RouterLink],
   templateUrl: './cancion.component.html',
   styleUrls: ['./cancion.component.css']
 })
