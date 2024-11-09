@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --verde: #1db954;
+  --negro: #121212;
+  --negroclaro: #212121;
+  --gris: #535353;
+  --grisclaro: #b3b3b3;
+  --fuente: "Varela Round", sans-serif;
+}
+
+body {
+  background-color: var(--negroclaro);
+  color: var(--grisclaro);
+}
