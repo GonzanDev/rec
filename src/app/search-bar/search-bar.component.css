@@ -1,11 +1,27 @@
-*{
-  margin: 0 auto;
+* {
+  font-family: var(--fuente);
 }
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: var(--negro);
+  border-radius: 20px;
+}
+
+.home {
+  cursor: pointer;
+}
+
 .search-bar {
+  margin: 0 auto;
   display: flex;
   gap: 10px;
   padding: 12px;
-  background-color: #ffffff;
+  background-color: var(--negroclaro);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
@@ -21,7 +37,6 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
-  color: #333;
   width: 120%;
 }
 
@@ -63,7 +78,7 @@
   scrollbar-width: none;
 }
 
-.search-results::-webkit-scrollbar{
+.search-results::-webkit-scrollbar {
   display: hidden;
 }
 
