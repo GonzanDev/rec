@@ -8,6 +8,12 @@
         <a [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0].name }}</a>
       </p>
     </div>
+<!-- Agregar el botón Crear Reseña -->
+<button (click)="openReviewComponent()">Crear Reseña</button>
+
+<!-- Condicional para mostrar el componente de reseña -->
+<app-create-review *ngIf="showReviewComponent" [selectedAlbum]="album"></app-create-review>
+
   </div>
 
   <div class="track-list">

@@ -1,20 +1,90 @@
+.review-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  color: #333;
+  text-align: center;
+}
+
+.review-text {
+  width: 100%;
+  height: 100px;
+  padding: 1px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  font-family: inherit;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 .stars {
-    display: inline-block;
-  }
-  
-  .stars span {
-    cursor: pointer;
-    font-size: 24px;
-    color: #ddd;
-  }
-  
-  .stars span.filled {
-    color: gold;
-  }
-  
-  .review {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-top: 10px;
-  }
-  
+  display: inline-flex;
+}
+
+.stars span {
+  cursor: pointer;
+  font-size: 24px;
+  color: #ddd;
+  transition: color 0.3s ease;
+}
+
+.stars span.filled {
+  color: gold;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #1db954;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #1aa34a;
+}
+
+h3 {
+  margin-top: 30px;
+  color: #333;
+}
+
+.no-reviews {
+  text-align: center;
+  color: #666;
+  margin-top: 10px;
+}
+
+.review {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+  background-color: #fff;
+  margin-top: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.review p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+}

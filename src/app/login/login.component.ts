@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [], // Añade aquí módulos necesarios si el componente es standalone
+  imports: [],
 })
 export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}

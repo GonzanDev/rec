@@ -1,40 +1,36 @@
-<h2>Escribir Reseña</h2>
+<div class="review-container">
+  <h2> {{ selectedAlbum?.name }}</h2>
 
-<!-- Campo para buscar álbumes -->
-<input
-  type="text"
-  placeholder="Buscar álbum"
-  (input)="onSearch($event)"
-  class="album-search"
-/>
-<ul>
-  <li *ngFor="let album of albums" (click)="selectAlbum(album)">
-    {{ album.name }} - {{ album.artists[0]?.name }}
-  </li>
-</ul>
+  <!-- Campo de texto para la reseña -->
+  <textarea
+    [(ngModel)]="reviewText"
+    placeholder="Escribe tu reseña aquí..."
+    class="review-text"
+  ></textarea>
 
-<!-- Campo de texto para la reseña -->
-<textarea [(ngModel)]="reviewText" placeholder="Escribe tu reseña" class="review-text"></textarea>
-
-<!-- Campo para calificar con estrellas (1 a 5) -->
-<div>
-  <label>Calificación:</label>
-  <div class="stars">
-    <span *ngFor="let star of [1, 2, 3, 4, 5]" (click)="rating = star">
-      <i [class.filled]="star <= rating">&#9733;</i>
-    </span>
+  <!-- Calificación con estrellas -->
+  <div class="rating-container">
+    <label>Calificación:</label>
+    <div class="stars">
+      <span
+        *ngFor="let star of [1, 2, 3, 4, 5]"
+        (click)="rating = star"
+        [class.filled]="star <= rating"
+        >&#9733;</span
+      >
+    </div>
   </div>
-</div>
 
-<!-- Botón para enviar la reseña -->
-<button (click)="submitReview()">Publicar Reseña</button>
+  <!-- Botón para enviar la reseña -->
+  <button class="submit-btn" (click)="submitReview()">Publicar Reseña</button>
 
-<!-- Mostrar las reseñas publicadas -->
-<h3>Reseñas publicadas</h3>
-<div *ngIf="reviews.length === 0">No hay reseñas publicadas.</div>
-<div *ngFor="let review of reviews" class="review">
-  <p><strong>Álbum:</strong> {{ review.albumName }}</p>
-  <p><strong>Artista:</strong> {{ review.artistName }}</p>
-  <p><strong>Reseña:</strong> {{ review.reviewText }}</p>
-  <p><strong>Calificación:</strong> {{ review.rating }} estrellas</p>
+  <!-- Mostrar las reseñas publicadas -->
+  <h3>Reseñas publicadas</h3>
+  <div *ngIf="reviews.length === 0" class="no-reviews">No hay reseñas publicadas.</div>
+  <div *ngFor="let review of reviews" class="review">
+    <p><strong>Álbum:</strong> {{ review.albumName }}</p>
+    <p><strong>Artista:</strong> {{ review.artistName }}</p>
+    <p><strong>Reseña:</strong> {{ review.reviewText }}</p>
+    <p><strong>Calificación:</strong> {{ review.rating }} estrellas</p>
+  </div>
 </div>

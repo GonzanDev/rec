@@ -66,7 +66,7 @@ export class SearchBarComponent {
   }
 
   goHome() {
-    this.router.navigate([`/`]);
+    this.router.navigate([`/home`]);
   }
 
   // Detect click outside the results to close it

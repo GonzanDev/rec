@@ -3,17 +3,18 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { switchMap } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
+import { CreateReviewComponent } from '../create-review/create-review.component';
 
 @Component({
   standalone: true,
   selector: 'app-album',
-  imports: [NgIf, NgFor, RouterLink],
-  templateUrl: `./album.component.html`,
-  styleUrl: `./album.component.css`,
+  imports: [NgFor, NgIf, RouterLink, CreateReviewComponent],
+  templateUrl: './album.component.html',
+  styleUrls: ['./album.component.css'],
 })
 export class AlbumComponent implements OnInit {
   album: any;
-
+  showReviewComponent = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,5 +42,7 @@ export class AlbumComponent implements OnInit {
       );
   }
 
-
+  openReviewComponent() {
+    this.showReviewComponent = true;
+  }
 }

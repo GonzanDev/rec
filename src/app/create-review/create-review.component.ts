@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { SpotifyService } from '../services/spotify.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,12 +12,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class CreateReviewComponent {
   albums: any[] = [];
-  selectedAlbum: any;
+  @Input() selectedAlbum: any;
   reviewText: string = '';
-  rating: number = 0; // Para manejar la calificación
-  reviews: any[] = []; // Array para almacenar las reseñas
+  rating: number = 0;
+  reviews: any[] = [];
 
   constructor(private spotifyService: SpotifyService) {}
+
 
   onSearch(event: any) {
     const query = event.target.value;
@@ -27,12 +28,14 @@ export class CreateReviewComponent {
     });
   }
 
+  // Seleccionar álbum para reseña
   selectAlbum(album: any) {
     this.spotifyService.getAlbumDetails(album.id).subscribe((details: any) => {
       this.selectedAlbum = details;
     });
   }
 
+  // Enviar reseña
   submitReview() {
     if (this.selectedAlbum && this.reviewText && this.rating > 0) {
       const review = {
@@ -40,11 +43,11 @@ export class CreateReviewComponent {
         albumName: this.selectedAlbum.name,
         artistName: this.selectedAlbum.artists[0].name,
         reviewText: this.reviewText,
-        rating: this.rating, // Agregar calificación
+        rating: this.rating,
       };
-      this.reviews.push(review); // Agregar la reseña al array
+      this.reviews.push(review);
       console.log('Reseña creada:', review);
-      
+
       // Resetear campos después de enviar la reseña
       this.reviewText = '';
       this.selectedAlbum = null;
