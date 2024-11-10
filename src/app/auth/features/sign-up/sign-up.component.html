@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div>
+    <label for="email">Correo electrónico</label>
+    <input id="email" formControlName="email" type="email" placeholder="Ingrese su correo electrónico" />
+    @if(isRequired('email')){
+      <small>Este campo es requerido</small>
+    }
+    @if(hasEmailError()){
+      <small>El correo no es valido</small>
+    }
+  </div>
+
+  <div>
+    <label for="password">Contraseña</label>
+    <input id="password" formControlName="password" type="password" placeholder="Ingrese su contraseña" />
+    @if(isRequired('password')){
+    <small>Este campo es requerido</small>
+  }
+  </div>
+  <app-google-button (onClick)="submitWithGoogle()"></app-google-button>
+  <button type="submit" [disabled]="form.invalid">Registrarse</button>
+  <p>Ya tienes tu cuenta?
+    <a
+    routerLink="/auth/sign-in">
+    Inicia sesion
+    </a>
+  </p>
+</form>

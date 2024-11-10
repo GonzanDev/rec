@@ -1,4 +1,45 @@
-import { Injectable } from '@angular/core';
+import { inject } from "@angular/core";
+import { CanActivateFn, Router } from "@angular/router";
+import { AuthStateService } from "./auth/data-access/auth-state.service";
+import { map } from "rxjs";
+
+export const privateGuard = (): CanActivateFn  => {
+  return () => {
+    const router = inject(Router);
+    const authState = inject(AuthStateService);
+
+    return authState.authState$.pipe(
+      map(state => {
+        console.log(state);
+        if(!state){
+          router.navigateByUrl('/auth/sign-in');
+          return false;
+        }
+        return true;
+      })
+    );
+  };
+};
+
+export const publicGuard = (): CanActivateFn =>{
+  return () => {
+    const router = inject(Router);
+    const authState = inject(AuthStateService);
+
+    return authState.authState$.pipe(
+      map(state => {
+        if(state){
+          router.navigateByUrl('home');
+          return false;
+        }
+        return true;
+      })
+    );
+  };
+};
+
+
+/*import { Injectable } from '@angular/core';
 import {
   CanActivate,
   ActivatedRouteSnapshot,
@@ -28,3 +69,4 @@ export class AuthGuard implements CanActivate {
     return false;
   }
 }
+*/

@@ -1,25 +1,36 @@
+
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
 import { SongPageComponent } from './pages/song-page/song-page.component';
 import { ArtistPageComponent } from './pages/artist-page/artist-page.component';
-import { CallbackComponent } from './components/callback/callback.component';
-import { LoginComponent } from './login/login.component';
 import { CreateReviewComponent } from './create-review/create-review.component';
 
 
-import { AuthGuard } from './auth.guard';
+import { SignInComponent } from './auth/features/sign-in/sign-in.component';
+import { SignUpComponent } from './auth/features/sign-up/sign-up.component';
+import { privateGuard, publicGuard } from './auth.guard';
+
 
 export const routes: Routes = [
   // Ruta protegida para la página de inicio
   {
     path: 'home',
     component: HomePageComponent,
-    canActivate: [AuthGuard],
+    canActivate: [privateGuard()],
   },
   { path: 'create-review', component: CreateReviewComponent },
 
+  {
+    path: 'auth/sign-in',
+    component:SignInComponent,
+    canActivate: [publicGuard()]
+  },
 
+  {
+    path: 'auth/sign-up',
+    component:SignUpComponent,
+  },
 
 
   // Rutas de acceso directo
@@ -36,7 +47,7 @@ export const routes: Routes = [
     component: SongPageComponent,
   },
 
-  // Ruta para manejar el callback de autenticación de Spotify
+ /* // Ruta para manejar el callback de autenticación de Spotify
   {
     path: 'callback',
     component: CallbackComponent,
@@ -50,4 +61,5 @@ export const routes: Routes = [
 
   // Redirección de rutas desconocidas a la página de inicio de sesión
   { path: '**', redirectTo: '/login' },
+   */
 ];
