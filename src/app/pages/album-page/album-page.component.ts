@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AlbumComponent } from '../../album/album.component';
-import { AlbumListComponent } from "../../album-list/album-list.component";
-import { SearchBarComponent } from "../../search-bar/search-bar.component";
+import { SearchBarComponent } from '../../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-album-page',
-  standalone: true,
-  imports: [AlbumComponent, SearchBarComponent],
   templateUrl: './album-page.component.html',
-  styleUrl: './album-page.component.css'
+  styleUrls: ['./album-page.component.css'],
+  standalone: true,
+  imports: [CommonModule, AlbumComponent, SearchBarComponent],
 })
 export class AlbumPageComponent {
-
+  // Add your constructor, methods, or properties here
 }

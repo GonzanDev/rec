@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SpotifyService } from '../services/spotify.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,12 +13,12 @@ import { FormsModule } from '@angular/forms';
 export class CreateReviewComponent {
   albums: any[] = [];
   @Input() selectedAlbum: any;
+  @Output() close = new EventEmitter<void>(); // Add an output event for closing the component
   reviewText: string = '';
   rating: number = 0;
   reviews: any[] = [];
 
   constructor(private spotifyService: SpotifyService) {}
-
 
   onSearch(event: any) {
     const query = event.target.value;
@@ -53,7 +53,14 @@ export class CreateReviewComponent {
       this.selectedAlbum = null;
       this.rating = 0;
     } else {
-      console.warn('Selecciona un álbum, escribe una reseña y da una calificación antes de enviar.');
+      console.warn(
+        'Selecciona un álbum, escribe una reseña y da una calificación antes de enviar.'
+      );
     }
+  }
+
+  // Método para cerrar el componente de reseña
+  closeReview() {
+    this.close.emit();
   }
 }

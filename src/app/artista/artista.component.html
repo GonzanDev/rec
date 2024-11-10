@@ -1,9 +1,23 @@
 <div *ngIf="artist">
-  <h2>{{ artist.name }}</h2>>
-  <img [src]="artist.images[0]?.url" alt="{{ artist.name }}" width="300" />
-
-  <!-- Usamos el AlbumListComponent y le pasamos el artistId -->
+  <div class="artist-details">
+    <div class="perfil-artista">
+      <img
+        class="artist-img"
+        [src]="artist.images[0]?.url"
+        alt="{{ artist.name }}"
+      />
+      <h2 class="artist-info">{{ artist.name }}</h2>
+    </div>
+    <div class="data-artista">
+      <p>
+        Seguidores:
+        {{ formatFollowers(artist.followers.total) }}
+      </p>
+      <p>
+        Generos:
+        {{ formatGenres(artist.genres) }}
+      </p>
+    </div>
+  </div>
   <app-album-list [artistId]="artist.id"></app-album-list>
 </div>
-
-

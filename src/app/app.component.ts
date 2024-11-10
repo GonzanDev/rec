@@ -5,7 +5,6 @@ import {
   RouterModule,
   RouterLink,
   RouterLinkActive,
-  
 } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { ArtistaComponent } from './artista/artista.component';
@@ -15,9 +14,6 @@ import { AlbumListComponent } from './album-list/album-list.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 
-
-
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,13 +21,8 @@ import { AuthService } from './services/auth.service';
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
     RouterModule,
     FormsModule, // Add FormsModule here
-    ArtistaComponent,
-    SearchBarComponent,
-    AlbumListComponent
   ],
   standalone: true,
 })

@@ -45,4 +45,8 @@ export class AlbumComponent implements OnInit {
   openReviewComponent() {
     this.showReviewComponent = true;
   }
+
+  closeReviewComponent(): void {
+    this.showReviewComponent = false;
+  }
 }

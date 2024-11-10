@@ -10,7 +10,7 @@ import { AlbumListComponent } from '../album-list/album-list.component';
   standalone: true,
   imports: [NgIf, NgFor, AlbumListComponent],
   templateUrl: './artista.component.html',
-  styleUrls: ['./artista.component.css']
+  styleUrls: ['./artista.component.css'],
 })
 export class ArtistaComponent {
   artist: any;
@@ -39,5 +39,14 @@ export class ArtistaComponent {
           console.error('Error fetching artist details:', error);
         }
       );
+  }
+  formatGenres(genres: string[]): string {
+    return genres
+      .map((genre) => genre.charAt(0).toUpperCase() + genre.slice(1))
+      .join(', ');
+  }
+
+  formatFollowers(followers: number): string {
+    return followers.toLocaleString();
   }
 }

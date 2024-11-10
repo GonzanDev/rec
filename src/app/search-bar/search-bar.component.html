@@ -1,14 +1,4 @@
 <nav>
-  <div class="search-bar">
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      placeholder="Busca una canción, álbum o artista"
-      (keydown.enter)="onSearch()"
-    />
-    <button (click)="onSearch()">Buscar</button>
-  </div>
-
   <div class="home">
     <img
       src="../../../public/home-wifi-svgrepo-com.png"
@@ -17,6 +7,25 @@
       class="home-icon"
     />
   </div>
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      (input)="onSearchTermChange(searchTerm)"
+      placeholder="Buscar..."
+    />
+  </div>
+
+  <!-- Ícono de Perfil -->
+  <div class="profile">
+    <img
+      src="../../../public/profile-icon.png"
+      alt="Perfil"
+      (click)="goToProfile()"
+      class="profile-icon"
+    />
+  </div>
+
   <!-- Resultados -->
   <div
     *ngIf="showResults && searchResults"

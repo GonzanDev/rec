@@ -1,36 +1,41 @@
 <div *ngIf="album" class="album-details">
   <div class="album-header">
-    <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
     <div class="album-info">
-      <h2>{{ album.name }}</h2>
-      <span>{{ album.release_date }}</span>
-      <p>Artista:
-        <a [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0].name }}</a>
-      </p>
+      <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
+      <div class="album-data">
+        <h2>{{ album.name }}</h2>
+        <span>{{ album.release_date }}</span>
+        <p>
+          Artista:
+          <a [routerLink]="['/artist', album.artists[0]?.id]">{{
+            album.artists[0].name
+          }}</a>
+        </p>
+      </div>
     </div>
-<!-- Agregar el botón Crear Reseña -->
-<button (click)="openReviewComponent()">Crear Reseña</button>
-
-<!-- Condicional para mostrar el componente de reseña -->
-<app-create-review *ngIf="showReviewComponent" [selectedAlbum]="album"></app-create-review>
-
+    <!-- Agregar el botón Crear Reseña -->
+    <button (click)="openReviewComponent()">Crear Reseña</button>
   </div>
 
   <div class="track-list">
-    <h3>Lista de Canciones</h3>
     <ul>
       <li *ngFor="let track of album.tracks.items">
         <div class="track-item">
-          <span>{{ track.track_number }}. {{ track.name }}</span>
+          <span> {{ track.track_number }} - {{ track.name }} </span>
           <!-- Mostrar un preview si está disponible -->
           <div *ngIf="track.preview_url">
             <audio controls [src]="track.preview_url"></audio>
           </div>
-          <div *ngIf="!track.preview_url">
-            <span>No disponible para previsualización</span>
-          </div>
         </div>
       </li>
     </ul>
+  </div>
+
+  <!-- Contenedor de superposición para la reseña -->
+  <div *ngIf="showReviewComponent" class="overlay">
+    <app-create-review
+      [selectedAlbum]="album"
+      (close)="closeReviewComponent()"
+    ></app-create-review>
   </div>
 </div>

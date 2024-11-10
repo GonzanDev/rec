@@ -5,7 +5,7 @@
 nav {
   display: flex;
   justify-content: space-between;
-  flex-direction: row-reverse;
+  flex-direction: row;
   align-items: center;
   padding: 20px 40px;
   background-color: var(--negro);
@@ -40,31 +40,66 @@ nav {
   width: 120%;
 }
 
+.resultsbox {
+  width: 800px;
+}
+
+.results {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+  justify-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: var(--negro);
+  border-radius: 20px;
+}
+
+.search-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background-color: var(--negroclaro);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  width: 50%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 120%;
+}
+
 .search-bar input:focus {
   border-color: #1db954;
 }
 
-.search-bar button {
-  padding: 10px 12px;
-  background-color: #1db954;
-  border: none;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 1rem;
-  width: 20%;
-  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-}
-
-.search-bar button:hover {
-  background-color: #1aa34a;
-  transform: scale(1.05);
-}
-
 .search-results {
   position: absolute;
-  top: 80px; /* Ajusta esta propiedad para definir la distancia desde la parte superior de la página */
+  top: 80px;
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
@@ -72,46 +107,41 @@ nav {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 999; /* Asegura que el contenedor esté por encima de otros elementos */
-  max-height: 500px; /* Limita la altura de los resultados */
-  overflow-y: auto; /* Agrega desplazamiento vertical si el contenido es demasiado largo */
+  z-index: 999;
+  max-height: 500px;
+  overflow-y: auto;
   scrollbar-width: none;
 }
 
 .search-results::-webkit-scrollbar {
-  display: hidden;
+  display: none;
 }
 
-/* Si quieres que los resultados se oculten hasta que el usuario busque algo */
 .search-results.hidden {
   display: none;
 }
 
-/* Cada sección de resultados (Canciones, Álbumes, Artistas) */
 .result-column {
   background-color: #fff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 1; /* Hace que las columnas ocupen el mismo tamaño */
-  min-width: 250px; /* Evita que las columnas se encojan demasiado */
+  flex: 1;
+  min-width: 250px;
 }
 
-/* Títulos */
 .result-column h3 {
   margin-bottom: 10px;
   font-size: 1.2rem;
   color: #333;
 }
 
-/* Estilo para la lista */
 .result-column ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* Estilo de cada ítem de la lista */
 .result-column li {
   padding: 8px 0;
   border-bottom: 1px solid #e0e0e0;
@@ -121,7 +151,25 @@ nav {
   border-bottom: none;
 }
 
-/* Botón de detalle */
+/* Estilo de cada ítem de la lista */
+.result-column li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.home,
+.profile {
+  cursor: pointer;
+}
+
+.home {
+  margin-left: 20px; /* Alinea el home a la izquierda */
+}
+
+.profile {
+  margin-right: 20px; /* Alinea el perfil a la derecha */
+}
+
 button {
   background: none;
   border: none;
@@ -143,7 +191,7 @@ button:hover {
 /* Media query para pantallas más pequeñas */
 @media (max-width: 768px) {
   .search-results {
-    flex-direction: column; /* Los resultados se apilan en una columna en pantallas pequeñas */
+    flex-direction: column;
     align-items: center;
   }
 

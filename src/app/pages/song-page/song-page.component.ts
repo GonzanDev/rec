@@ -7,8 +7,6 @@ import { SearchBarComponent } from '../../search-bar/search-bar.component';
   standalone: true,
   imports: [CancionComponent, SearchBarComponent],
   templateUrl: './song-page.component.html',
-  styleUrl: './song-page.component.css'
+  styleUrl: './song-page.component.css',
 })
-export class SongPageComponent {
-
-}
+export class SongPageComponent {}

@@ -11,9 +11,10 @@ export class SpotifyService {
   private clientId = `eea8b97c4e754c898bc58978c62ac4a1`;
   private clientSecret = `b737690ab26b4fc7b1b41fcdd5512e1a`;
 
-
   private tokenSubject = new BehaviorSubject<string | null>(null);
-  public token$ = this.tokenSubject.asObservable().pipe(filter((token): token is string => !!token));
+  public token$ = this.tokenSubject
+    .asObservable()
+    .pipe(filter((token): token is string => !!token));
 
   constructor(private http: HttpClient) {
     this.getAccessToken().subscribe();
@@ -21,10 +22,8 @@ export class SpotifyService {
 
   private getAccessToken(): Observable<string> {
     if (this.tokenSubject.value) {
-
       return this.token$;
     }
-
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -33,17 +32,19 @@ export class SpotifyService {
 
     const body = 'grant_type=client_credentials';
 
-    return this.http.post<any>('https://accounts.spotify.com/api/token', body, { headers }).pipe(
-      map((response) => {
-        const token = response.access_token;
-        if (token) {
-          this.tokenSubject.next(token);
-          return token;
-        } else {
-          throw new Error('No access token returned');
-        }
-      })
-    );
+    return this.http
+      .post<any>('https://accounts.spotify.com/api/token', body, { headers })
+      .pipe(
+        map((response) => {
+          const token = response.access_token;
+          if (token) {
+            this.tokenSubject.next(token);
+            return token;
+          } else {
+            throw new Error('No access token returned');
+          }
+        })
+      );
   }
 
   search(query: string): Observable<any> {
@@ -57,8 +58,8 @@ export class SpotifyService {
           headers,
           params: {
             q: query,
-            type: 'track,album,artist',  // Incluir 'album' y 'artist' en la búsqueda
-            limit: '10',  // Limitar los resultados si lo deseas (opcional)
+            type: 'track,album,artist', // Incluir 'album' y 'artist' en la búsqueda
+            limit: '5', // Limitar los resultados si lo deseas (opcional)
           },
         });
       })
@@ -72,9 +73,9 @@ export class SpotifyService {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
-        return this.http.get<any>(`${this.API_URL}/browse/new-releases`, { headers }).pipe(
-          map((data) => data.albums.items)
-        );
+        return this.http
+          .get<any>(`${this.API_URL}/browse/new-releases`, { headers })
+          .pipe(map((data) => data.albums.items));
       })
     );
   }
@@ -86,17 +87,19 @@ export class SpotifyService {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
-        return this.http.get<any>(`${this.API_URL}/artists/${artistId}/albums`, { headers }).pipe(
-          map((data) => {
-            // Filtrar solo los álbumes completos
-            return data.items.filter((album: any) => album.album_type === 'album');
-          })
-        );
+        return this.http
+          .get<any>(`${this.API_URL}/artists/${artistId}/albums`, { headers })
+          .pipe(
+            map((data) => {
+              // Filtrar solo los álbumes completos
+              return data.items.filter(
+                (album: any) => album.album_type === 'album'
+              );
+            })
+          );
       })
     );
   }
-
-
 
   getAlbumDetails(albumId: string): Observable<any> {
     return this.token$.pipe(
@@ -105,9 +108,9 @@ export class SpotifyService {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
-        return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers }).pipe(
-          map((data) => data)
-        );
+        return this.http
+          .get<any>(`${this.API_URL}/albums/${albumId}`, { headers })
+          .pipe(map((data) => data));
       })
     );
   }
@@ -119,7 +122,9 @@ export class SpotifyService {
           Authorization: `Bearer ${TOKEN}`,
         });
 
-        return this.http.get<any>(`${this.API_URL}/tracks/${songId}`, { headers });
+        return this.http.get<any>(`${this.API_URL}/tracks/${songId}`, {
+          headers,
+        });
       })
     );
   }
@@ -130,10 +135,10 @@ export class SpotifyService {
           Authorization: `Bearer ${TOKEN}`,
         });
 
-        return this.http.get<any>(`${this.API_URL}/artists/${artistId}`, { headers });
+        return this.http.get<any>(`${this.API_URL}/artists/${artistId}`, {
+          headers,
+        });
       })
     );
   }
 }
-
-

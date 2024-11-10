@@ -1,15 +1,30 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it is above other elements */
+  font-family: var(--fuente);
+}
+
 .review-container {
   max-width: 600px;
+  width: 100%;
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  background-color: #f8f8f8;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: Arial, sans-serif;
+  background-color: var(--grisclaro);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) inset;
+  z-index: 1001; /* Ensure it is above the overlay */
 }
 
 h2 {
-  color: #333;
+  color: var(--negro);
   text-align: center;
 }
 
@@ -30,61 +45,4 @@ h2 {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-}
-
-.stars {
-  display: inline-flex;
-}
-
-.stars span {
-  cursor: pointer;
-  font-size: 24px;
-  color: #ddd;
-  transition: color 0.3s ease;
-}
-
-.stars span.filled {
-  color: gold;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #1db954;
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submit-btn:hover {
-  background-color: #1aa34a;
-}
-
-h3 {
-  margin-top: 30px;
-  color: #333;
-}
-
-.no-reviews {
-  text-align: center;
-  color: #666;
-  margin-top: 10px;
-}
-
-.review {
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 5px;
-  background-color: #fff;
-  margin-top: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.review p {
-  margin: 5px 0;
-  font-size: 0.95rem;
 }

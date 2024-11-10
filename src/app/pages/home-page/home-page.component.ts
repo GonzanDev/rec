@@ -8,8 +8,6 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [AlbumListComponent, SearchBarComponent, RouterOutlet],
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css'
+  styleUrls: ['./home-page.component.css'], // Cambiado a "styleUrls"
 })
-export class HomePageComponent {
-
-}
+export class HomePageComponent {}
