@@ -1,17 +1,25 @@
 import { AuthService } from './../../../services/auth.service';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import {
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { User } from '../../../services/user.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
+import { toast } from 'ngx-sonner';
+
+import { hasEmailError, isRequired } from './../../utils/validators';
+import { GoogleButtonComponent } from '../../ui/google-button/google-button.component';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, RouterLink],
+  imports: [ReactiveFormsModule, NgIf, RouterLink, GoogleButtonComponent],
   templateUrl: 'sign-up.component.html',
-  styleUrls: ['./sign-up.component.css']
+  styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent {
   private formBuilder = inject(FormBuilder);
@@ -22,8 +30,11 @@ export class SignUpComponent {
 
   form = this.formBuilder.group({
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    username: new FormControl('', Validators.required)
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+    ]),
+    username: new FormControl('', Validators.required),
   });
 
   async submit() {
@@ -32,7 +43,7 @@ export class SignUpComponent {
       const user: User = {
         email: email!,
         password: password!,
-        username: username!
+        username: username!,
       };
 
       try {
@@ -45,6 +56,16 @@ export class SignUpComponent {
       } catch (error) {
         console.error('Error en el registro:', error);
       }
+    }
+  }
+
+  async submitWithGoogle() {
+    try {
+      await this.authService.signInWithGoogle();
+      toast.success('Usuario creado correctamente.');
+      this.router.navigateByUrl('/home');
+    } catch (error) {
+      toast.error('Ocurrio un error.');
     }
   }
 }

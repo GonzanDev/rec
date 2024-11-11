@@ -166,6 +166,10 @@ a {
   margin-left: 20px; /* Alinea el home a la izquierda */
 }
 
+.home img {
+  width: 50px;
+}
+
 .profile {
   margin-right: 20px; /* Alinea el perfil a la derecha */
 }

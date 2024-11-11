@@ -8,10 +8,10 @@ import { Router } from '@angular/router';
   selector: 'app-album-list',
   imports: [NgFor],
   templateUrl: './album-list.component.html',
-  styleUrls: ['./album-list.component.css']
+  styleUrls: ['./album-list.component.css'],
 })
 export class AlbumListComponent implements OnInit {
-  @Input() artistId?: string;  // Permite pasar un artistId como parámetro
+  @Input() artistId?: string; // Permite pasar un artistId como parámetro
   albums: any[] = [];
   @ViewChild('carousel') carousel!: ElementRef;
 
@@ -29,7 +29,6 @@ export class AlbumListComponent implements OnInit {
         }
       );
     } else {
-
       this.spotifyService.getTopAlbums().subscribe(
         (albums) => {
           this.albums = albums;
@@ -51,5 +50,18 @@ export class AlbumListComponent implements OnInit {
 
   viewAlbumDetails(albumId: string) {
     this.router.navigate([`/album`, albumId]); // Navega a la ruta del detalle del álbum
+  }
+
+  loadAlbums() {
+    if (this.artistId) {
+      this.spotifyService.getAlbumsByArtist(this.artistId).subscribe({
+        next: (albums) => {
+          this.albums = albums;
+        },
+        error: (error) => {
+          console.error('Error loading albums:', error);
+        },
+      });
+    }
   }
 }

@@ -1,24 +1,52 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <div>
-    <label for="email">Correo electrónico</label>
-    <input id="email" formControlName="email" type="email" placeholder="Ingrese su correo electrónico" />
-    <small *ngIf="form.controls['email'].errors?.['required']">Este campo es requerido</small>
-    <small *ngIf="form.controls['email'].errors?.['email']">El correo no es válido</small>
-  </div>
+<div class="container">
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div>
+      <label for="email">Correo electrónico</label>
+      <input
+        id="email"
+        formControlName="email"
+        type="email"
+        placeholder="Ingrese su correo electrónico"
+      />
+      <small *ngIf="form.controls['email'].errors?.['required']"
+        >Este campo es requerido</small
+      >
+      <small *ngIf="form.controls['email'].errors?.['email']"
+        >El correo no es válido</small
+      >
+    </div>
 
-  <div>
-    <label for="username">Nombre de usuario</label>
-    <input id="username" formControlName="username" type="text" placeholder="Ingrese su nombre de usuario" />
-    <small *ngIf="form.controls['username'].errors?.['required']">Este campo es requerido</small>
-  </div>
+    <div>
+      <label for="username">Nombre de usuario</label>
+      <input
+        id="username"
+        formControlName="username"
+        type="text"
+        placeholder="Ingrese su nombre de usuario"
+      />
+      <small *ngIf="form.controls['username'].errors?.['required']"
+        >Este campo es requerido</small
+      >
+    </div>
 
-  <div>
-    <label for="password">Contraseña</label>
-    <input id="password" formControlName="password" type="password" placeholder="Ingrese su contraseña" />
-    <small *ngIf="form.controls['password'].errors?.['required']">Este campo es requerido</small>
-    <small *ngIf="form.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</small>
-  </div>
+    <div>
+      <label for="password">Contraseña</label>
+      <input
+        id="password"
+        formControlName="password"
+        type="password"
+        placeholder="Ingrese su contraseña"
+      />
+      <small *ngIf="form.controls['password'].errors?.['required']"
+        >Este campo es requerido</small
+      >
+      <small *ngIf="form.controls['password'].errors?.['minlength']"
+        >La contraseña debe tener al menos 6 caracteres</small
+      >
+    </div>
 
-  <button type="submit" [disabled]="form.invalid">Registrarse</button>
-  <p>¿Ya tienes cuenta? <a routerLink="/auth/sign-in">Inicia sesión</a></p>
-</form>
+    <button type="submit" [disabled]="form.invalid">Registrarse</button>
+    <app-google-button (onClick)="submitWithGoogle()"></app-google-button>
+    <p>¿Ya tienes cuenta? <a routerLink="/auth/sign-in">Inicia sesión</a></p>
+  </form>
+</div>

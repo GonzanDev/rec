@@ -2,7 +2,11 @@
   <button class="carousel-button left" (click)="scrollLeft()">&#9664;</button>
 
   <div #carousel class="carousel">
-    <div *ngFor="let album of albums" class="album" (click)="viewAlbumDetails(album.id)">
+    <div
+      *ngFor="let album of albums"
+      class="album"
+      (click)="viewAlbumDetails(album.id)"
+    >
       <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
       <div class="album-info">
         <h3>{{ album.name }}</h3>
@@ -13,4 +17,3 @@
 
   <button class="carousel-button right" (click)="scrollRight()">&#9654;</button>
 </div>
-

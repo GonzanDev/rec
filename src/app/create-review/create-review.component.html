@@ -1,6 +1,9 @@
 <div class="overlay">
   <div class="review-container">
-    <h2>Crear Reseña</h2>
+    <div class="texto">
+      <h3>Escribe una reseña para</h3>
+      <h3 class="nombre">{{ albumName }}</h3>
+    </div>
     <textarea
       [(ngModel)]="reviewText"
       class="review-text"
@@ -8,11 +11,19 @@
     ></textarea>
     <div class="rating-container">
       <label for="rating">Calificación:</label>
-      <input type="number" id="rating" [(ngModel)]="rating" min="0" max="5" />
+      <div class="stars">
+        <span *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)">
+          <i
+            class="fa"
+            [ngClass]="star <= rating ? 'fa fa-star' : 'fa fa-star-o'"
+          ></i>
+        </span>
+      </div>
     </div>
-    <button (click)="submitReview()">Enviar Reseña</button>
-    <button (click)="closeReview()">Cerrar</button>
-    <!-- Botón para cerrar la ventana de reseña -->
+    <div class="botones">
+      <button (click)="submitReview()">Enviar Reseña</button>
+      <button (click)="closeReview()">Cerrar</button>
+    </div>
   </div>
 </div>
 
@@ -25,5 +36,13 @@
   <p><strong>Álbum:</strong> {{ review.albumName }}</p>
   <p><strong>Artista:</strong> {{ review.artistName }}</p>
   <p><strong>Reseña:</strong> {{ review.reviewText }}</p>
-  <p><strong>Calificación:</strong> {{ review.rating }} estrellas</p>
+  <p>
+    <strong>Calificación:</strong>
+    <span *ngFor="let star of [1, 2, 3, 4, 5]">
+      <i
+        class="fa"
+        [ngClass]="star <= review.rating ? 'fa fa-star' : 'fa fa-star-o'"
+      ></i>
+    </span>
+  </p>
 </div>

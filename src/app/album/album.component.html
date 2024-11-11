@@ -22,8 +22,7 @@
       <li *ngFor="let track of album.tracks.items">
         <div class="track-item">
           <span> {{ track.track_number }} - {{ track.name }} </span>
-
-
+          <!-- Mostrar un preview si está disponible -->
           <div *ngIf="track.preview_url">
             <audio controls [src]="track.preview_url"></audio>
           </div>
@@ -36,6 +35,7 @@
   <div *ngIf="showReviewComponent" class="overlay">
     <app-create-review
       [selectedAlbum]="album"
+      [albumName]="album.name"
       (close)="closeReviewComponent()"
     ></app-create-review>
   </div>

@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class CreateReviewComponent {
   albums: any[] = [];
   @Input() selectedAlbum: any;
+  @Input() albumName: string = ''; // Add an input property for the album name
   @Output() close = new EventEmitter<void>(); // Add an output event for closing the component
   reviewText: string = '';
   rating: number = 0;
@@ -35,32 +36,27 @@ export class CreateReviewComponent {
     });
   }
 
-  // Enviar reseña
-  submitReview() {
-    if (this.selectedAlbum && this.reviewText && this.rating > 0) {
-      const review = {
-        albumId: this.selectedAlbum.id,
-        albumName: this.selectedAlbum.name,
-        artistName: this.selectedAlbum.artists[0].name,
-        reviewText: this.reviewText,
-        rating: this.rating,
-      };
-      this.reviews.push(review);
-      console.log('Reseña creada:', review);
-
-      // Resetear campos después de enviar la reseña
-      this.reviewText = '';
-      this.selectedAlbum = null;
-      this.rating = 0;
-    } else {
-      console.warn(
-        'Selecciona un álbum, escribe una reseña y da una calificación antes de enviar.'
-      );
-    }
-  }
-
   // Método para cerrar el componente de reseña
   closeReview() {
     this.close.emit();
+  }
+
+  // Método para enviar la reseña
+  submitReview() {
+    const newReview = {
+      albumName: this.albumName,
+      artistName: this.selectedAlbum.artists[0].name,
+      reviewText: this.reviewText,
+      rating: this.rating,
+    };
+    this.reviews.push(newReview);
+    this.reviewText = '';
+    this.rating = 0;
+    this.closeReview();
+  }
+
+  // Método para establecer la calificación
+  setRating(star: number) {
+    this.rating = star;
   }
 }
