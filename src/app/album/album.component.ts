@@ -2,19 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SpotifyService } from '../services/spotify.service';
 import { switchMap } from 'rxjs';
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { CreateReviewComponent } from '../create-review/create-review.component';
 
 @Component({
   standalone: true,
   selector: 'app-album',
-  imports: [NgFor, NgIf, RouterLink, CreateReviewComponent],
+  imports: [NgFor, NgIf, RouterLink, CreateReviewComponent, CommonModule],
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css'],
 })
 export class AlbumComponent implements OnInit {
   album: any;
   showReviewComponent = false;
+  reviews: any[] = []; // Arreglo para almacenar las reseñas
 
   constructor(
     private route: ActivatedRoute,
@@ -48,5 +49,11 @@ export class AlbumComponent implements OnInit {
 
   closeReviewComponent(): void {
     this.showReviewComponent = false;
+  }
+
+  // Método para manejar la recepción de la reseña desde CreateReviewComponent
+  onReviewCreated(review: any) {
+    this.reviews.push(review);
+    this.closeReviewComponent(); // Cerrar el componente de reseña
   }
 }

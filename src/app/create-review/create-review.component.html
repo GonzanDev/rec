@@ -10,13 +10,14 @@
       placeholder="Escribe tu reseña..."
     ></textarea>
     <div class="rating-container">
-      <label for="rating">Calificación:</label>
+      <label>Calificación:</label>
       <div class="stars">
-        <span *ngFor="let star of [1, 2, 3, 4, 5]" (click)="setRating(star)">
-          <i
-            class="fa"
-            [ngClass]="star <= rating ? 'fa fa-star' : 'fa fa-star-o'"
-          ></i>
+        <span
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          (click)="setRating(star)"
+          [class.filled]="star <= rating"
+        >
+          &#9733;
         </span>
       </div>
     </div>
@@ -27,22 +28,3 @@
   </div>
 </div>
 
-<!-- Mostrar las reseñas publicadas -->
-<h3>Reseñas publicadas</h3>
-<div *ngIf="reviews.length === 0" class="no-reviews">
-  No hay reseñas publicadas.
-</div>
-<div *ngFor="let review of reviews" class="review">
-  <p><strong>Álbum:</strong> {{ review.albumName }}</p>
-  <p><strong>Artista:</strong> {{ review.artistName }}</p>
-  <p><strong>Reseña:</strong> {{ review.reviewText }}</p>
-  <p>
-    <strong>Calificación:</strong>
-    <span *ngFor="let star of [1, 2, 3, 4, 5]">
-      <i
-        class="fa"
-        [ngClass]="star <= review.rating ? 'fa fa-star' : 'fa fa-star-o'"
-      ></i>
-    </span>
-  </p>
-</div>

@@ -40,6 +40,30 @@
       [selectedAlbum]="album"
       [albumName]="album.name"
       (close)="closeReviewComponent()"
+      (reviewCreated)="onReviewCreated($event)"
     ></app-create-review>
+  </div>
+
+  <!-- Mostrar las reseñas debajo de los detalles del álbum -->
+  <div *ngIf="reviews.length > 0" class="reviews-section">
+    <h3>Reseñas publicadas</h3>
+    <div *ngFor="let review of reviews" class="review">
+      <p><strong>Álbum:</strong> {{ review.albumName }}</p>
+      <p><strong>Artista:</strong> {{ review.artistName }}</p>
+      <p><strong>Reseña:</strong> {{ review.reviewText }}</p>
+      <p>
+        <strong>Calificación:</strong>&nbsp;
+        <span *ngFor="let star of [1, 2, 3, 4, 5]">
+          <i
+            class="fa"
+            [ngClass]="star <= review.rating ? 'fa fa-star' : 'fa fa-star-o'"
+          ></i>
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="reviews.length === 0" class="no-reviews">
+    No hay reseñas publicadas.
   </div>
 </div>

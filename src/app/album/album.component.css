@@ -79,3 +79,52 @@
   display: flex;
   gap: 10px;
 }
+/* Contenedor de la sección de reseñas */
+.reviews-section {
+  padding: 20px;
+  background-color: var(--negroclaro); /* Fondo oscuro para la sección */
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Título de la sección de reseñas */
+.reviews-section h3 {
+  font-size: 1.5rem;
+  color: var(--verde); /* Color de texto para el título */
+  margin-bottom: 15px;
+}
+
+/* Estilo de cada tarjeta de reseña */
+.review {
+  background-color: var(--negro); /* Fondo oscuro para cada reseña */
+  border: 1px solid var(--grisclaro); /* Borde en un tono gris claro */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo del texto de las reseñas */
+.review p {
+  margin: 5px 0;
+  color: var(--grisclaro); /* Texto en color claro */
+  font-size: 1rem;
+}
+
+/* Estilo del nombre del álbum y artista */
+.review p strong {
+  color: var(--verde); /* Color destacado para los títulos dentro de cada reseña */
+  font-weight: bold;
+}
+
+/* Contenedor de las estrellas de calificación */
+.review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+/* Estilo de las estrellas */
+.review-rating i {
+  font-size: 1.2rem;
+  color: gold; /* Estrellas doradas */
+}
