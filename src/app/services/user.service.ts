@@ -8,6 +8,7 @@ export interface User{
   password: string,
   username?: string,
   favoriteAlbums?: string[],
+  favoriteArtists?: string[],
   followers?: string[],
   following?: string[],
 }

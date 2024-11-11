@@ -16,13 +16,8 @@
   </div>
 
   <!-- Ícono de Perfil -->
-  <div class="profile">
-    <img
-      src="../../../public/profile-icon.png"
-      alt="Perfil"
-      (click)="goToProfile()"
-      class="profile-icon"
-    />
+  <div class="profile" (click)="goToProfile()">
+    <img src="../../../public/profile-icon.png" alt="Perfil" class="profile-icon"/>
   </div>
 
   <button (click)="logOut()">Cerrar sesion</button>

@@ -1,5 +1,5 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   RouterOutlet,
@@ -7,11 +7,9 @@ import {
 
 } from '@angular/router';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { ArtistaComponent } from './artista/artista.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
-import { AlbumListComponent } from './album-list/album-list.component';
 
 import {NgxSonnerToaster} from 'ngx-sonner';
+import { AuthStateService } from './auth/data-access/auth-state.service';
 
 @Component({
   selector: 'app-root',
@@ -26,5 +24,10 @@ import {NgxSonnerToaster} from 'ngx-sonner';
   ],
   standalone: true,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(private authStateService: AuthStateService) {}
+
+  ngOnInit(): void {
+    this.authStateService.initAuthStateListener();
+  }
 }

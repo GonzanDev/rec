@@ -11,7 +11,8 @@ import { CreateReviewComponent } from './create-review/create-review.component';
 import { SignInComponent } from './auth/features/sign-in/sign-in.component';
 import { SignUpComponent } from './auth/features/sign-up/sign-up.component';
 import { privateGuard, publicGuard } from './auth.guard';
-import { LayoutComponent } from './auth/ui/layout.component';
+
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 
 
 export const routes: Routes = [
@@ -22,6 +23,12 @@ export const routes: Routes = [
     canActivate: [privateGuard()],
   },
   { path: 'create-review', component: CreateReviewComponent },
+
+  {
+    path: 'users/:userId',
+    component: ProfilePageComponent,
+    canActivate: [privateGuard()],
+  },
 
   {
     path: 'auth/sign-in',
