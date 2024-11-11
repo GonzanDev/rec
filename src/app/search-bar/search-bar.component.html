@@ -17,10 +17,8 @@
 
   <!-- Ícono de Perfil -->
   <div class="profile" (click)="goToProfile()">
-    <img src="../../../public/profile-icon.png" alt="Perfil" class="profile-icon"/>
+    <p>{{ userName || "Usuario" }}</p>
   </div>
-
-  <button (click)="logOut()">Cerrar sesion</button>
 
   <!-- Resultados -->
   <div
