@@ -1,4 +1,5 @@
 
+
 import { Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
@@ -10,6 +11,7 @@ import { CreateReviewComponent } from './create-review/create-review.component';
 import { SignInComponent } from './auth/features/sign-in/sign-in.component';
 import { SignUpComponent } from './auth/features/sign-up/sign-up.component';
 import { privateGuard, publicGuard } from './auth.guard';
+import { LayoutComponent } from './auth/ui/layout.component';
 
 
 export const routes: Routes = [
@@ -37,14 +39,17 @@ export const routes: Routes = [
   {
     path: 'artist/:artistId',
     component: ArtistPageComponent,
+    canActivate: [privateGuard()],
   },
   {
     path: 'album/:albumId',
     component: AlbumPageComponent,
+    canActivate: [privateGuard()],
   },
   {
     path: 'song/:songId',
     component: SongPageComponent,
+    canActivate: [privateGuard()],
   },
 
  /* // Ruta para manejar el callback de autenticación de Spotify

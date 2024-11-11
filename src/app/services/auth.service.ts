@@ -1,31 +1,45 @@
 
 import { inject, Injectable } from "@angular/core";
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "@angular/fire/auth";
-
-
-export interface User{
-  email: string,
-  password: string
-}
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, UserCredential } from "@angular/fire/auth";
+import { UserService, User } from "./user.service";
 
 @Injectable({
   providedIn: 'root',
 })
-
-export class AuthService{
+export class AuthService {
   private _auth = inject(Auth);
+  private userService = inject(UserService);
 
-  signUp(user: User){
-    return createUserWithEmailAndPassword(this._auth, user.email, user.password);
+  async signUp(user: User): Promise<UserCredential> {
+    try {
+
+      const userCredential = await createUserWithEmailAndPassword(this._auth, user.email, user.password);
+
+      // Guardar el usuario en Firestore
+      await this.userService.create({
+        id: userCredential.user.uid,  // Asegúrate de asignar el UID generado por Firebase Auth
+        email: user.email,
+        password: user.password, // Si necesitas almacenar la contraseña en Firestore, aunque no es recomendable.
+        username: user.username,
+        favoriteAlbums: user.favoriteAlbums || [],
+        followers: user.followers || [],
+        following: user.following || [],
+      });
+
+      return userCredential;
+    } catch (error) {
+      console.error("Error al registrar el usuario:", error);
+      throw error;
+    }
   }
 
-  signIn(user: User){
-    return signInWithEmailAndPassword(this._auth, user.email, user.password)
+  signIn(user: User) {
+    return signInWithEmailAndPassword(this._auth, user.email, user.password);
   }
 
-  signInWithGoogle(){
-    const provider =  new GoogleAuthProvider();
-    provider.setCustomParameters({prompt: 'select_account'})
+  signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
     return signInWithPopup(this._auth, provider);
   }
 }

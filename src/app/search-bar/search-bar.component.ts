@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnInit,
   OnDestroy,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,13 +14,17 @@ import { Router, RouterModule, RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { AuthStateService } from '../auth/data-access/auth-state.service';
 
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, RouterLink],
+  imports: [CommonModule,
+    FormsModule,
+    RouterModule,
+    ],
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
@@ -33,6 +38,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
+  private authState = inject(AuthStateService);
 
   constructor(
     private spotifyService: SpotifyService,
@@ -106,6 +112,11 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
   goToProfile() {
     this.router.navigate(['/profile']);
+  }
+
+  async logOut(){
+    await this.authState.logOut();
+    this.router.navigateByUrl('/auth/sign-in');
   }
 
   // Detecta clics fuera de los resultados para cerrarlos

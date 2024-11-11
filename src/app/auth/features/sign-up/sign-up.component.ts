@@ -1,71 +1,50 @@
-import { hasEmailError, isRequired } from './../../utils/validators';
+import { AuthService } from './../../../services/auth.service';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../services/auth.service';
-import { toast } from 'ngx-sonner';
-import { RouterLink, Router } from '@angular/router';
-import { GoogleButtonComponent } from '../../ui/google-button/google-button.component';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
-
-interface FormSignUp {
-  email: FormControl<string | null >;
-  password: FormControl<string | null>;
-}
+import { User } from '../../../services/user.service';
+import { Router, RouterLink } from '@angular/router';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, GoogleButtonComponent],
-  templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  imports: [ReactiveFormsModule, NgIf, RouterLink],
+  templateUrl: 'sign-up.component.html',
+  styleUrls: ['./sign-up.component.css']
 })
-export  class SignUpComponent {
- private _formBuilder = inject(FormBuilder);
- private authService = inject(AuthService);
- private _router = inject(Router);
+export class SignUpComponent {
+  private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
+  constructor() {}
 
- isRequired(field: 'email' | 'password'){
-  return isRequired(field, this.form);
- }
+  form = this.formBuilder.group({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    username: new FormControl('', Validators.required)
+  });
 
- hasEmailError() {
-  return hasEmailError(this.form);
- }
+  async submit() {
+    if (this.form.valid) {
+      const { email, password, username } = this.form.value;
+      const user: User = {
+        email: email!,
+        password: password!,
+        username: username!
+      };
 
- form = this._formBuilder.group({
-  email: this._formBuilder.control('',
-    [Validators.required,
-     Validators.email
-  ]),
-  password:this._formBuilder.control('', Validators.required)
- })
+      try {
+        // Llama a signUp de AuthService y espera el resultado
+        await this.authService.signUp(user);
+        console.log('Usuario registrado y guardado en Firestore');
 
- async submit(){
-  if(this.form.invalid) return;
-
-  try{
-  const {email, password} = this.form.value;
-
-  if(!email || !password) return ;
-
-  console.log({email, password});
-  await this.authService.signUp({email, password});
-    toast.success('Usuario creado correctamente.');
-    this._router.navigateByUrl('home');
- }catch(error){
-    toast.error('Ocurrio un error.')
- }
- }
-
- async submitWithGoogle(){
-  try{
-    await this.authService.signInWithGoogle();
-    toast.success('Usuario creado correctamente.');
-    this._router.navigateByUrl('/home')
-  }catch(error){
-    toast.error('Ocurrio un error.')
+        // Redirige al usuario a la página de inicio o perfil después del registro
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Error en el registro:', error);
+      }
+    }
   }
- }
-
 }
