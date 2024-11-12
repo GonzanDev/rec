@@ -1,31 +1,95 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { UserStateService } from '../auth/data-access/user-state.service'; // Importa el servicio de estado global
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
-import { Router, RouterModule, RouterLink } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Router} from '@angular/router';
+import { UserService } from '../services/user.service';
+import { NgFor, NgIf } from '@angular/common';
+import { SpotifyService } from '../services/spotify.service';
+
 
 @Component({
   standalone: true,
   selector: 'app-profile',
+  imports: [NgIf, NgFor, RouterLink],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
   userId: string = '';
   private authState = inject(AuthStateService);
+  user: any = null;
+  favoriteAlbumsDetails: any[] = [];
+  favoriteArtistsDetails: any[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+
+
+
+  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private spotifyService: SpotifyService) {}
 
   ngOnInit(): void {
-    // Obtén el parámetro 'userId' de la ruta
     this.route.paramMap.subscribe((params) => {
       this.userId = params.get('userId')!;
-      console.log('User ID:', this.userId);
-      // Aquí puedes hacer algo con el userId, como cargar los detalles del usuario
+      this.loadUserProfile(this.userId);
     });
   }
+
+  loadUserProfile(userId: string): void {
+    this.userService.getUserProfile(userId).subscribe(
+      (userProfile) => {
+        this.user = userProfile;
+        console.log(this.user);
+
+        if (this.user && this.user.favoriteAlbums) {
+          this.getFavoriteAlbumsDetails();
+        }
+
+        if(this.user && this.user.favoriteArtists){
+          this.getFavoriteArtistsDetails();
+        }
+
+        console.log(this.favoriteAlbumsDetails);
+      },
+      (error) => {
+        console.error('Error loading user profile:', error);
+      }
+    );
+  }
+
+  getFavoriteAlbumsDetails() {
+    if (this.user.favoriteAlbums.length > 0) {
+      const albumIds = this.user.favoriteAlbums;
+      this.favoriteAlbumsDetails = [];
+      albumIds.forEach((albumId: string) => {
+        this.spotifyService.getAlbumDetails(albumId).subscribe(
+          (albumDetails) => {
+            this.favoriteAlbumsDetails.push(albumDetails);
+          },
+          (error) => {
+            console.error('Error al obtener los detalles del álbum', error);
+          }
+        );
+      });
+    }
+  }
+
+  getFavoriteArtistsDetails(){
+    if(this.user.favoriteArtists.length>0){
+      const artistsId = this.user.favoriteArtists;
+      this.favoriteArtistsDetails = [];
+      artistsId.forEach((artistId: string) => {
+        this.spotifyService.getArtistDetails(artistId).subscribe(
+          (artistDetails) => {
+            this.favoriteAlbumsDetails.push(artistDetails);
+          },
+          (error) => {
+            console.error('Error al obtener los detalles del artista', error);
+          }
+        );
+      });
+    }
+  }
+
+
 
   async logOut() {
     await this.authState.logOut();

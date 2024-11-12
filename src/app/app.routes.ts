@@ -22,6 +22,7 @@ export const routes: Routes = [
     component: HomePageComponent,
     canActivate: [privateGuard()],
   },
+  
   { path: 'create-review', component: CreateReviewComponent },
 
   {
@@ -39,6 +40,7 @@ export const routes: Routes = [
   {
     path: 'auth/sign-up',
     component:SignUpComponent,
+    canActivate: [publicGuard()]
   },
 
 

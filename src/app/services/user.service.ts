@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { Firestore, collection, doc, docData } from '@angular/fire/firestore';
-import { addDoc } from 'firebase/firestore';
+import { Firestore, collection, docData, doc } from '@angular/fire/firestore';
+import { arrayRemove, arrayUnion, setDoc, updateDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 export interface User {
@@ -8,6 +8,7 @@ export interface User {
   email: string;
   password: string;
   username?: string;
+  reviews?: string[];
   favoriteAlbums?: string[];
   favoriteArtists?: string[];
   followers?: string[];
@@ -24,14 +25,40 @@ export class UserService {
   private users = collection(this.firestore, PATH);
 
   create(user: User) {
-    return addDoc(this.users, user);
+    const userDocRef = doc(this.firestore, `users/${user.id}`);
+    return setDoc(userDocRef, user);
   }
 
-  // Método para obtener el perfil del usuario a partir del ID
-  getUserProfile(userId: string): Observable<User | undefined> {
-    const userDocRef = doc(this.firestore, `${PATH}/${userId}`);
-    return docData(userDocRef, { idField: 'id' }) as Observable<
-      User | undefined
-    >;
+  getUserProfile(userId: string): Observable<any> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return docData(userDocRef);
+  }
+
+  addFavoriteAlbum(userId: string, albumId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userDocRef, {
+      favoriteAlbums: arrayUnion(albumId),
+    });
+  }
+
+  removeFavoriteAlbum(userId: string, albumId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userDocRef, {
+      favoriteAlbums: arrayRemove(albumId),
+    });
+  }
+
+  addFavoriteArtist(userId: string, artistId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userDocRef, {
+      favoriteArtists: arrayUnion(artistId),
+    });
+  }
+
+  removeFavoriteArtist(userId: string, artistId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userDocRef, {
+      favoriteArtists: arrayRemove(artistId),
+    });
   }
 }

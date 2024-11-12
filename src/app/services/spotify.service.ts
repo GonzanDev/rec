@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, from } from 'rxjs';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
 import { map, switchMap, catchError, filter, take } from 'rxjs/operators';
 
 @Injectable({
@@ -108,9 +108,17 @@ export class SpotifyService {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
-        return this.http
-          .get<any>(`${this.API_URL}/albums/${albumId}`, { headers })
-          .pipe(map((data) => data));
+
+
+        return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers }).pipe(
+          map((data) => {
+            return data;
+          }),
+          catchError((error) => {
+            console.error('Error al obtener detalles del álbum:', error);
+            return of(null);
+          })
+        );
       })
     );
   }

@@ -1,2 +1,26 @@
-<p>profile works!</p>
+<div *ngIf="user">
+  <h2>{{ user.username }}</h2>
+  <p>Email: {{ user.email }}</p>
+  <h3>Favoritos</h3>
+
+  <h4>Álbumes Favoritos</h4>
+  <ul>
+    <li *ngFor="let album of favoriteAlbumsDetails" class="album">
+      <img [src]="album.images[2]?.url" alt="{{ album.name }}" class="album-image" />
+      <div>
+        <a [routerLink]="['/artist', album.artists[0]?.id]">
+          {{ album.artists[0].name }}
+        </a>
+      </div>
+    </li>
+  </ul>
+  <ul>
+  <h4>Artistas Favoritos</h4>
+    <li *ngFor="let artistId of user.favoriteArtists">
+      {{ artistId }}
+    </li>
+  </ul>
+<div *ngIf="!user">
+  <p>Cargando perfil...</p>
+</div>
 <button (click)="logOut()">Cerrar sesion</button>

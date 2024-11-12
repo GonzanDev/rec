@@ -22,6 +22,8 @@ export class AuthService {
         password: user.password, // Si necesitas almacenar la contraseña en Firestore, aunque no es recomendable.
         username: user.username,
         favoriteAlbums: user.favoriteAlbums || [],
+        favoriteArtists:user.favoriteArtists || [],
+        reviews: user.reviews || [],
         followers: user.followers || [],
         following: user.following || [],
       });

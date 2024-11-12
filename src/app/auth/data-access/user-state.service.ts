@@ -7,7 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 export class UserStateService {
   private userIdSubject = new BehaviorSubject<string | null>(null); // Inicialmente null
 
-  // Recupera la ID del usuario (observable)
   get userId$() {
     return this.userIdSubject.asObservable();
   }

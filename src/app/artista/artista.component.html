@@ -18,6 +18,9 @@
         {{ formatGenres(artist.genres) }}
       </p>
     </div>
+    <div class="botones">
+      <button (click)="addToFavorites()" >🤍</button>
+    </div>
   </div>
   <app-album-list [artistId]="artist.id"></app-album-list>
 </div>
