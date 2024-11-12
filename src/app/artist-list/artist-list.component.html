@@ -1,0 +1,18 @@
+<div class="carousel-container">
+  <button class="carousel-button left" (click)="scrollLeft()">&#9664;</button>
+
+  <div #carousel class="carousel">
+    <div
+      *ngFor="let artist of artists"
+      class="artist"
+      (click)="viewArtistDetails(artist.id)"
+    >
+      <img [src]="artist.images[2]?.url" alt="{{ artist.name }}" />
+      <div class="album-info">
+        <h3>{{ artist.name }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <button class="carousel-button right" (click)="scrollRight()">&#9654;</button>
+</div>

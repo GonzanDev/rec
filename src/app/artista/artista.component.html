@@ -14,13 +14,14 @@
         {{ formatFollowers(artist.followers.total) }}
       </p>
       <p>
-        Generos:
+        Géneros:
         {{ formatGenres(artist.genres) }}
       </p>
     </div>
     <div class="botones">
-      <button (click)="addToFavorites()" >🤍</button>
+      <button (click)="addToFavorites()">🤍</button>
     </div>
   </div>
+  <!-- Pasa el artistId al AlbumListComponent -->
   <app-album-list [artistId]="artist.id"></app-album-list>
 </div>

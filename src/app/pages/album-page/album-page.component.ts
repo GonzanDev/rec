@@ -11,5 +11,5 @@ import { SearchBarComponent } from '../../search-bar/search-bar.component';
   imports: [CommonModule, AlbumComponent, SearchBarComponent],
 })
 export class AlbumPageComponent {
-  // Add your constructor, methods, or properties here
+
 }

@@ -10,7 +10,7 @@ import { UserService } from '../services/user.service';
 @Component({
   selector: 'app-artista',
   standalone: true,
-  imports: [NgIf, NgFor, AlbumListComponent],
+  imports: [NgIf, AlbumListComponent],
   templateUrl: './artista.component.html',
   styleUrls: ['./artista.component.css'],
 })
@@ -77,8 +77,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
 
   updateAlbumList() {
     if (this.albumListComponent) {
-      this.albumListComponent.artistId = this.artist.id;
-      this.albumListComponent.loadAlbums();
+      this.albumListComponent;
     }
   }
   formatGenres(genres: string[]): string {

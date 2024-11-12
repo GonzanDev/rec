@@ -5,12 +5,14 @@ import { Router} from '@angular/router';
 import { UserService } from '../services/user.service';
 import { NgFor, NgIf } from '@angular/common';
 import { SpotifyService } from '../services/spotify.service';
+import { AlbumListComponent } from '../album-list/album-list.component';
+import { ArtistListComponent } from '../artist-list/artist-list.component';
 
 
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [NgIf, NgFor, RouterLink, ],
+  imports: [NgIf, AlbumListComponent, ArtistListComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -27,6 +29,7 @@ export class ProfileComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private spotifyService: SpotifyService) {}
 
   ngOnInit(): void {
+
     this.route.paramMap.subscribe((params) => {
       this.userId = params.get('userId')!;
       this.loadUserProfile(this.userId);

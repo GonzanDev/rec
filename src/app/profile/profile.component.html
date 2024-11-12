@@ -4,27 +4,9 @@
   <h3>Favoritos</h3>
 
   <h4>Álbumes Favoritos</h4>
-  <ul>
-    <li *ngFor="let album of favoriteAlbumsDetails" class="album">
-      <img [src]="album.images[2]?.url" alt="{{ album.name }}" class="album-image" />
-      <div>
-        <a [routerLink]="['/artist', album.artists[0]?.id]">
-          {{ album.artists[0].name }}
-        </a>
-      </div>
-    </li>
-  </ul>
-  <ul>
+  <app-album-list [albums]="favoriteAlbumsDetails"></app-album-list>
   <h4>Artistas Favoritos</h4>
-    <li *ngFor="let artist of favoriteArtistsDetails">
-      <img [src]="artist.images[2]?.url" alt="{{ artist.name }}" class="artist-image" />
-      <div>
-        <a [routerLink]="['/artist', artist.id]">
-          {{ artist.name }}
-        </a>
-      </div>
-    </li>
-  </ul>
+  <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
 <div *ngIf="!user">
   <p>Cargando perfil...</p>
 </div>
