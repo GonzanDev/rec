@@ -16,8 +16,13 @@
   </ul>
   <ul>
   <h4>Artistas Favoritos</h4>
-    <li *ngFor="let artistId of user.favoriteArtists">
-      {{ artistId }}
+    <li *ngFor="let artist of favoriteArtistsDetails">
+      <img [src]="artist.images[2]?.url" alt="{{ artist.name }}" class="artist-image" />
+      <div>
+        <a [routerLink]="['/artist', artist.id]">
+          {{ artist.name }}
+        </a>
+      </div>
     </li>
   </ul>
 <div *ngIf="!user">

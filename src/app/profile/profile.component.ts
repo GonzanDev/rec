@@ -10,7 +10,7 @@ import { SpotifyService } from '../services/spotify.service';
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [NgIf, NgFor, RouterLink],
+  imports: [NgIf, NgFor, RouterLink, ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -79,7 +79,7 @@ export class ProfileComponent implements OnInit {
       artistsId.forEach((artistId: string) => {
         this.spotifyService.getArtistDetails(artistId).subscribe(
           (artistDetails) => {
-            this.favoriteAlbumsDetails.push(artistDetails);
+            this.favoriteArtistsDetails.push(artistDetails);
           },
           (error) => {
             console.error('Error al obtener los detalles del artista', error);

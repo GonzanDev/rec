@@ -58,14 +58,14 @@ export class ArtistaComponent implements OnInit, OnDestroy {
     if (this.userId && this.artist?.id) {
       this.userService.addFavoriteArtist(this.userId, this.artist.id).then(
         () => {
-          console.log('Álbum agregado a favoritos');
+          console.log('Artista agregado a favoritos');
         },
         (error) => {
           console.error('Error al agregar álbum a favoritos:', error);
         }
       );
     } else {
-      console.error('No se encontró userId o albumId');
+      console.error('No se encontró userId o artistId');
     }
   }
 
