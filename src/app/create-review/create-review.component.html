@@ -2,10 +2,10 @@
   <div class="review-container">
     <div class="texto">
       <h3>Escribe una reseña para</h3>
-      <h3 class="nombre">{{ albumName }}</h3>
+      <h3 class="nombre">{{ selectedAlbum?.name }}</h3>
     </div>
     <textarea
-      [(ngModel)]="reviewText"
+      [(ngModel)]="comment"
       class="review-text"
       placeholder="Escribe tu reseña..."
     ></textarea>
@@ -27,4 +27,3 @@
     </div>
   </div>
 </div>
-

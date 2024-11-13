@@ -20,19 +20,18 @@ export class AuthStateService {
   logOut() {
     return signOut(this._auth).then(() => {
       console.log('Usuario cerrado sesión');
-      localStorage.removeItem('userId');  // Elimina la ID cuando el usuario cierre sesión
+      localStorage.removeItem('userId');
     });
   }
 
-  // Almacenar la ID en localStorage cuando el usuario inicie sesión
   storeUserId() {
     const user = this._auth.currentUser;
     if (user) {
-      localStorage.setItem('userId', user.uid);  // Guarda la ID en localStorage
+      localStorage.setItem('userId', user.uid);
     }
   }
 
-  // Recuperar la ID desde localStorage
+
   getUserIdFromStorage(): string | null {
     return localStorage.getItem('userId');
   }

@@ -38,7 +38,7 @@
   <div *ngIf="showReviewComponent" class="overlay">
     <app-create-review
       [selectedAlbum]="album"
-      [albumName]="album.name"
+
       (close)="closeReviewComponent()"
       (reviewCreated)="onReviewCreated($event)"
     ></app-create-review>

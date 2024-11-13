@@ -2,6 +2,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SpotifyService } from '../services/spotify.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ReviewService, Review } from '../services/review.service';
+import { Auth } from '@angular/fire/auth'; // Importa Auth de Firebase
+import { Timestamp } from 'firebase/firestore';
 
 @Component({
   selector: 'app-create-review',
@@ -13,34 +16,53 @@ import { FormsModule } from '@angular/forms';
 export class CreateReviewComponent {
   albums: any[] = [];
   @Input() selectedAlbum: any;
-  @Input() albumName: string = '';
   @Output() close = new EventEmitter<void>();
-  @Output() reviewCreated = new EventEmitter<any>(); // Emitir la reseña creada
-  reviewText: string = '';
+  timestamp = Timestamp.now;
+  comment: string = '';
   rating: number = 0;
+  userId: string = ''; // Variable local para almacenar userId
 
-  constructor(private spotifyService: SpotifyService) {}
+  constructor(
+    private spotifyService: SpotifyService,
+    private reviewService: ReviewService,
+    private auth: Auth // Inyecta Auth para obtener userId
+  ) {}
 
-  // Método para cerrar el componente de reseña
+  async ngOnInit() {
+    const currentUser = this.auth.currentUser;
+    if (currentUser) {
+      this.userId = currentUser.uid; // Asigna el userId del usuario autenticado
+    }
+  }
+
   closeReview() {
     this.close.emit();
   }
 
-  // Método para enviar la reseña
-  submitReview() {
-    const newReview = {
-      albumName: this.albumName,
-      artistName: this.selectedAlbum.artists[0].name,
-      reviewText: this.reviewText,
+  async submitReview() {
+    if (!this.userId) {
+      console.error('Error: no se encontró el ID del usuario');
+      return;
+    }
+
+    const newReview: Review = {
+      albumId: this.selectedAlbum.id,
+      userId: this.userId,
+      comment: this.comment,
       rating: this.rating,
+      timestamp: this.timestamp(),
     };
-    this.reviewCreated.emit(newReview); // Emitir la reseña
-    this.reviewText = '';
-    this.rating = 0;
-    this.closeReview();
+
+    try {
+      await this.reviewService.create(newReview);
+      this.comment = '';
+      this.rating = 0;
+      this.closeReview();
+    } catch (error) {
+      console.error('Error al crear la reseña:', error);
+    }
   }
 
-  // Método para establecer la calificación
   setRating(star: number) {
     this.rating = star;
   }
