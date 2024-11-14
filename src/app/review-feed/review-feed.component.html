@@ -2,7 +2,9 @@
   <div *ngFor="let review of reviews; let i = index" class="review">
     <div *ngIf="getUserInfo(i) && getAlbumInfo(i)">
       <div class="review-header">
-        <h4>{{ getUserInfo(i)?.username }}</h4>
+        <h4>
+          <a [routerLink]="['/users', getUserInfo(i)?.id]">{{ getUserInfo(i)?.username }}</a>
+        </h4>
         <span>{{ review.timestamp.toDate() | date:'short' }}</span>
       </div>
       <p>{{ review.comment }}</p>
@@ -28,6 +30,18 @@
           <span *ngIf="!isLikedByUser(review)">🤍</span>
         </button>
         <span>{{ review.likes?.length || 0 }} Likes</span>
+      </div>
+      <div class="comments-section">
+        <h5>Comentarios</h5>
+        <div *ngFor="let comment of review.comments">
+          <p><strong>{{ getUserName(comment.userId) }}:</strong> {{ comment.content }}</p>
+        </div>
+
+        <!-- Formulario para agregar un nuevo comentario -->
+        <div *ngIf="currentUser">
+          <input [(ngModel)]="newCommentContent[review.id!]" placeholder="Agregar un comentario..." />
+          <button (click)="addCommentToReview(review.id!, newCommentContent[review.id!])" [disabled]="!review.id">Comentar</button>
+        </div>
       </div>
     </div>
   </div>

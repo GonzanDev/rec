@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, docData, doc, setDoc, updateDoc, arrayUnion, arrayRemove, collectionData } from '@angular/fire/firestore';
-import { addDoc, deleteDoc, getDoc, orderBy, query, Timestamp, where } from 'firebase/firestore';
+import { addDoc, deleteDoc, getDocs, orderBy, query, Timestamp, where } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 export interface Review {
@@ -11,6 +11,7 @@ export interface Review {
   comment: string;
   timestamp: Timestamp;
   likes?: string[];
+  comments?: { userId: string; content: string; timestamp: Date }[];  // Nuevo campo para los comentarios
 }
 
 const PATH = 'reviews'; // Ruta de la colección de reseñas
@@ -24,7 +25,16 @@ export class ReviewService {
 
   // Crear una nueva reseña
   create(review: Review) {
-    return addDoc(this.reviews, review); // Usa addDoc para dejar que Firestore genere el ID
+    return addDoc(this.reviews, review);
+  }
+
+  getReviewsByUser(userId: string) {
+    const reviewsCollection = collection(this.firestore, 'reviews');
+    const q = query(reviewsCollection, where('userId', '==', userId));
+    return getDocs(q).then(snapshot => {
+      const reviews = snapshot.docs.map(doc => doc.data());
+      return reviews;
+    });
   }
 
   getReviewsByAlbum(albumId: string): Observable<Review[]> {
@@ -80,30 +90,31 @@ export class ReviewService {
     });
   }
 
-  async addLike(reviewId: string, userId: string) {
+  addLike(reviewId: string, userId: string) {
     const reviewDocRef = doc(this.firestore, `reviews/${reviewId}`);
-    const reviewDoc = await getDoc(reviewDocRef);
-
-    if (reviewDoc.exists()) {
-      return updateDoc(reviewDocRef, {
-        likes: arrayUnion(userId)  // Agregar el ID del usuario a la lista de "likes"
-      });
-    } else {
-      throw new Error('La reseña no existe.');
-    }
+    return updateDoc(reviewDocRef, {
+      likes: arrayUnion(userId)
+    });
   }
 
-  // Quitar "like" de una reseña
-  async removeLike(reviewId: string, userId: string) {
+  removeLike(reviewId: string, userId: string) {
     const reviewDocRef = doc(this.firestore, `reviews/${reviewId}`);
-    const reviewDoc = await getDoc(reviewDocRef);
+    return updateDoc(reviewDocRef, {
+      likes: arrayRemove(userId)
+    });
+  }
 
-    if (reviewDoc.exists()) {
-      return updateDoc(reviewDocRef, {
-        likes: arrayRemove(userId)  // Eliminar el ID del usuario de la lista de "likes"
-      });
-    } else {
-      throw new Error('La reseña no existe.');
-    }
+  // Nuevo método para agregar un comentario a una reseña
+  addComment(reviewId: string, userId: string, content: string) {
+    const comment = {
+      userId,
+      content,
+      timestamp: new Date(),
+    };
+
+    const reviewDocRef = doc(this.firestore, `reviews/${reviewId}`);
+    return updateDoc(reviewDocRef, {
+      comments: arrayUnion(comment)  // Agregar el comentario al array de "comments"
+    });
   }
 }

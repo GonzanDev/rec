@@ -1,23 +1,28 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ReviewService, Review } from '../services/review.service';
 import { CommonModule } from '@angular/common';
-import { catchError, combineLatest, Observable } from 'rxjs';
+import { catchError, combineLatest, from, Observable } from 'rxjs';
 import { SpotifyService } from '../services/spotify.service';
 import { AuthStateService } from '../services/localstorage.service';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-review-feed',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './review-feed.component.html',
   styleUrls: ['./review-feed.component.css']
 })
 export class ReviewFeedComponent implements OnInit {
+  @Input() userId: string = '';  // userId puede estar vacío para la página de inicio
   reviews: Review[] = [];
   usersInfo: any[] = [];
   albumsInfo: any[] = [];
   isLoading: boolean = true;
   currentUser: any = null;
+  newCommentContent: { [key: string]: string } = {};
+
 
   private reviewService = inject(ReviewService);
   private spotifyService = inject(SpotifyService);
@@ -28,44 +33,58 @@ export class ReviewFeedComponent implements OnInit {
       if (authState) {
         this.currentUser = authState;
 
-        // Obtener todas las reseñas
-        this.reviewService.getAllReviews().pipe(
-          catchError(error => {
-            console.error('Error al obtener las reseñas:', error);
-            this.isLoading = false;
-            return [];
-          })
-        ).subscribe(reviews => {
-          this.reviews = reviews;
-
-          // Imprimir las reseñas después de haber sido asignadas
-          console.log(this.reviews[1]);  // Ahora esto debería mostrar la segunda reseña correctamente.
-
-          // Obtener datos de usuarios y álbumes
-          const userRequests: Observable<any>[] = [];
-          const albumRequests: Observable<any>[] = [];
-          reviews.forEach(review => {
-            userRequests.push(this.reviewService.getUserById(review.userId));
-            albumRequests.push(this.spotifyService.getAlbumDetails(review.albumId));
-          });
-
-          combineLatest([...userRequests, ...albumRequests]).pipe(
+        if (this.userId) {
+          // Si hay un userId, obtenemos las reseñas del usuario específico
+          from(this.reviewService.getReviewsByUser(this.userId)).pipe(
             catchError(error => {
-              console.error('Error al obtener los detalles:', error);
+              console.error('Error al obtener las reseñas:', error);
+              this.isLoading = false;
               return [];
             })
-          ).subscribe((responses) => {
-            const users = responses.slice(0, reviews.length);
-            const albums = responses.slice(reviews.length);
-            this.usersInfo = users;
-            this.albumsInfo = albums;
-            this.isLoading = false;
+          ).subscribe(reviews => {
+            this.reviews = reviews.map(review => review as Review);
+            this.loadUserAndAlbumDetails(this.reviews);
           });
-        });
+        } else {
+          // Si no hay userId, obtenemos todas las reseñas y las ordenamos por timestamp
+          this.reviewService.getAllReviews().pipe(
+            catchError(error => {
+              console.error('Error al obtener las reseñas:', error);
+              this.isLoading = false;
+              return [];
+            })
+          ).subscribe(reviews => {
+            this.reviews = reviews.sort((a, b) => (b.timestamp as unknown as number) - (a.timestamp as unknown as number));
+            this.loadUserAndAlbumDetails(reviews);
+          });
+        }
       } else {
         console.error('Usuario no autenticado');
         this.isLoading = false;
       }
+    });
+  }
+
+  // Método para cargar la información de los usuarios y álbumes
+  private loadUserAndAlbumDetails(reviews: Review[]) {
+    const userRequests: Observable<any>[] = [];
+    const albumRequests: Observable<any>[] = [];
+    reviews.forEach(review => {
+      userRequests.push(this.reviewService.getUserById(review.userId));
+      albumRequests.push(this.spotifyService.getAlbumDetails(review.albumId));
+    });
+
+    combineLatest([...userRequests, ...albumRequests]).pipe(
+      catchError(error => {
+        console.error('Error al obtener los detalles:', error);
+        return [];
+      })
+    ).subscribe((responses) => {
+      const users = responses.slice(0, reviews.length);
+      const albums = responses.slice(reviews.length);
+      this.usersInfo = users;
+      this.albumsInfo = albums;
+      this.isLoading = false;
     });
   }
 
@@ -112,5 +131,20 @@ export class ReviewFeedComponent implements OnInit {
           }
         });
     }
+  }
+
+  getUserName(userId: string): string {
+    const user = this.usersInfo.find(u => u.id === userId);
+    return user?.username || 'Unknown User';
+  }
+
+  addCommentToReview(reviewId: string, comment: string) {
+    if (!comment?.trim()) return;
+
+    this.reviewService.addComment(reviewId, this.currentUser.uid, comment)
+      .then(() => {
+        this.newCommentContent[reviewId] = '';  // Use the existing newCommentContent object instead
+      })
+      .catch(error => console.error('Error al agregar comentario:', error));
   }
 }

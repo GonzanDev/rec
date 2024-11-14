@@ -6,11 +6,12 @@ import { SpotifyService } from '../services/spotify.service';
 import { NgFor, NgIf } from '@angular/common';
 import { AlbumListComponent } from '../album-list/album-list.component';
 import { ArtistListComponent } from '../artist-list/artist-list.component';
+import { ReviewFeedComponent } from '../review-feed/review-feed.component';
 
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [NgIf, AlbumListComponent, ArtistListComponent],
+  imports: [NgIf, AlbumListComponent, ArtistListComponent, ReviewFeedComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
