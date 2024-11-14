@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ReviewService } from '../services/review.service';
-import { Review } from '../services/review.service';
-import { CommonModule } from '@angular/common'; // Asegúrate de importar CommonModule para usar directivas como *ngFor
+import { ReviewService, Review } from '../services/review.service';
+import { CommonModule } from '@angular/common';
 import { catchError, combineLatest, Observable } from 'rxjs';
 import { SpotifyService } from '../services/spotify.service';
 import { AuthStateService } from '../services/localstorage.service';
@@ -9,7 +8,7 @@ import { AuthStateService } from '../services/localstorage.service';
 @Component({
   selector: 'app-review-feed',
   standalone: true,
-  imports: [CommonModule], // Importar CommonModule para usar *ngFor y otras directivas
+  imports: [CommonModule],
   templateUrl: './review-feed.component.html',
   styleUrls: ['./review-feed.component.css']
 })
@@ -17,18 +16,16 @@ export class ReviewFeedComponent implements OnInit {
   reviews: Review[] = [];
   usersInfo: any[] = [];
   albumsInfo: any[] = [];
+  isLoading: boolean = true;
+  currentUser: any = null;
 
   private reviewService = inject(ReviewService);
   private spotifyService = inject(SpotifyService);
   private authState = inject(AuthStateService);
-  isLoading: boolean = true;
-  currentUser: any = null;
 
   ngOnInit(): void {
-    // Suscripción al estado de autenticación
     this.authState.authState$.subscribe(authState => {
       if (authState) {
-        // Si el usuario está autenticado
         this.currentUser = authState;
 
         // Obtener todas las reseñas
@@ -41,16 +38,17 @@ export class ReviewFeedComponent implements OnInit {
         ).subscribe(reviews => {
           this.reviews = reviews;
 
-          // Usamos combineLatest para obtener los datos del usuario y del álbum
+          // Imprimir las reseñas después de haber sido asignadas
+          console.log(this.reviews[1]);  // Ahora esto debería mostrar la segunda reseña correctamente.
+
+          // Obtener datos de usuarios y álbumes
           const userRequests: Observable<any>[] = [];
           const albumRequests: Observable<any>[] = [];
-
           reviews.forEach(review => {
-            userRequests.push(this.reviewService.getUserById(review.userId));  // Obtener info del usuario
-            albumRequests.push(this.spotifyService.getAlbumDetails(review.albumId));  // Obtener info del álbum
+            userRequests.push(this.reviewService.getUserById(review.userId));
+            albumRequests.push(this.spotifyService.getAlbumDetails(review.albumId));
           });
 
-          // Combinar las respuestas de los usuarios y los álbumes
           combineLatest([...userRequests, ...albumRequests]).pipe(
             catchError(error => {
               console.error('Error al obtener los detalles:', error);
@@ -59,28 +57,60 @@ export class ReviewFeedComponent implements OnInit {
           ).subscribe((responses) => {
             const users = responses.slice(0, reviews.length);
             const albums = responses.slice(reviews.length);
-
             this.usersInfo = users;
             this.albumsInfo = albums;
-            this.isLoading = false;  // Fin de la carga
+            this.isLoading = false;
           });
         });
       } else {
-        // Si el usuario no está autenticado
         console.error('Usuario no autenticado');
-        this.isLoading = false;  // Fin de la carga, no se muestran reseñas
+        this.isLoading = false;
       }
     });
   }
 
-
-  // Método para obtener la información de un álbum por su índice
+  // Obtener información del álbum por índice
   getAlbumInfo(index: number): any {
     return this.albumsInfo[index];
   }
 
-  // Método para obtener la información de un usuario por su índice
+  // Obtener información del usuario por índice
   getUserInfo(index: number): any {
     return this.usersInfo[index];
+  }
+
+  // Verificar si la reseña tiene like del usuario actual
+  isLikedByUser(review: Review): boolean {
+    return review.likes?.includes(this.currentUser?.uid) || false;
+  }
+
+  toggleLike(review: Review) {
+    if (!review.id || !this.currentUser?.uid) return;
+
+    if (review.likes?.includes(this.currentUser.uid)) {
+      this.reviewService.removeLike(review.id, this.currentUser.uid)
+        .then(() => {
+          console.log('Like removed successfully');
+        })
+        .catch(error => {
+          if (error.code === 'permission-denied') {
+            console.error('No tienes permisos para realizar esta acción');
+          } else {
+            console.error('Error al quitar like:', error);
+          }
+        });
+    } else {
+      this.reviewService.addLike(review.id, this.currentUser.uid)
+        .then(() => {
+          console.log('Like added successfully');
+        })
+        .catch(error => {
+          if (error.code === 'permission-denied') {
+            console.error('No tienes permisos para realizar esta acción');
+          } else {
+            console.error('Error al dar like:', error);
+          }
+        });
+    }
   }
 }

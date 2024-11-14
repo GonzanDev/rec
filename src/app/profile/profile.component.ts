@@ -1,13 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { AuthStateService } from '../auth/data-access/auth-state.service';
-import { Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../services/user.service';
-import { NgFor, NgIf } from '@angular/common';
+import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { SpotifyService } from '../services/spotify.service';
+import { NgFor, NgIf } from '@angular/common';
 import { AlbumListComponent } from '../album-list/album-list.component';
 import { ArtistListComponent } from '../artist-list/artist-list.component';
-
 
 @Component({
   standalone: true,
@@ -18,17 +16,27 @@ import { ArtistListComponent } from '../artist-list/artist-list.component';
 })
 export class ProfileComponent implements OnInit {
   userId: string = '';
+  currentUserId: string = ''; // El ID del usuario actualmente autenticado
   private authState = inject(AuthStateService);
   user: any = null;
   favoriteAlbumsDetails: any[] = [];
   favoriteArtistsDetails: any[] = [];
+  isFollowing: boolean = false; // Estado para saber si el usuario sigue al perfil
 
-
-
-
-  constructor(private route: ActivatedRoute, private router: Router, private userService: UserService, private spotifyService: SpotifyService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userService: UserService,
+    private spotifyService: SpotifyService
+  ) {}
 
   ngOnInit(): void {
+    // Obtener el ID del usuario autenticado
+    this.authState.authState$.subscribe(authState => {
+      if (authState) {
+        this.currentUserId = authState.uid;
+      }
+    });
 
     this.route.paramMap.subscribe((params) => {
       this.userId = params.get('userId')!;
@@ -46,11 +54,11 @@ export class ProfileComponent implements OnInit {
           this.getFavoriteAlbumsDetails();
         }
 
-        if(this.user && this.user.favoriteArtists){
+        if (this.user && this.user.favoriteArtists) {
           this.getFavoriteArtistsDetails();
         }
 
-        console.log(this.favoriteAlbumsDetails);
+        this.checkIfFollowing(); // Verificar si el usuario sigue a este perfil
       },
       (error) => {
         console.error('Error loading user profile:', error);
@@ -75,8 +83,8 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  getFavoriteArtistsDetails(){
-    if(this.user.favoriteArtists.length>0){
+  getFavoriteArtistsDetails() {
+    if (this.user.favoriteArtists.length > 0) {
       const artistsId = this.user.favoriteArtists;
       this.favoriteArtistsDetails = [];
       artistsId.forEach((artistId: string) => {
@@ -92,7 +100,33 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  checkIfFollowing() {
+    if (this.user && this.currentUserId) {
+      this.userService.isFollowing(this.currentUserId, this.userId).subscribe((isFollowing) => {
+        this.isFollowing = isFollowing;
+      });
+    }
+  }
 
+  followUser() {
+    if (this.currentUserId && this.userId) {
+      this.userService.addFollower(this.userId, this.currentUserId).then(() => {
+        this.isFollowing = true; // Actualizar estado a "siguiendo"
+      }).catch((error) => {
+        console.error('Error al seguir al usuario:', error);
+      });
+    }
+  }
+
+  unfollowUser() {
+    if (this.currentUserId && this.userId) {
+      this.userService.removeFollower(this.userId, this.currentUserId).then(() => {
+        this.isFollowing = false; // Actualizar estado a "no siguiendo"
+      }).catch((error) => {
+        console.error('Error al dejar de seguir al usuario:', error);
+      });
+    }
+  }
 
   async logOut() {
     await this.authState.logOut();

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, docData, doc } from '@angular/fire/firestore';
-import { arrayRemove, arrayUnion, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 export interface User {
@@ -59,6 +59,52 @@ export class UserService {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return updateDoc(userDocRef, {
       favoriteArtists: arrayRemove(artistId),
+    });
+  }
+
+  addFollower(userId: string, followerId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const followerDocRef = doc(this.firestore, `users/${followerId}`);
+
+    return updateDoc(userDocRef, {
+      followers: arrayUnion(followerId),  // Agregar el 'followerId' a la lista de seguidores del usuario
+    }).then(() => {
+      return updateDoc(followerDocRef, {
+        following: arrayUnion(userId),  // Agregar el 'userId' a la lista de 'following' del seguidor
+      });
+    });
+  }
+
+  removeFollower(userId: string, followerId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const followerDocRef = doc(this.firestore, `users/${followerId}`);
+
+    return updateDoc(userDocRef, {
+      followers: arrayRemove(followerId),  // Eliminar el 'followerId' de la lista de seguidores del usuario
+    }).then(() => {
+      return updateDoc(followerDocRef, {
+        following: arrayRemove(userId),  // Eliminar el 'userId' de la lista de 'following' del seguidor
+      });
+    });
+  }
+
+  isFollowing(currentUserId: string, userId: string): Observable<boolean> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return new Observable<boolean>((observer) => {
+      getDoc(userDocRef).then((docSnapshot) => {
+        if (docSnapshot.exists()) {
+          const userData = docSnapshot.data();
+          const followers = userData?.['followers'] || [];
+          observer.next(followers.includes(currentUserId)); // Si el currentUserId está en followers, devuelve true
+        } else {
+          observer.next(false);
+        }
+        observer.complete();
+      }).catch((error) => {
+        console.error('Error al verificar el seguimiento:', error);
+        observer.next(false);
+        observer.complete();
+      });
     });
   }
 }

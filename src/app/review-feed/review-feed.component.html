@@ -6,16 +6,28 @@
         <span>{{ review.timestamp.toDate() | date:'short' }}</span>
       </div>
       <p>{{ review.comment }}</p>
+
+      <!-- Calificación en estrellas -->
       <div class="rating">
-        <!-- Generar siempre 5 estrellas, con las primeras 'review.rating' en amarillo -->
         <span *ngFor="let star of [0,1,2,3,4]; let j = index"
               [ngClass]="{'filled': j < review.rating}">
           &#9733;
         </span>
       </div>
+
+      <!-- Información del álbum -->
       <div class="album-info">
         <img [src]="getAlbumInfo(i)?.images[2]?.url" alt="Album cover" width="50" height="50">
         <span>{{ getAlbumInfo(i)?.name }}</span>
+      </div>
+
+      <!-- Sección de likes -->
+      <div class="like-section">
+        <button (click)="toggleLike(review)">
+          <span *ngIf="isLikedByUser(review)">❤️</span>
+          <span *ngIf="!isLikedByUser(review)">🤍</span>
+        </button>
+        <span>{{ review.likes?.length || 0 }} Likes</span>
       </div>
     </div>
   </div>
