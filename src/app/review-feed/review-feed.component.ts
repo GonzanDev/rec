@@ -22,7 +22,7 @@ export class ReviewFeedComponent implements OnInit {
   isLoading: boolean = true;
   currentUser: any = null;
   newCommentContent: { [key: string]: string } = {};
-
+  @Input() individualTextFields: boolean = false;
 
   private reviewService = inject(ReviewService);
   private spotifyService = inject(SpotifyService);

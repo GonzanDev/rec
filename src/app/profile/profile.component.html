@@ -11,7 +11,7 @@
   <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
 
   <h3>Reseñas</h3>
-  <app-review-feed [userId]="user.id"></app-review-feed> <!-- Pasa el userId aquí -->
+  <app-review-feed [userId]="user.id"></app-review-feed>
 
   <button *ngIf="!isFollowing && user.id !== currentUserId" (click)="followUser()">Seguir</button>
   <button *ngIf="isFollowing && user.id !== currentUserId" (click)="unfollowUser()">Dejar de seguir</button>
