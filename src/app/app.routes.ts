@@ -22,6 +22,8 @@ export const routes: Routes = [
     component: HomePageComponent,
     canActivate: [privateGuard()],
   },
+
+    
   
   { path: 'create-review', component: CreateReviewComponent },
 
@@ -60,20 +62,9 @@ export const routes: Routes = [
     component: SongPageComponent,
     canActivate: [privateGuard()],
   },
-
- /* // Ruta para manejar el callback de autenticación de Spotify
   {
-    path: 'callback',
-    component: CallbackComponent,
-  },
+    path: '**',
+    redirectTo: '/home'
+  }
 
-  // Ruta de inicio de sesión
-  { path: 'login', component: LoginComponent },
-
-  // Redirección de raíz a la página de inicio de sesión
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-
-  // Redirección de rutas desconocidas a la página de inicio de sesión
-  { path: '**', redirectTo: '/login' },
-   */
 ];
