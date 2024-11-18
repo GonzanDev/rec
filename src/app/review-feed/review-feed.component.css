@@ -171,4 +171,8 @@
 .comments-section button:hover:not(:disabled) {
   background-color: #1ed760;
 }
+.album-info a {
+  color: #4CAF50;
+  text-decoration: none;
+}
 

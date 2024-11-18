@@ -3,7 +3,7 @@ import { ReviewService, Review } from '../services/review.service';
 import { CommonModule } from '@angular/common';
 import { catchError, combineLatest, from, Observable } from 'rxjs';
 import { SpotifyService } from '../services/spotify.service';
-import { AuthStateService } from '../services/localstorage.service';
+import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 

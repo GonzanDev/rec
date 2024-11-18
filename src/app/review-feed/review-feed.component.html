@@ -20,8 +20,8 @@
       <!-- Información del álbum -->
       <div class="album-info">
         <img [src]="getAlbumInfo(i)?.images[2]?.url" alt="Album cover" width="50" height="50">
-        <span>{{ getAlbumInfo(i)?.name }}</span>
-      </div>
+
+<a [routerLink]="['/album', getAlbumInfo(i)?.id]"  >{{ getAlbumInfo(i)?.name }}</a>      </div>
 
       <!-- Sección de likes -->
       <div class="like-section">
