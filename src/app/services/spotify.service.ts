@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { map, switchMap, catchError, filter, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, switchMap, catchError, filter, take, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -12,17 +12,18 @@ export class SpotifyService {
   private clientSecret = `b737690ab26b4fc7b1b41fcdd5512e1a`;
 
   private tokenSubject = new BehaviorSubject<string | null>(null);
-  public token$ = this.tokenSubject
-    .asObservable()
-    .pipe(filter((token): token is string => !!token));
+  private token$ = this.tokenSubject.asObservable().pipe(
+    filter((token): token is string => !!token),
+    take(1) // Always take 1 and complete
+  );
 
   constructor(private http: HttpClient) {
-    this.getAccessToken().subscribe();
+    this.fetchToken().subscribe();
   }
 
-  private getAccessToken(): Observable<string> {
+  private fetchToken(): Observable<string> {
     if (this.tokenSubject.value) {
-      return this.token$;
+      return of(this.tokenSubject.value);
     }
 
     const headers = new HttpHeaders({
@@ -47,8 +48,18 @@ export class SpotifyService {
       );
   }
 
+  private getToken(): Observable<string> {
+    if (this.tokenSubject.value) {
+      return of(this.tokenSubject.value);
+    }
+    return this.tokenSubject.asObservable().pipe(
+      filter((token): token is string => !!token),
+      take(1)
+    );
+  }
+
   search(query: string): Observable<any> {
-    return this.getAccessToken().pipe(
+    return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
@@ -58,8 +69,8 @@ export class SpotifyService {
           headers,
           params: {
             q: query,
-            type: 'track,album,artist', // Incluir 'album' y 'artist' en la búsqueda
-            limit: '5', // Limitar los resultados si lo deseas (opcional)
+            type: 'track,album,artist',
+            limit: '5',
           },
         });
       })
@@ -67,8 +78,7 @@ export class SpotifyService {
   }
 
   getTopAlbums(): Observable<any[]> {
-    return this.token$.pipe(
-      take(1),
+    return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
@@ -81,8 +91,7 @@ export class SpotifyService {
   }
 
   getAlbumsByArtist(artistId: string): Observable<any[]> {
-    return this.token$.pipe(
-      take(1),
+    return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
@@ -91,7 +100,6 @@ export class SpotifyService {
           .get<any>(`${this.API_URL}/artists/${artistId}/albums`, { headers })
           .pipe(
             map((data) => {
-              // Filtrar solo los álbumes completos
               return data.items.filter(
                 (album: any) => album.album_type === 'album'
               );
@@ -102,18 +110,13 @@ export class SpotifyService {
   }
 
   getAlbumDetails(albumId: string): Observable<any> {
-    return this.token$.pipe(
-      take(1),
+    return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
 
-
         return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers }).pipe(
-          map((data) => {
-            return data;
-          }),
           catchError((error) => {
             console.error('Error al obtener detalles del álbum:', error);
             return of(null);
@@ -124,10 +127,10 @@ export class SpotifyService {
   }
 
   getSongDetails(songId: string): Observable<any> {
-    return this.getAccessToken().pipe(
-      switchMap((TOKEN) => {
+    return this.getToken().pipe(
+      switchMap((token) => {
         const headers = new HttpHeaders({
-          Authorization: `Bearer ${TOKEN}`,
+          Authorization: `Bearer ${token}`,
         });
 
         return this.http.get<any>(`${this.API_URL}/tracks/${songId}`, {
@@ -136,11 +139,12 @@ export class SpotifyService {
       })
     );
   }
+
   getArtistDetails(artistId: string): Observable<any> {
-    return this.getAccessToken().pipe(
-      switchMap((TOKEN) => {
+    return this.getToken().pipe(
+      switchMap((token) => {
         const headers = new HttpHeaders({
-          Authorization: `Bearer ${TOKEN}`,
+          Authorization: `Bearer ${token}`,
         });
 
         return this.http.get<any>(`${this.API_URL}/artists/${artistId}`, {

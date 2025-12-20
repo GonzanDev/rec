@@ -1,0 +1,53 @@
+<div class="overlay" (click)="closeReview()">
+  <div class="review-container" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeReview()">✕</button>
+
+    <div class="header">
+      <img [src]="selectedAlbum?.images[0]?.url" alt="{{ selectedAlbum?.name }}" class="album-cover" />
+      <div class="album-info">
+        <h2 class="album-name">{{ selectedAlbum?.name }}</h2>
+        <span class="artist-name">{{ selectedAlbum?.artists[0]?.name }}</span>
+      </div>
+    </div>
+
+    <div class="rating-container">
+      <label>¿Qué calificación le das?</label>
+      <div class="stars">
+        <span
+          *ngFor="let star of [1, 2, 3, 4, 5]"
+          (click)="setRating(star)"
+          (mouseenter)="hoverRating = star"
+          (mouseleave)="hoverRating = 0"
+          [class.filled]="star <= (hoverRating || rating)"
+          [class.hover]="hoverRating >= star && hoverRating !== rating">
+          ★
+        </span>
+      </div>
+      <span class="rating-text">{{ getRatingText() }}</span>
+    </div>
+
+    <div class="comment-container">
+      <label for="comment">Tu reseña</label>
+      <textarea
+        id="comment"
+        [(ngModel)]="comment"
+        placeholder="¿Qué te pareció este álbum? Comparte tu opinión..."
+        maxlength="1000"
+      ></textarea>
+      <span class="char-count" [class.warning]="comment.length > 900">
+        {{ comment.length }}/1000
+      </span>
+    </div>
+
+    <div class="botones">
+      <button class="cancel-btn" (click)="closeReview()">Cancelar</button>
+      <button
+        class="submit-btn"
+        (click)="submitReview()"
+        [disabled]="isSubmitting || rating === 0 || !comment.trim()">
+        <span *ngIf="!isSubmitting">Publicar Reseña</span>
+        <span *ngIf="isSubmitting">Publicando...</span>
+      </button>
+    </div>
+  </div>
+</div>

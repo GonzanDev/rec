@@ -1,0 +1,238 @@
+.album-details {
+  font-family: var(--fuente);
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  color: var(--grisclaro);
+}
+
+/* Header */
+.album-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 30px;
+  background: linear-gradient(135deg, var(--gris) 0%, var(--negro) 100%);
+  border-radius: 15px;
+}
+
+.album-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.album-header img {
+  width: 180px;
+  height: 180px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.album-data h2 {
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+  color: var(--grisclaro);
+}
+
+.album-meta {
+  color: var(--grisclaro);
+  opacity: 0.8;
+}
+
+.album-meta a {
+  color: var(--verde);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.album-meta a:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  margin: 0 8px;
+}
+
+/* Buttons */
+.botones {
+  display: flex;
+  gap: 15px;
+}
+
+.botones button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-btn {
+  background-color: transparent;
+  border: 2px solid var(--verde) !important;
+  font-size: 1.5rem !important;
+  padding: 10px 20px !important;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn.is-favorite {
+  background-color: rgba(77, 189, 88, 0.2);
+}
+
+.review-btn {
+  background-color: var(--verde);
+  color: var(--negro);
+  font-weight: bold;
+}
+
+.review-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(77, 189, 88, 0.4);
+}
+
+/* Track list */
+.track-list {
+  margin-top: 30px;
+}
+
+.track-list h3 {
+  color: var(--verde);
+  margin-bottom: 15px;
+}
+
+.track-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.track-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--gris);
+  margin: 8px 0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.track-item:hover {
+  background-color: rgba(77, 189, 88, 0.1);
+  transform: translateX(5px);
+}
+
+.track-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.track-number {
+  color: var(--grisclaro);
+  opacity: 0.6;
+  width: 25px;
+}
+
+.track-name {
+  color: var(--grisclaro);
+}
+
+.track-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.track-duration {
+  color: var(--grisclaro);
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+
+.track-item audio {
+  height: 30px;
+  width: 200px;
+}
+
+/* Modal overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: var(--negro);
+  border-radius: 15px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Reviews section */
+.reviews-section {
+  margin-top: 40px;
+  padding: 25px;
+  background-color: var(--gris);
+  border-radius: 15px;
+}
+
+.reviews-section h3 {
+  color: var(--verde);
+  margin-bottom: 20px;
+}
+
+.no-reviews {
+  text-align: center;
+  color: var(--grisclaro);
+  opacity: 0.7;
+  padding: 30px;
+}
+
+.review {
+  background-color: var(--negro);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.review-header {
+  margin-bottom: 10px;
+}
+
+.review-rating i {
+  color: gold;
+  margin-right: 2px;
+}
+
+.review-rating i.fa-star-o {
+  color: var(--grisclaro);
+  opacity: 0.3;
+}
+
+.review-text {
+  color: var(--grisclaro);
+  line-height: 1.6;
+}

@@ -1,7 +1,8 @@
+import { SearchBarComponent } from './../../components/search-bar/search-bar.component';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AlbumComponent } from '../../album/album.component';
-import { SearchBarComponent } from '../../search-bar/search-bar.component';
+import { AlbumComponent } from '../../components/album/album.component';
+
 
 @Component({
   selector: 'app-album-page',

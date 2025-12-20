@@ -1,0 +1,85 @@
+<div *ngIf="isLoading" class="loading">
+  <p>Cargando álbum...</p>
+</div>
+
+<div *ngIf="album && !isLoading" class="album-details">
+  <div class="album-header">
+    <div class="album-info">
+      <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
+      <div class="album-data">
+        <h2>{{ album.name }}</h2>
+        <p class="album-meta">
+          <a [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0]?.name }}</a>
+          <span class="separator">•</span>
+          <span>{{ album.release_date | slice:0:4 }}</span>
+          <span class="separator">•</span>
+          <span>{{ album.total_tracks }} canciones, {{ getTotalDuration() }}</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="botones">
+      <button
+        class="favorite-btn"
+        [class.is-favorite]="isFavorite"
+        (click)="toggleFavorite()"
+        [title]="isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+        {{ isFavorite ? '❤️' : '🤍' }}
+      </button>
+      <button class="review-btn" (click)="openReviewComponent()">
+        Crear Reseña
+      </button>
+    </div>
+  </div>
+
+  <div class="track-list">
+    <h3>Canciones</h3>
+    <ul>
+      <li *ngFor="let track of album.tracks.items">
+        <div class="track-item">
+          <div class="track-info">
+            <span class="track-number">{{ track.track_number }}</span>
+            <span class="track-name">{{ track.name }}</span>
+          </div>
+          <div class="track-right">
+            <span class="track-duration">{{ formatDuration(track.duration_ms) }}</span>
+            <audio *ngIf="track.preview_url" controls [src]="track.preview_url"></audio>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Review modal -->
+   <app-create-review
+    *ngIf="showReviewComponent"
+    [selectedAlbum]="album"
+    (close)="closeReviewComponent()"
+    (reviewCreated)="onReviewCreated($event)">
+  </app-create-review>
+
+  <!-- Reviews section -->
+  <div class="reviews-section">
+    <h3>Reseñas ({{ reviews.length }})</h3>
+
+    <div *ngIf="reviews.length === 0" class="no-reviews">
+      <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
+    </div>
+
+    <div *ngFor="let review of reviews" class="review">
+      <div class="review-header">
+        <span class="review-rating">
+          <i *ngFor="let star of [1, 2, 3, 4, 5]"
+             class="fa"
+             [ngClass]="star <= review.rating ? 'fa-star' : 'fa-star-o'">
+          </i>
+        </span>
+      </div>
+      <p class="review-text">{{ review.comment }}</p>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!album && !isLoading" class="error">
+  <p>No se pudo cargar el álbum.</p>
+</div>

@@ -29,6 +29,15 @@ export class UserService {
     return setDoc(userDocRef, user);
   }
 
+  async getById(userId: string): Promise<User | null> {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const docSnapshot = await getDoc(userDocRef);
+    if (docSnapshot.exists()) {
+      return docSnapshot.data() as User;
+    }
+    return null;
+  }
+
   getUserProfile(userId: string): Observable<any> {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return docData(userDocRef);
@@ -50,8 +59,10 @@ export class UserService {
 
   addFavoriteArtist(userId: string, artistId: string) {
     const userDocRef = doc(this.firestore, `users/${userId}`);
+    console.log("User: ", userId, " Artist: ", artistId);
     return updateDoc(userDocRef, {
       favoriteArtists: arrayUnion(artistId),
+
     });
   }
 

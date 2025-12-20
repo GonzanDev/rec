@@ -1,0 +1,27 @@
+<div *ngIf="artist">
+  <div class="artist-details">
+    <div class="perfil-artista">
+      <img
+        class="artist-img"
+        [src]="artist.images[0]?.url"
+        alt="{{ artist.name }}"
+      />
+      <h2 class="artist-info">{{ artist.name }}</h2>
+    </div>
+    <div class="data-artista">
+      <p>
+        Seguidores:
+        {{ formatFollowers(artist.followers.total) }}
+      </p>
+      <p>
+        Géneros:
+        {{ formatGenres(artist.genres) }}
+      </p>
+    </div>
+    <div class="botones">
+  <button (click)="addToFavorites()">{{ isFavorite ? '❤️' : '🤍' }}</button>
+</div>
+  </div>
+  <!-- Pasa el artistId al AlbumListComponent -->
+  <app-album-list [artistId]="artist.id"></app-album-list>
+</div>
