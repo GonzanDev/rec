@@ -5,15 +5,14 @@ import { CommonModule } from '@angular/common';
 import { catchError, combineLatest, from, Observable, Subscription, of, map } from 'rxjs';
 import { SpotifyService } from '../../services/spotify.service';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
-import { RouterLink } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { filter, take } from 'rxjs/operators';
+import { ReviewComponent } from '../review/review.component';
 
 
 @Component({
   selector: 'app-review-feed',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, ReviewComponent],
   templateUrl: './review-feed.component.html',
   styleUrls: ['./review-feed.component.css']
 })
@@ -24,7 +23,6 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
   albumsInfo: Map<string, any> = new Map();
   isLoading: boolean = true;
   currentUser: any = null;
-  newCommentContent: { [key: string]: string } = {};
   @Input() individualTextFields: boolean = false;
 
   private reviewService = inject(ReviewService);
@@ -67,7 +65,7 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
       );
     } else {
       reviewsObservable = this.reviewService.getAllReviews().pipe(
-        map(docs => docs as Review[]),  // Cast to Review[]
+        map(docs => docs as Review[]),
         catchError(error => {
           console.error('Error al obtener las reseñas:', error);
           return of([]);
@@ -141,10 +139,6 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
     return review ? this.usersInfo.get(review.userId) : null;
   }
 
-  isLikedByUser(review: Review): boolean {
-    return review.likes?.includes(this.currentUser?.uid) || false;
-  }
-
   toggleLike(review: Review) {
     if (!review.id || !this.currentUser?.uid) return;
 
@@ -180,9 +174,6 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
     if (!comment?.trim()) return;
 
     this.reviewService.addComment(reviewId, this.currentUser.uid, comment)
-      .then(() => {
-        this.newCommentContent[reviewId] = '';
-      })
       .catch(error => console.error('Error al agregar comentario:', error));
   }
 }

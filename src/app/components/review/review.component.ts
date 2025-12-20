@@ -1,59 +1,129 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ReviewService, Review } from '../../services/review.service';
-import { Observable } from 'rxjs';
-import { AuthStateService } from '../auth/data-access/auth-state.service';
-import { Timestamp } from 'firebase/firestore';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Review } from '../../services/review.service';
+import { ReportService, ReportReason } from '../../services/report.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-review',
+  standalone: true,
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.css']
 })
-export class ReviewComponent implements OnInit {
-  @Input() albumId: string = ''; // Para saber qué álbum mostrar reseñas
-  reviews$: Observable<Review[]> = new Observable();
-  userId: string = ''; // ID del usuario autenticado
-  rating: number = 0;
-  comment: string = '';
+export class ReviewComponent {
+  @Input() review!: Review;
+  @Input() userInfo: any;
+  @Input() albumInfo: any;
+  @Input() currentUserId: string | null = null;
+  @Input() getUserName!: (userId: string) => string;
 
-  constructor(private reviewService: ReviewService, private authStateService: AuthStateService) {}
+  @Output() likeToggled = new EventEmitter<Review>();
+  @Output() commentAdded = new EventEmitter<{ reviewId: string; comment: string }>();
 
-  ngOnInit(): void {
-    // Obtener el usuario autenticado
-    this.authStateService.getUser().subscribe(user => {
-      if (user) {
-        this.userId = user.uid;
-      }
+  private reportService = inject(ReportService);
+
+  newCommentContent: string = '';
+
+  // Report modal state
+  showReportModal: boolean = false;
+  reportType: 'review' | 'comment' = 'review';
+  reportCommentIndex: number = -1;
+  selectedReason: ReportReason = 'spam';
+  reportDescription: string = '';
+  isSubmittingReport: boolean = false;
+
+  reportReasons: { value: ReportReason; label: string }[] = [
+    { value: 'spam', label: 'Spam' },
+    { value: 'offensive', label: 'Contenido ofensivo' },
+    { value: 'harassment', label: 'Acoso' },
+    { value: 'other', label: 'Otro' }
+  ];
+
+  get isLikedByUser(): boolean {
+    return this.review.likes?.includes(this.currentUserId || '') || false;
+  }
+
+  onToggleLike(): void {
+    this.likeToggled.emit(this.review);
+  }
+
+  onAddComment(): void {
+    if (!this.newCommentContent?.trim() || !this.review.id) return;
+
+    this.commentAdded.emit({
+      reviewId: this.review.id,
+      comment: this.newCommentContent
     });
-
-    // Obtener reseñas del álbum
-    this.loadReviews();
+    this.newCommentContent = '';
   }
 
-  loadReviews() {
-    if (this.albumId) {
-      this.reviews$ = this.reviewService.getReviewsByAlbum(this.albumId);
+  // Open report modal for a review
+  openReportReviewModal(): void {
+    if (!this.currentUserId) {
+      toast.error('Debes iniciar sesión para reportar');
+      return;
     }
+    this.reportType = 'review';
+    this.reportCommentIndex = -1;
+    this.resetReportForm();
+    this.showReportModal = true;
   }
 
-  addReview() {
-    if (this.comment && this.rating > 0) {
-      const newReview: Review = {
-        albumId: this.albumId,
-        userId: this.userId,
-        rating: this.rating,
-        comment: this.comment,
-        timestamp: Timestamp.now(),
-      };
+  // Open report modal for a comment
+  openReportCommentModal(commentIndex: number): void {
+    if (!this.currentUserId) {
+      toast.error('Debes iniciar sesión para reportar');
+      return;
+    }
+    this.reportType = 'comment';
+    this.reportCommentIndex = commentIndex;
+    this.resetReportForm();
+    this.showReportModal = true;
+  }
 
+  closeReportModal(): void {
+    this.showReportModal = false;
+    this.resetReportForm();
+  }
 
-      this.reviewService.create(newReview).then(() => {
-        this.comment = '';
-        this.rating = 0;
-        this.loadReviews();
-      }).catch((error) => {
-        console.error('Error adding review:', error);
-      });
+  private resetReportForm(): void {
+    this.selectedReason = 'spam';
+    this.reportDescription = '';
+  }
+
+  async submitReport(): Promise<void> {
+    if (!this.currentUserId || !this.review.id) return;
+
+    this.isSubmittingReport = true;
+
+    try {
+      if (this.reportType === 'review') {
+        await this.reportService.reportReview(
+          this.review.id,
+          this.currentUserId,
+          this.selectedReason,
+          this.reportDescription || undefined
+        );
+      } else {
+        await this.reportService.reportComment(
+          this.review.id,
+          this.reportCommentIndex,
+          this.currentUserId,
+          this.selectedReason,
+          this.reportDescription || undefined
+        );
+      }
+
+      toast.success('Reporte enviado correctamente');
+      this.closeReportModal();
+    } catch (error) {
+      console.error('Error al enviar reporte:', error);
+      toast.error('Error al enviar el reporte');
+    } finally {
+      this.isSubmittingReport = false;
     }
   }
 }
