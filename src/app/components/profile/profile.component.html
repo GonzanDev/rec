@@ -1,0 +1,36 @@
+<div *ngIf="user">
+  <h2>{{ user.username }}</h2>
+  <p>Email: {{ user.email }}</p>
+  <p><strong>Seguidores:</strong> {{ user.followers?.length || 0 }}</p>
+  <p><strong>Seguidos:</strong> {{ user.following?.length || 0 }}</p>
+
+  <h3>Favoritos</h3>
+
+  <h4>Álbumes Favoritos</h4>
+  @if (favoriteAlbumsDetails.length > 0) {
+    <app-album-list [albums]="favoriteAlbumsDetails"></app-album-list>
+  } @else {
+    <p>No hay álbumes favoritos.</p>
+  }
+
+  <h4>Artistas Favoritos</h4>
+  @if (favoriteArtistsDetails.length > 0) {
+    <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
+  } @else {
+    <p>No hay artistas favoritos.</p>
+  }
+
+  <h3>Reseñas</h3>
+  <app-review-feed [userId]="user.id"></app-review-feed>
+
+  <button *ngIf="!isFollowing && user.id !== currentUserId" (click)="followUser()">Seguir</button>
+  <button *ngIf="isFollowing && user.id !== currentUserId" (click)="unfollowUser()">Dejar de seguir</button>
+</div>
+
+<div *ngIf="!user">
+  <p>Cargando perfil...</p>
+</div>
+
+<div class="cerrarSesion">
+<button (click)="logOut()">Cerrar sesión</button>
+</div>

@@ -6,10 +6,10 @@ import {
   RouterModule,
 
 } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { FormsModule } from '@angular/forms';
 
 import {NgxSonnerToaster} from 'ngx-sonner';
-import { AuthStateService } from './auth/data-access/auth-state.service';
+import { AuthStateService } from './components/auth/data-access/auth-state.service';
 
 @Component({
   selector: 'app-root',

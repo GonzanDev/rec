@@ -5,11 +5,11 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
 import { SongPageComponent } from './pages/song-page/song-page.component';
 import { ArtistPageComponent } from './pages/artist-page/artist-page.component';
-import { CreateReviewComponent } from './create-review/create-review.component';
+import { CreateReviewComponent } from './components/create-review/create-review.component';
 
 
-import { SignInComponent } from './auth/features/sign-in/sign-in.component';
-import { SignUpComponent } from './auth/features/sign-up/sign-up.component';
+import { SignInComponent } from './components/auth/features/sign-in/sign-in.component';
+import { SignUpComponent } from './components/auth/features/sign-up/sign-up.component';
 import { privateGuard, publicGuard } from './auth.guard';
 
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
@@ -23,8 +23,8 @@ export const routes: Routes = [
     canActivate: [privateGuard()],
   },
 
-    
-  
+
+
   { path: 'create-review', component: CreateReviewComponent },
 
   {

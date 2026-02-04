@@ -1,0 +1,114 @@
+<div class="review" *ngIf="userInfo && albumInfo">
+  <div class="review-header">
+    <h4>
+      <a [routerLink]="['/users', userInfo?.id]">{{ userInfo?.username }}</a>
+    </h4>
+    <div class="review-header-right">
+      <span>{{ review.timestamp.toDate() | date:'short' }}</span>
+      <button
+        *ngIf="currentUserId && currentUserId !== review.userId"
+        class="report-btn"
+        (click)="openReportReviewModal()"
+        title="Reportar reseña">
+        <img src="assets/report_flag.svg" alt="Reportar" class="report-icon">
+      </button>
+    </div>
+  </div>
+
+  <p>{{ review.comment }}</p>
+
+  <!-- Rating stars -->
+  <div class="rating">
+    <span *ngFor="let star of [0,1,2,3,4]; let j = index"
+          [ngClass]="{'filled': j < review.rating}">
+      &#9733;
+    </span>
+  </div>
+
+  <!-- Album info -->
+  <div class="album-info">
+    <img [src]="albumInfo?.images[2]?.url" alt="Album cover" width="50" height="50">
+    <a [routerLink]="['/album', albumInfo?.id]">{{ albumInfo?.name }}</a>
+  </div>
+
+  <!-- Like section -->
+  <div class="like-section">
+    <button (click)="onToggleLike()">
+      <span *ngIf="isLikedByUser">❤️</span>
+      <span *ngIf="!isLikedByUser">🤍</span>
+    </button>
+    <span>{{ review.likes?.length || 0 }} Likes</span>
+  </div>
+
+  <!-- Comments section -->
+  <div class="comments-section">
+    <h5>Comentarios</h5>
+    <div *ngFor="let comment of review.comments; let i = index" class="comment-item">
+      <p>
+        <a [routerLink]="['/users', comment.userId]">{{ getUserName(comment.userId) }}</a>
+        {{ comment.content }}
+      </p>
+      <button
+        *ngIf="currentUserId && currentUserId !== comment.userId"
+        class="report-btn report-btn-small"
+        (click)="openReportCommentModal(i)"
+        title="Reportar comentario">
+        <img src="assets/report_flag.svg" alt="Reportar" class="report-icon report-icon-small">
+      </button>
+    </div>
+
+    <!-- Add new comment form -->
+    <div *ngIf="currentUserId">
+      <input
+        [(ngModel)]="newCommentContent"
+        placeholder="Agregar un comentario..." />
+      <button
+        (click)="onAddComment()"
+        [disabled]="!review.id || !newCommentContent?.trim()">
+        Comentar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Report Modal -->
+<div class="report-modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">
+  <div class="report-modal" (click)="$event.stopPropagation()">
+    <div class="report-modal-header">
+      <h3>Reportar {{ reportType === 'review' ? 'reseña' : 'comentario' }}</h3>
+      <button class="close-btn" (click)="closeReportModal()">✕</button>
+    </div>
+
+    <div class="report-modal-body">
+      <label>Razón del reporte:</label>
+      <div class="report-reasons">
+        <label *ngFor="let reason of reportReasons" class="reason-option">
+          <input
+            type="radio"
+            [value]="reason.value"
+            [(ngModel)]="selectedReason"
+            name="reportReason" />
+          {{ reason.label }}
+        </label>
+      </div>
+
+      <label for="reportDescription">Descripción adicional (opcional):</label>
+      <textarea
+        id="reportDescription"
+        [(ngModel)]="reportDescription"
+        placeholder="Proporciona más detalles sobre el reporte..."
+        rows="3">
+      </textarea>
+    </div>
+
+    <div class="report-modal-footer">
+      <button class="cancel-btn" (click)="closeReportModal()">Cancelar</button>
+      <button
+        class="submit-btn"
+        (click)="submitReport()"
+        [disabled]="isSubmittingReport">
+        {{ isSubmittingReport ? 'Enviando...' : 'Enviar reporte' }}
+      </button>
+    </div>
+  </div>
+</div>

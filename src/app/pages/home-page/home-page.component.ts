@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AlbumListComponent } from '../../album-list/album-list.component';
-import { SearchBarComponent } from '../../search-bar/search-bar.component';
+import { AlbumListComponent } from '../../components/album-list/album-list.component';
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { RouterOutlet } from '@angular/router';
-import { ReviewFeedComponent } from '../../review-feed/review-feed.component';
+import { ReviewFeedComponent } from '../../components/review-feed/review-feed.component';
 
 @Component({
   selector: 'app-home-page',

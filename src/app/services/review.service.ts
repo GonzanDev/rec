@@ -28,33 +28,27 @@ export class ReviewService {
     return addDoc(this.reviews, review);
   }
 
-  getReviewsByUser(userId: string) {
-    const reviewsCollection = collection(this.firestore, 'reviews');
-    const q = query(reviewsCollection, where('userId', '==', userId));
-    return getDocs(q).then(snapshot => {
-      const reviews = snapshot.docs.map(doc => doc.data());
-      return reviews;
-    });
-  }
+  getReviewsByUser(userId: string): Promise<Review[]> {
+  const reviewsCollection = collection(this.firestore, 'reviews');
+  const q = query(reviewsCollection, where('userId', '==', userId));
+  return getDocs(q).then(snapshot => {
+    const reviews = snapshot.docs.map(doc => ({
+      id: doc.id,  // Include the document ID
+      ...doc.data()
+    })) as Review[];
+    return reviews;
+  });
+}
 
   getReviewsByAlbum(albumId: string): Observable<Review[]> {
-    const albumReviewsQuery = query(
-      this.reviews,
-      where('albumId', '==', albumId),
-      orderBy('timestamp', 'desc')
-    );
-
-    return collectionData(albumReviewsQuery, { idField: 'id' }) as Observable<Review[]>;
-  }
+  const reviewsCollection = collection(this.firestore, 'reviews');
+  const q = query(reviewsCollection, where('albumId', '==', albumId), orderBy('timestamp', 'desc'));
+  return collectionData(q, { idField: 'id' }) as Observable<Review[]>;
+}
 
   getAllReviews(): Observable<Review[]> {
-    const reviewsQuery = query(
-      this.reviews,
-      orderBy('timestamp', 'desc')
-    );
-
-    return collectionData(reviewsQuery, { idField: 'id' }) as Observable<Review[]>;
-  }
+  return collectionData(this.reviews, { idField: 'id' }) as Observable<Review[]>;
+}
 
   getUserById(userId: string): Observable<any> {
     const userDocRef = doc(this.firestore, `users/${userId}`);
@@ -117,4 +111,6 @@ export class ReviewService {
       comments: arrayUnion(comment)  // Agregar el comentario al array de "comments"
     });
   }
+
+
 }

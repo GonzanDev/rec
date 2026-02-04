@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { ProfileComponent } from '../../profile/profile.component';
+import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
+import { ProfileComponent } from '../../components/profile/profile.component';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
