@@ -1,12 +1,17 @@
 <div class="review-feed">
-  <app-review
+  <div
     *ngFor="let review of reviews; let i = index"
-    [review]="review"
-    [userInfo]="getUserInfo(i)"
-    [albumInfo]="getAlbumInfo(i)"
-    [currentUserId]="currentUser?.uid"
-    [getUserName]="getUserName.bind(this)"
-    (likeToggled)="toggleLike($event)"
-    (commentAdded)="addCommentToReview($event.reviewId, $event.comment)">
-  </app-review>
+    [attr.id]="'review-' + review.id">
+
+    <app-review
+      [review]="review"
+      [userInfo]="getUserInfo(i)"
+      [albumInfo]="getAlbumInfo(i)"
+      [currentUserId]="currentUser?.uid"
+      [getUserName]="getUserName.bind(this)"
+      (likeToggled)="toggleLike($event)"
+      (commentAdded)="addCommentToReview($event.reviewId, $event.comment)">
+    </app-review>
+
+  </div>
 </div>

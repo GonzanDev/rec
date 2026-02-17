@@ -40,6 +40,13 @@
     <span>{{ review.likes?.length || 0 }} Likes</span>
   </div>
 
+  <div class="share-section">
+  <button (click)="shareWhatsApp()">WhatsApp</button>
+  <button (click)="shareX()">X</button>
+  <button (click)="copyLink()">Copiar link</button>
+</div>
+
+
   <!-- Comments section -->
   <div class="comments-section">
     <h5>Comentarios</h5>
@@ -64,7 +71,7 @@
         placeholder="Agregar un comentario..." />
       <button
         (click)="onAddComment()"
-        [disabled]="!review.id || !newCommentContent?.trim()">
+        [disabled]="!review.id || !newCommentContent.trim()">
         Comentar
       </button>
     </div>

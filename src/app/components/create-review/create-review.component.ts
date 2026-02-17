@@ -17,6 +17,8 @@ import { toast } from 'ngx-sonner';
 export class CreateReviewComponent {
   albums: any[] = [];
   @Input() selectedAlbum: any;
+    @Input() highlightReviewId: string | null = null;
+
   @Output() close = new EventEmitter<void>();
   @Output() reviewCreated = new EventEmitter<Review>();
 
@@ -68,6 +70,19 @@ export class CreateReviewComponent {
       toast.error('Selecciona una calificación');
       return;
     }
+
+    if (this.highlightReviewId) {
+  setTimeout(() => {
+    const element = document.getElementById(
+      'review-' + this.highlightReviewId
+    );
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.classList.add('highlighted-review');
+    }
+  }, 300);
+}
+
 
     this.isSubmitting = true;
 

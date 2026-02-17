@@ -126,4 +126,28 @@ export class ReviewComponent {
       this.isSubmittingReport = false;
     }
   }
+
+  getReviewLink(): string {
+  return window.location.origin + '/review/' + this.review.id;
+}
+
+shareWhatsApp() {
+  const url = encodeURIComponent(this.getReviewLink());
+  window.open(`https://wa.me/?text=${url}`, '_blank');
+}
+
+shareX() {
+  const url = encodeURIComponent(this.getReviewLink());
+  const text = encodeURIComponent('Mirá esta reseña 👇');
+  window.open(
+    `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    '_blank'
+  );
+}
+
+copyLink() {
+  navigator.clipboard.writeText(this.getReviewLink());
+  alert('Link copiado');
+}
+
 }

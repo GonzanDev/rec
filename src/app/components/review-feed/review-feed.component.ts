@@ -18,12 +18,13 @@ import { ReviewComponent } from '../review/review.component';
 })
 export class ReviewFeedComponent implements OnInit, OnDestroy {
   @Input() userId: string = '';
+  @Input() highlightReviewId: string | null = null;
+  @Input() individualTextFields: boolean = false;
   reviews: Review[] = [];
   usersInfo: Map<string, any> = new Map();
   albumsInfo: Map<string, any> = new Map();
   isLoading: boolean = true;
   currentUser: any = null;
-  @Input() individualTextFields: boolean = false;
 
   private reviewService = inject(ReviewService);
   private spotifyService = inject(SpotifyService);
@@ -53,35 +54,61 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private loadReviews(): void {
-    let reviewsObservable: Observable<Review[]>;
+private loadReviews(): void {
+  let reviewsObservable: Observable<Review[]>;
 
-    if (this.userId) {
-      reviewsObservable = from(this.reviewService.getReviewsByUser(this.userId)).pipe(
-        catchError(error => {
-          console.error('Error al obtener las reseñas:', error);
-          return of([]);
-        })
-      );
-    } else {
-      reviewsObservable = this.reviewService.getAllReviews().pipe(
-        map(docs => docs as Review[]),
-        catchError(error => {
-          console.error('Error al obtener las reseñas:', error);
-          return of([]);
-        })
-      );
-    }
-
-    const reviewSub = reviewsObservable.subscribe(reviews => {
-      this.reviews = reviews.sort((a, b) =>
-        (b.timestamp as unknown as number) - (a.timestamp as unknown as number)
-      );
-      this.loadUserAndAlbumDetails(this.reviews);
-    });
-
-    this.subscriptions.push(reviewSub);
+  // Caso 1: viene desde /review/:id
+  if (this.highlightReviewId) {
+    reviewsObservable = from(
+      this.reviewService.getReviewById(this.highlightReviewId)
+    ).pipe(
+      map(review => review ? [review] : []),
+      catchError(error => {
+        console.error('Error al obtener la reseña:', error);
+        return of([]);
+      })
+    );
   }
+
+  // Caso 2: perfil de usuario
+  else if (this.userId) {
+    reviewsObservable = from(
+      this.reviewService.getReviewsByUser(this.userId)
+    ).pipe(
+      catchError(error => {
+        console.error('Error al obtener las reseñas:', error);
+        return of([]);
+      })
+    );
+  }
+
+  // Caso 3: feed general
+  else {
+    reviewsObservable = this.reviewService.getAllReviews().pipe(
+      map(docs => docs as Review[]),
+      catchError(error => {
+        console.error('Error al obtener las reseñas:', error);
+        return of([]);
+      })
+    );
+  }
+
+  const reviewSub = reviewsObservable.subscribe(reviews => {
+
+    // Solo ordenar si NO es vista individual
+    this.reviews = this.highlightReviewId
+      ? reviews
+      : reviews.sort((a, b) =>
+          (b.timestamp as unknown as number) -
+          (a.timestamp as unknown as number)
+        );
+
+    this.loadUserAndAlbumDetails(this.reviews);
+  });
+
+  this.subscriptions.push(reviewSub);
+}
+
 
   private loadUserAndAlbumDetails(reviews: Review[]) {
     if (reviews.length === 0) {

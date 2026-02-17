@@ -171,4 +171,21 @@ export class AlbumComponent implements OnInit, OnDestroy {
     const minutes = Math.floor(totalMs / 60000);
     return `${minutes} min`;
   }
+
+  shareWhatsApp() {
+  const url = encodeURIComponent(window.location.href);
+  window.open(`https://wa.me/?text=${url}`, '_blank');
+}
+
+shareX() {
+  const url = encodeURIComponent(window.location.href);
+  const text = encodeURIComponent(`Mirá este álbum`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+}
+
+copyLink() {
+  navigator.clipboard.writeText(window.location.href);
+  alert('Link copiado al portapapeles');
+}
+
 }

@@ -9,3 +9,16 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
 }
+
+.highlighted-review {
+  border: 2px solid var(--verde);
+  border-radius: 10px;
+  animation: pulseHighlight 2s ease-in-out;
+}
+
+@keyframes pulseHighlight {
+  0% { box-shadow: 0 0 0px var(--verde); }
+  50% { box-shadow: 0 0 15px var(--verde); }
+  100% { box-shadow: 0 0 0px var(--verde); }
+}
+

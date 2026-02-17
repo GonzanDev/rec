@@ -63,6 +63,12 @@ export const routes: Routes = [
     canActivate: [privateGuard()],
   },
   {
+  path: 'review/:reviewId',
+  component: HomePageComponent,
+  canActivate: [privateGuard()],
+},
+
+  {
     path: '**',
     redirectTo: '/home'
   }
