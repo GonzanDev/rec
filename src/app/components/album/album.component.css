@@ -257,3 +257,111 @@
   font-weight: 600;
 }
 
+/* Contenedor de botones de compartir */
+.share-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap; /* Permite que los botones bajen si no hay espacio */
+  align-items: center;
+}
+
+/* Botones individuales de compartir */
+.share-buttons button {
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+  color: var(--grisclaro);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 8px 16px !important; /* Más compactos que los botones principales */
+  font-size: 0.85rem !important;
+  font-weight: 500;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+/* Efectos Hover */
+.share-buttons button:hover {
+  background-color: var(--grisclaro);
+  color: var(--negro);
+  border-color: var(--grisclaro) !important;
+  transform: translateY(-2px);
+}
+
+/* Color específico para WhatsApp al pasar el mouse */
+.share-buttons button:nth-child(1):hover {
+  background-color: #25D366;
+  border-color: #25D366 !important;
+  color: white;
+}
+
+/* Color específico para X (Twitter) al pasar el mouse */
+.share-buttons button:nth-child(2):hover {
+  background-color: #ffffff;
+  border-color: #ffffff !important;
+  color: #000000;
+}
+
+/* Botón copiar link - resaltado sutil con el verde de tu variable */
+.share-buttons button:last-child:hover {
+  background-color: var(--verde);
+  border-color: var(--verde) !important;
+  color: var(--negro);
+}
+
+/* Tablets y Celulares grandes */
+@media (max-width: 992px) {
+  .album-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+
+  .album-info {
+    flex-direction: column;
+  }
+
+  .botones {
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+
+  .share-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+
+
+  .album-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 25px;
+  }
+
+  /* Centramos el contenedor flex de las estrellas */
+  .average-rating {
+    justify-content: center; 
+    margin: 10px 0; /* Un poco más de aire en móviles */
+  }
+
+  .album-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Asegura que todo lo que esté dentro de album-data se centre */
+  }
+}
+
+/* Celulares pequeños */
+@media (max-width: 480px) {
+  .album-header img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .album-data h2 {
+    font-size: 1.5rem;
+  }
+
+  .share-buttons button {
+    flex: 1 1 calc(50% - 10px); /* Dos botones por fila en móviles muy chicos */
+    text-align: center;
+  }
+}

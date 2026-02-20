@@ -364,3 +364,74 @@
   background-color: #666;
   cursor: not-allowed;
 }
+
+
+/* Share Section Container */
+.share-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 15px;
+  padding: 10px 0;
+  border-top: 1px solid #404040; /* Separador sutil */
+}
+
+/* Botones base de compartir */
+.share-section button {
+  background-color: #333333;
+  color: #b3b3b3;
+  border: 1px solid transparent;
+  padding: 6px 14px;
+  border-radius: 20px; /* Estilo píldora de Spotify */
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover general */
+.share-section button:hover {
+  background-color: #404040;
+  color: #ffffff;
+  transform: translateY(-1px); /* Pequeño salto al pasar el mouse */
+}
+
+/* Estilo específico para WhatsApp (opcional, para dar color) */
+.share-section button:nth-child(1):hover {
+  border-color: #25D366;
+  color: #25D366;
+}
+
+/* Estilo específico para X / Twitter */
+.share-section button:nth-child(2):hover {
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* Estilo para Copiar Link (más corporativo/Spotify) */
+.share-section button:last-child {
+  background-color: transparent;
+  border: 1px solid #b3b3b3;
+}
+
+.share-section button:last-child:hover {
+  border-color: #1db954;
+  color: #1db954;
+  background-color: rgba(29, 185, 84, 0.1);
+}
+
+/* Adaptabilidad para móviles */
+@media (max-width: 480px) {
+  .share-section {
+    flex-wrap: wrap; /* Si no caben, se envuelven */
+    gap: 8px;
+  }
+  
+  .share-section button {
+    flex: 1; /* Crecen para ocupar el ancho disponible */
+    font-size: 12px;
+  }
+}
