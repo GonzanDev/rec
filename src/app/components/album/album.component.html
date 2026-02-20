@@ -8,6 +8,18 @@
       <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
       <div class="album-data">
         <h2>{{ album.name }}</h2>
+        <div *ngIf="reviews.length > 0" class="average-rating">
+    <span class="stars">
+      <i *ngFor="let star of [1,2,3,4,5]"
+         class="fa"
+         [ngClass]="star <= roundedAverage ? 'fa-star' : 'fa-star-o'">
+      </i>
+    </span>
+    <span class="average-number">
+      ({{ formattedAverage }})
+    </span>
+  </div>
+        
         <p class="album-meta">
           <a [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0]?.name }}</a>
           <span class="separator">•</span>

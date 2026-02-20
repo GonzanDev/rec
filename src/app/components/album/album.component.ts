@@ -28,6 +28,11 @@ export class AlbumComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   private authState = inject(AuthStateService);
 
+  averageRating: number = 0;
+  roundedAverage: number = 0;
+  formattedAverage: string = '0,0';
+
+
   constructor(
     private route: ActivatedRoute,
     private spotifyService: SpotifyService,
@@ -100,6 +105,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
     this.reviewService.getReviewsByAlbum(this.album.id).subscribe({
       next: (reviews) => {
         this.reviews = reviews;
+        this.updateAverage();
       },
       error: (error) => {
         console.error('Error loading reviews:', error);
@@ -155,6 +161,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
 
   onReviewCreated(review: Review) {
     this.reviews.unshift(review); // Add to beginning of array
+    this.updateAverage(); //  recalcula promedio
     this.closeReviewComponent();
     toast.success('Reseña creada');
   }
@@ -187,5 +194,24 @@ copyLink() {
   navigator.clipboard.writeText(window.location.href);
   alert('Link copiado al portapapeles');
 }
+
+private updateAverage(): void {
+  if (!this.reviews || this.reviews.length === 0) {
+    this.averageRating = 0;
+    this.roundedAverage = 0;
+    this.formattedAverage = '0,0';
+    return;
+  }
+
+  const total = this.reviews.reduce((sum, r) => sum + r.rating, 0);
+  this.averageRating = total / this.reviews.length;
+
+  this.roundedAverage = Math.round(this.averageRating);
+
+  this.formattedAverage = this.averageRating
+    .toFixed(1)
+    .replace('.', ',');
+}
+
 
 }
