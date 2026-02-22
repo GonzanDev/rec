@@ -1,77 +1,96 @@
-<div *ngIf="user">
-  <h2>{{ user.username }}</h2>
-  <p>Email: {{ user.email }}</p>
-  <p><strong>Seguidores:</strong> {{ user.followers?.length || 0 }}</p>
-  <p><strong>Seguidos:</strong> {{ user.following?.length || 0 }}</p>
+<div *ngIf="user" class="profile-container">
+<div class="top-nav" *ngIf="user.id === currentUserId">
+  <button class="btn-secondary btn-small" (click)="logOut()">Cerrar sesión</button>
+</div>
 
-  <h3>Favoritos</h3>
-
-  <h4>Álbumes Favoritos</h4>
-  @if (favoriteAlbumsDetails.length > 0) {
-    <app-album-list [albums]="favoriteAlbumsDetails"></app-album-list>
-  } @else {
-    <p>No hay álbumes favoritos.</p>
-  }
-
-  <h4>Artistas Favoritos</h4>
-  @if (favoriteArtistsDetails.length > 0) {
-    <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
-  } @else {
-    <p>No hay artistas favoritos.</p>
-  }
-
-
-  <button 
-  *ngIf="user && user.id !== currentUserId" 
-  (click)="compareProfiles()" 
-  class="compare-btn">
-  {{ isComparing ? 'Analizando...' : 'Comparar Perfil' }}
-</button>
-
-@if (showComparison) {
-  <div class="comparison-results">
-    <div class="comparison-header">
-      <h3>Albumes reseñados en común</h3>
-      <button class="close-btn" (click)="showComparison = false">✕</button>
-    </div>
-
-    @if (isComparing) {
-      <p>Buscando coincidencias entre sus bibliotecas...</p>
-    } @else {
-      @for (match of comparisonResults; track match.albumName) {
-        <div class="match-card">
-          <div class="match-album">
-            <img [src]="match.albumCover" alt="Cover">
-            <strong>{{ match.albumName }}</strong>
-          </div>
-          <div class="match-reviews">
-            <div class="review-box">
-              <small>{{ user.username }}</small>
-              <p>⭐ {{ match.viewedUser.rating }} - {{ match.viewedUser.comment }}</p>
-            </div>
-            <div class="review-box my-box">
-              <small>Tú</small>
-              <p>⭐ {{ match.currentUser.rating }} - {{ match.currentUser.comment }}</p>
-            </div>
-          </div>
+  <div class="profile-header">
+    <div class="header-main">
+      <h2>{{ user.username }}</h2>
+      <div class="stats-container">
+        <div class="stat">
+          <strong>{{ user.followers?.length || 0 }}</strong>
+          <span>Seguidores</span>
         </div>
-      } @empty {
-        <p class="no-matches">No tienen álbumes reseñados en común todavía.</p>
-      }
-    }
+        <div class="stat">
+          <strong>{{ user.following?.length || 0 }}</strong>
+          <span>Seguidos</span>
+        </div>
+      </div>
+    </div>
+    <p class="user-email">{{ user.email }}</p>
+    
+    <div class="action-bar">
+      <ng-container *ngIf="user.id !== currentUserId">
+        <button *ngIf="!isFollowing" class="btn-primary" (click)="followUser()">Seguir</button>
+        <button *ngIf="isFollowing" class="btn-outline" (click)="unfollowUser()">Dejar de seguir</button>
+        
+        <button (click)="compareProfiles()" class="btn-spotify">
+          {{ isComparing ? 'Analizando...' : 'Comparar Perfil' }}
+        </button>
+      </ng-container>
+    </div>
   </div>
-}
-  <h3>Reseñas</h3>
-  <app-review-feed [userId]="user.id"></app-review-feed>
 
-  <button *ngIf="!isFollowing && user.id !== currentUserId" (click)="followUser()">Seguir</button>
-  <button *ngIf="isFollowing && user.id !== currentUserId" (click)="unfollowUser()">Dejar de seguir</button>
+  <hr class="separator">
+
+  @if (showComparison) {
+    <div class="comparison-results">
+      <div class="comparison-header">
+        <h3>Álbumes reseñados en común</h3>
+        <button class="close-btn" (click)="showComparison = false">✕</button>
+      </div>
+
+      @if (isComparing) {
+        <p class="loading-text">Buscando coincidencias...</p>
+      } @else {
+        @for (match of comparisonResults; track match.albumName) {
+          <div class="match-card">
+            <div class="match-album">
+              <img [src]="match.albumCover" alt="Cover">
+              <strong>{{ match.albumName }}</strong>
+            </div>
+            <div class="match-reviews">
+              <div class="review-box">
+                <small>{{ user.username }}</small>
+                <p>⭐ {{ match.viewedUser.rating }} - {{ match.viewedUser.comment }}</p>
+              </div>
+              <div class="review-box my-box">
+                <small>Tú</small>
+                <p>⭐ {{ match.currentUser.rating }} - {{ match.currentUser.comment }}</p>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <p class="no-matches">No tienen álbumes reseñados en común todavía.</p>
+        }
+      }
+    </div>
+  }
+
+  <div class="content-section">
+    <h3>Favoritos</h3>
+
+    <h4>Álbumes Favoritos</h4>
+    @if (favoriteAlbumsDetails.length > 0) {
+      <app-album-list [albums]="favoriteAlbumsDetails"></app-album-list>
+    } @else {
+      <p class="empty-text">No hay álbumes favoritos.</p>
+    }
+
+    <h4>Artistas Favoritos</h4>
+    @if (favoriteArtistsDetails.length > 0) {
+      <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
+    } @else {
+      <p class="empty-text">No hay artistas favoritos.</p>
+    }
+
+    <hr class="separator">
+
+    <h3>Reseñas</h3>
+    <app-review-feed [userId]="user.id"></app-review-feed>
+  </div>
 </div>
 
-<div *ngIf="!user">
+<div *ngIf="!user" class="loading-state">
   <p>Cargando perfil...</p>
-</div>
-
-<div class="cerrarSesion">
-<button (click)="logOut()">Cerrar sesión</button>
 </div>
