@@ -73,3 +73,83 @@ display: flex;
 align-items: end;
 justify-content: end;
 }
+
+.compare-btn {
+  background-color: #1DB954 !important; /* Verde Spotify */
+  margin-left: 10px;
+}
+
+.comparison-results {
+  background-color: #282828;
+  border: 1px solid #4CAF50;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.comparison-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  background: none;
+  font-size: 20px;
+  padding: 0;
+  margin: 0;
+  color: #b3b3b3;
+}
+
+.match-card {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.match-album {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.match-album img {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.match-reviews {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.review-box {
+  background: #333;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.my-box {
+  border-left: 3px solid #4CAF50;
+}
+
+.review-box small {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .match-reviews { grid-template-columns: 1fr; }
+}

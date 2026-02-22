@@ -20,6 +20,47 @@
     <p>No hay artistas favoritos.</p>
   }
 
+
+  <button 
+  *ngIf="user && user.id !== currentUserId" 
+  (click)="compareProfiles()" 
+  class="compare-btn">
+  {{ isComparing ? 'Analizando...' : 'Comparar Perfil' }}
+</button>
+
+@if (showComparison) {
+  <div class="comparison-results">
+    <div class="comparison-header">
+      <h3>Albumes reseñados en común</h3>
+      <button class="close-btn" (click)="showComparison = false">✕</button>
+    </div>
+
+    @if (isComparing) {
+      <p>Buscando coincidencias entre sus bibliotecas...</p>
+    } @else {
+      @for (match of comparisonResults; track match.albumName) {
+        <div class="match-card">
+          <div class="match-album">
+            <img [src]="match.albumCover" alt="Cover">
+            <strong>{{ match.albumName }}</strong>
+          </div>
+          <div class="match-reviews">
+            <div class="review-box">
+              <small>{{ user.username }}</small>
+              <p>⭐ {{ match.viewedUser.rating }} - {{ match.viewedUser.comment }}</p>
+            </div>
+            <div class="review-box my-box">
+              <small>Tú</small>
+              <p>⭐ {{ match.currentUser.rating }} - {{ match.currentUser.comment }}</p>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <p class="no-matches">No tienen álbumes reseñados en común todavía.</p>
+      }
+    }
+  </div>
+}
   <h3>Reseñas</h3>
   <app-review-feed [userId]="user.id"></app-review-feed>
 

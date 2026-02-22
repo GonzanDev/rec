@@ -3,17 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { SpotifyService } from '../../services/spotify.service';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { AlbumListComponent } from '../album-list/album-list.component';
 import { ArtistListComponent } from '../artist-list/artist-list.component';
 import { ReviewFeedComponent } from '../review-feed/review-feed.component';
 import { catchError, filter, take, timeout } from 'rxjs/operators';
 import { combineLatest, Subscription, forkJoin, Observable, of } from 'rxjs';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [NgIf, AlbumListComponent, ArtistListComponent, ReviewFeedComponent],
+  imports: [NgIf, NgFor, NgClass, AlbumListComponent, ArtistListComponent, ReviewFeedComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -22,6 +23,13 @@ export class ProfileComponent implements OnInit {
   currentUserId: string = '';
   private authState = inject(AuthStateService);
   private subscriptions: Subscription[] = [];
+
+  private reviewService = inject(ReviewService);
+
+  // Variables para la comparación
+comparisonResults: any[] = [];
+showComparison: boolean = false;
+isComparing: boolean = false;
 
   user: any = null;
   favoriteAlbumsDetails: any[] = [];
@@ -173,4 +181,50 @@ getFavoriteAlbumsDetails() {
     await this.authState.logOut();
     this.router.navigateByUrl('/auth/sign-in');
   }
+
+  async compareProfiles() {
+  this.isComparing = true;
+  this.showComparison = true;
+  this.comparisonResults = [];
+
+  try {
+    // 1. Obtenemos las reseñas de ambos en paralelo
+    const [viewedUserReviews, currentUserReviews] = await Promise.all([
+      this.reviewService.getReviewsByUser(this.userId),
+      this.reviewService.getReviewsByUser(this.currentUserId)
+    ]);
+
+    // 2. Buscamos coincidencias por albumId
+    const matches = viewedUserReviews.filter(review => 
+      currentUserReviews.some(currReview => currReview.albumId === review.albumId)
+    );
+
+    // 3. Mapeamos los resultados cruzados
+    const detailedMatches = await Promise.all(matches.map(async (viewedReview) => {
+      const myReview = currentUserReviews.find(r => r.albumId === viewedReview.albumId);
+      
+      // Buscamos detalles del álbum en Spotify para que se vea lindo
+      const albumInfo = await this.spotifyService.getAlbumDetails(viewedReview.albumId).toPromise();
+
+      return {
+        albumName: albumInfo?.name,
+        albumCover: albumInfo?.images[2]?.url,
+        viewedUser: {
+          rating: viewedReview.rating,
+          comment: viewedReview.comment
+        },
+        currentUser: {
+          rating: myReview?.rating,
+          comment: myReview?.comment
+        }
+      };
+    }));
+
+    this.comparisonResults = detailedMatches;
+  } catch (error) {
+    console.error('Error al comparar perfiles:', error);
+  } finally {
+    this.isComparing = false;
+  }
+}
 }
