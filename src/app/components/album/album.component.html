@@ -78,29 +78,35 @@
     (reviewCreated)="onReviewCreated($event)">
   </app-create-review>
 
-<div class="reviews-section">
-  <h3>Reseñas ({{ reviews.length }})</h3>
+  <div class="reviews-section">
+    <h3>Reseñas ({{ reviews.length }})</h3>
 
-  <div *ngIf="reviews.length === 0" class="no-reviews">
-    <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
-  </div>
-
-  <div *ngFor="let review of reviews" class="review">
-    <div class="review-header">
-<a [routerLink]="['/users', review.userId]" class="review-author">
-  {{ getUserName(review.userId) }}
-</a>
-
-      <span class="review-rating">
-        <i *ngFor="let star of [1, 2, 3, 4, 5]" class="fa"
-          [ngClass]="star <= review.rating ? 'fa-star' : 'fa-star-o'">
-        </i>
-      </span>
+    <div *ngIf="reviews.length === 0" class="no-reviews">
+      <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
     </div>
-    <p class="review-text">{{ review.comment }}</p>
+
+<div *ngFor="let review of reviews" class="review">
+  <div class="review-header">
+    <a [routerLink]="['/users', review.userId]" class="review-author">
+      {{ getUserName(review.userId) }}
+    </a>
+    <span class="review-rating">
+      <i *ngFor="let star of [1, 2, 3, 4, 5]" class="fa"
+        [ngClass]="star <= review.rating ? 'fa-star' : 'fa-star-o'">
+      </i>
+    </span>
+  </div>
+  
+  <p class="review-text">{{ review.comment }}</p>
+
+  <div class="review-actions">
+    <button class="like-button" [class.liked]="isLiked(review)" (click)="toggleLike(review)">
+      <i class="fa" [ngClass]="isLiked(review) ? 'fa-heart' : 'fa-heart-o'"></i>
+      <span>{{ review.likes?.length || 0 }}</span>
+    </button>
   </div>
 </div>
 
-<div *ngIf="!album && !isLoading" class="error">
-  <p>No se pudo cargar el álbum.</p>
-</div>
+  <div *ngIf="!album && !isLoading" class="error">
+    <p>No se pudo cargar el álbum.</p>
+  </div>

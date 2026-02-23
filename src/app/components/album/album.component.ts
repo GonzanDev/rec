@@ -239,5 +239,41 @@ private updateAverage(): void {
     .replace('.', ',');
 }
 
+// ... dentro de la clase AlbumComponent
+
+toggleLike(review: Review) {
+  if (!review.id || !this.userId) {
+    toast.error('Debes iniciar sesión para dar like');
+    return;
+  }
+
+  // Lógica Optimista: Actualizamos la UI antes de la respuesta del servidor
+  const currentLikes = review.likes || [];
+  const isLiked = currentLikes.includes(this.userId);
+
+  if (isLiked) {
+    // Quitar Like
+    review.likes = currentLikes.filter(id => id !== this.userId);
+    this.reviewService.removeLike(review.id, this.userId)
+      .catch(error => {
+        review.likes = currentLikes; // Revertir si falla
+        console.error('Error al quitar like:', error);
+      });
+  } else {
+    // Dar Like
+    review.likes = [...currentLikes, this.userId];
+    this.reviewService.addLike(review.id, this.userId)
+      .catch(error => {
+        review.likes = currentLikes; // Revertir si falla
+        console.error('Error al dar like:', error);
+      });
+  }
+}
+
+// Método auxiliar para saber si el usuario actual dio like
+isLiked(review: Review): boolean {
+  return review.likes?.includes(this.userId) || false;
+}
+
 
 }
