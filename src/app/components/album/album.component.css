@@ -306,6 +306,24 @@
   color: var(--negro);
 }
 
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.total-reviews {
+  color: #b3b3b3; /* Gris claro tipo Spotify */
+  font-size: 0.9rem;
+  font-weight: normal;
+}
+
+.average-number {
+  color: #4CAF50; /* Tu verde principal */
+  font-weight: bold;
+}
+
 /* Tablets y Celulares grandes */
 @media (max-width: 992px) {
   .album-header {
