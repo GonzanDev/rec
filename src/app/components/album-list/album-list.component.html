@@ -1,6 +1,7 @@
 <div class="carousel-container">
-  <button class="carousel-button left" (click)="scrollLeft()">&#9664;</button>
-
+<button class="carousel-button left" (click)="scrollLeft()">
+  <i class="fa fa-chevron-left"></i>
+</button>
   <div #carousel class="carousel">
     <div
       *ngFor="let album of albums"
@@ -15,5 +16,6 @@
     </div>
   </div>
 
-  <button class="carousel-button right" (click)="scrollRight()">&#9654;</button>
-</div>
+<button class="carousel-button right" (click)="scrollRight()">
+  <i class="fa fa-chevron-right"></i>
+</button></div>

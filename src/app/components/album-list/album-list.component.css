@@ -1,15 +1,19 @@
-* {
-  font-family: var(--fuente);
+:host {
+  display: block;
+  width: 100%;
+  overflow-x: hidden; /* Evita que las flechas estiren la página */
 }
 
 .carousel-container {
   display: flex;
   align-items: center;
-  justify-content: center;
   position: relative;
-  width: 90%;
-  max-width: 1000px;
+  width: 100%;
+  max-width: 1100px;
   margin: 20px auto;
+  /* El padding crea el espacio "fuera" del carrusel para las flechas */
+  padding: 0 60px; 
+  box-sizing: border-box;
 }
 
 .carousel {
@@ -17,80 +21,106 @@
   overflow-x: auto;
   scroll-behavior: smooth;
   gap: 20px;
-  padding: 10px;
-  max-width: 100%;
-
+  padding: 15px 0;
+  width: 100%;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
+
 .carousel::-webkit-scrollbar {
   display: none;
 }
 
+/* --- BOTONES (Flechas) --- */
+.carousel-button {
+  position: absolute;
+  /* Centrado vertical perfecto respecto al contenedor */
+  top: 50%;
+  transform: translateY(-50%); 
+  
+  /* Color original: Negro transparente */
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Transición suave solo para el brillo */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+/* Posicionados en el espacio del padding (FUERA de los álbumes) */
+.carousel-button.left {
+  left: 5px;
+}
+
+.carousel-button.right {
+  right: 5px;
+}
+
+.carousel-button:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Eliminamos la animación de bajada, solo un leve aumento de tamaño */
+  /* Importante mantener el translateY(-50%) para que no se mueva de su centro */
+  transform: translateY(-50%) scale(1.1); 
+}
+
+/* --- ALBUMS --- */
 .album {
   flex: 0 0 auto;
   text-align: center;
-  width: 200px;
+  width: 180px;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease;
 }
 
 .album img {
   width: 100%;
   height: auto;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.album-info {
-  margin-top: 10px;
+  border-radius: 12px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
 
 .album h3 {
-  font-size: 16px;
-  margin: 5px 0;
-  color: var(--grisclaro);
-  font-weight: bold;
+  font-size: 14px;
+  margin: 10px 0 5px;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .album p {
-  font-size: 14px;
-  color: #555;
+  font-size: 13px;
+  color: #b3b3b3;
 }
 
 .album:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px); /* Pequeña elevación del album al pasar el mouse */
 }
 
-.album:hover img {
-  transform: scale(1.05);
-}
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .carousel-container {
+    padding: 0 15px; /* En móvil quitamos el padding de las flechas */
+  }
 
-.carousel-button {
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s;
-}
+  .carousel-button {
+    display: none; /* En móvil usamos gesto de arrastre */
+  }
 
-.carousel-button:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
+  .carousel {
+    padding: 10px 0;
+  }
 
-.carousel-button.left {
-  position: absolute;
-  left: -50px;
-}
-
-.carousel-button.right {
-  position: absolute;
-  right: -50px;
+  .album {
+    width: 150px;
+  }
 }

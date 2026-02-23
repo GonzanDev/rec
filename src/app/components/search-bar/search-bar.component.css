@@ -6,7 +6,7 @@
   width: 100%; /* Toma todo el ancho del search-container */
   background-color: #181818;
   border-radius: 8px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
   z-index: 9999;
   max-height: 60vh;
   overflow-y: auto;
@@ -26,7 +26,7 @@
 .section-title {
   padding: 15px 20px 8px 20px;
   font-size: 0.75rem;
-  color: #1DB954; /* Cambiado a Verde Spotify */
+  color: #1db954; /* Cambiado a Verde Spotify */
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-weight: bold;
@@ -190,78 +190,78 @@ nav {
   transform: scale(1.05);
 }
 
-/* --- RESPONSIVE DESIGN --- */
+/* --- RESPONSIVE DESIGN  --- */
 
 @media (max-width: 768px) {
-  /* 1. Hacemos que el Nav crezca para albergar dos filas */
   nav {
     height: auto;
     flex-wrap: wrap;
-    padding: 15px 20px;
-    gap: 15px;
+    padding: 15px; /* Reducimos un poco el padding */
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box; /* Fundamental para que el padding no sume al ancho */
+    overflow: hidden; /* Evita que los hijos escapen */
   }
 
-  /* 2. El logo y el perfil se quedan en la primera fila, uno a cada lado */
   .home {
-    flex: 1;
+    flex: 1 1 auto; /* Permite que crezca y encoja */
     order: 1;
   }
 
   .profile {
-    flex: 1;
+    flex: 1 1 auto;
     order: 2;
     justify-content: flex-end;
+    flex-shrink: 0; /* Evita que el perfil se aplaste demasiado */
   }
 
-  /* 3. La barra de búsqueda se mueve a una nueva fila y toma el 100% */
+  .profile span {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap; /* Evita que el nombre de usuario salte de línea */
+  }
+
+  /* 3. La barra de búsqueda ahora toma el ancho justo */
   .search-container {
-    flex: 0 0 100%;
+    flex: 0 0 100%; /* Ocupa toda la fila */
     order: 3;
-    margin: 0;
+    margin: 5px 0 0 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .search-bar {
-    padding: 12px 15px; /* Un poco más grande para facilitar el toque con el dedo */
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding interno no la ensanche */
+    padding: 10px 15px;
   }
 
-  /* 4. Ajustamos el Dropdown de resultados para móviles */
+  /* 4. Dropdown flotante corregido */
   .search-results-dropdown {
-    position: fixed; /* En móviles es mejor que flote sobre todo el contenido */
-    top: 135px; /* Ajusta esto según la altura final de tu nav */
-    left: 10px;
-    right: 10px;
-    width: calc(100% - 20px);
-    max-height: 70vh;
+    position: fixed;
+    top: 130px; /* Ajusta este valor si el nav queda más alto/bajo */
+    left: 50%;
+    transform: translateX(-50%); /* Centrado exacto respecto a la pantalla */
+    width: 92vw; /* Usamos viewport width para máxima precisión */
+    max-height: 65vh;
     border-radius: 12px;
-  }
-
-  .list-item {
-    padding: 12px 15px; /* Más espacio para los dedos */
-  }
-
-  .item-thumb {
-    width: 40px;
-    height: 40px;
-  }
-
-  .item-name {
-    font-size: 0.9rem;
-  }
-
-  .item-type {
-    display: none; /* Ocultamos el texto de tipo (Canción/Álbum) para ganar espacio horizontal */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
   }
 }
 
-/* Para pantallas MUY pequeñas (relojes o móviles antiguos) */
+/* Ajuste para pantallas extra pequeñas */
 @media (max-width: 480px) {
-  .section-title {
-    font-size: 0.65rem;
-    padding-left: 15px;
+  nav {
+    padding: 10px;
   }
   
+  .home {
+    flex: 0 0 40px; /* Reducimos el espacio del logo */
+  }
+
   .profile span {
-    padding: 6px 12px;
-    font-size: 0.75rem;
+    max-width: 120px; /* Acortamos el nombre si es muy largo */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

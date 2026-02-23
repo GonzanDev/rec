@@ -81,13 +81,13 @@ export class AlbumListComponent implements OnInit, OnChanges {
     }
   }
 
-  scrollLeft() {
-    this.carousel.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
-  }
+scrollLeft() {
+  this.carousel.nativeElement.scrollBy({ left: -400, behavior: 'smooth' });
+}
 
-  scrollRight() {
-    this.carousel.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
-  }
+scrollRight() {
+  this.carousel.nativeElement.scrollBy({ left: 400, behavior: 'smooth' });
+}
 
   viewAlbumDetails(albumId: string) {
     this.router.navigate([`/album`, albumId]);
