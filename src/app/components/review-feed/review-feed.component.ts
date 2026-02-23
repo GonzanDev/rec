@@ -93,15 +93,22 @@ private loadReviews(): void {
     );
   }
 
-  // Caso 3: NUEVO - Feed de Seguidos
-  else if (this.mode === 'following') {
-    reviewsObservable = this.reviewService.getReviewsByFollowing(this.followingIds).pipe(
-      catchError(error => {
-        console.error('Error al obtener reseñas de seguidos:', error);
-        return of([]);
-      })
-    );
-  }
+// Caso 3: Feed de Seguidos (Modificado para no requerir índice)
+else if (this.mode === 'following') {
+  // Pedimos TODAS las reseñas (que ya tiene índice simple por defecto)
+  reviewsObservable = this.reviewService.getAllReviews().pipe(
+    map(allReviews => {
+      // Filtramos manualmente en Angular usando tu array de followingIds
+      return allReviews.filter(review => 
+        this.followingIds.includes(review.userId)
+      );
+    }),
+    catchError(error => {
+      console.error('Error al filtrar seguidos en cliente:', error);
+      return of([]);
+    })
+  );
+}
 
   // Caso 4: Feed General (Home por defecto)
   else {
