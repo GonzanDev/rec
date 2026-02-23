@@ -7,7 +7,7 @@ import { CreateReviewComponent } from '../create-review/create-review.component'
 import { UserService } from '../../services/user.service';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { ReviewService, Review } from '../../services/review.service';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest, catchError, of } from 'rxjs';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -32,6 +32,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   roundedAverage: number = 0;
   formattedAverage: string = '0,0';
 
+  usersInfo: Map<string, any> = new Map(); // datos usuarios de reseñas
 
   constructor(
     private route: ActivatedRoute,
@@ -106,11 +107,36 @@ export class AlbumComponent implements OnInit, OnDestroy {
       next: (reviews) => {
         this.reviews = reviews;
         this.updateAverage();
+        this.loadUsersDetails(reviews); // <--- Llamada a cargar usuarios
       },
       error: (error) => {
         console.error('Error loading reviews:', error);
       }
     });
+  }
+
+// Nuevo método para obtener nombres de usuario (similar al feed)
+  private loadUsersDetails(reviews: Review[]) {
+    const userIds = [...new Set(reviews.map(r => r.userId))].filter(id => !this.usersInfo.has(id));
+    
+    if (userIds.length === 0) return;
+
+    const userRequests = userIds.map(id =>
+      this.reviewService.getUserById(id).pipe(catchError(() => of(null)))
+    );
+
+    combineLatest(userRequests).subscribe(users => {
+      userIds.forEach((id, index) => {
+        if (users[index]) {
+          this.usersInfo.set(id, users[index]);
+        }
+      });
+    });
+  }
+
+  // Método auxiliar para el HTML
+  getUserName(userId: string): string {
+    return this.usersInfo.get(userId)?.username || 'Usuario...';
   }
 
   toggleFavorite() {
