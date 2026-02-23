@@ -1,205 +1,267 @@
-* {
-  font-family: var(--fuente);
+/* Contenedor del Dropdown */
+.search-results-dropdown {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%; /* Toma todo el ancho del search-container */
+  background-color: #181818;
+  border-radius: 8px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+  z-index: 9999;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 8px 0; /* Espaciado interno vertical */
+  display: none;
 }
 
+.search-results-dropdown.has-results {
+  display: block;
+}
+
+/* Secciones */
+.result-section {
+  padding-bottom: 10px;
+}
+
+.section-title {
+  padding: 15px 20px 8px 20px;
+  font-size: 0.75rem;
+  color: #1DB954; /* Cambiado a Verde Spotify */
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+}
+
+/* Items de la lista */
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  gap: 15px;
+}
+
+.list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.item-thumb {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.item-thumb.artist-circle {
+  border-radius: 50%;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.item-name {
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-sub {
+  color: #b3b3b3;
+  font-size: 0.85rem;
+}
+
+.item-type {
+  color: #b3b3b3;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar elegante */
+.search-results-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.search-results-dropdown::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+/* Icono de búsqueda en el input */
+.icon-search {
+  color: #b3b3b3;
+  margin-right: 10px;
+}
+
+/* Estructura Principal del Header */
 nav {
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
   align-items: center;
-  padding: 20px 40px;
-  background-color: var(--negro);
-  border-radius: 20px;
-}
-
-.home {
-  cursor: pointer;
-}
-
-.search-bar {
-  margin: 0 auto;
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  background-color: var(--negroclaro);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  width: 50%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.search-bar input {
-  flex-grow: 1;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  width: 120%;
-}
-
-.resultsbox {
-  width: 800px;
-}
-
-.results {
-  display: flex;
-
-  align-items: center;
-  justify-content: space-between;
-  justify-items: center;
-}
-
-a {
-  text-decoration: none;
-  color: black;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background-color: var(--negro);
-  border-radius: 20px;
-}
-
-.search-container {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.search-bar {
-  margin: 0 auto;
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  background-color: var(--negroclaro);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 30px;
-  width: 50%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.search-bar input {
-  flex-grow: 1;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  width: 120%;
-}
-
-.search-bar input:focus {
-  border-color: #1db954;
-}
-
-.search-results {
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 999;
-  max-height: 500px;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.search-results::-webkit-scrollbar {
-  display: none;
-}
-
-.search-results.hidden {
-  display: none;
-}
-
-.result-column {
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  min-width: 250px;
-}
-
-.result-column h3 {
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.result-column ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.result-column li {
-  padding: 8px 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.result-column li:last-child {
-  border-bottom: none;
-}
-
-/* Estilo de cada ítem de la lista */
-.result-column li {
-  padding: 8px 0;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.home,
-.profile {
-  cursor: pointer;
-}
-
-.home {
-  margin-left: 20px; /* Alinea el home a la izquierda */
-}
-
-.home img {
-  width: 50px;
-}
-
-.profile {
-  margin-right: 20px; /* Alinea el perfil a la derecha */
-}
-
-button {
-  background: none;
-  border: none;
-  color: #1db954;
-  font-size: 1rem;
-  font-weight: normal;
-  cursor: pointer;
-  text-align: left;
+  padding: 0 30px;
+  background-color: #000000; /* Fondo negro puro estilo Spotify */
+  height: 75px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   width: 100%;
-  padding: 0;
-  transition: color 0.3s ease, text-decoration 0.2s ease;
+  box-sizing: border-box;
 }
 
-button:hover {
-  color: #1aa34a;
-  text-decoration: underline;
+/* Contenedor de la izquierda (Home) */
+.home {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex: 0 0 100px; /* Tamaño fijo para que no se mueva */
 }
 
-/* Media query para pantallas más pequeñas */
+.home-icon {
+  width: 35px;
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.home:hover .home-icon {
+  transform: scale(1.1);
+}
+
+/* Contenedor del Centro (Buscador) */
+.search-container {
+  flex: 1;
+  max-width: 600px; /* Le damos más espacio para aprovechar tu idea */
+  position: relative;
+  margin: 0 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #242424; /* Gris oscuro */
+  border-radius: 500px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+  background-color: #2a2a2a;
+  border-color: #ffffff;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: white;
+  margin-left: 10px;
+  width: 100%;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+/* Contenedor de la derecha (Perfil) */
+.profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  flex: 0 0 150px; /* Tamaño fijo */
+}
+
+.profile span {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 8px 18px;
+  border-radius: 500px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.profile:hover span {
+  transform: scale(1.05);
+}
+
+/* --- RESPONSIVE DESIGN --- */
+
 @media (max-width: 768px) {
-  .search-results {
-    flex-direction: column;
-    align-items: center;
+  /* 1. Hacemos que el Nav crezca para albergar dos filas */
+  nav {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    gap: 15px;
   }
 
-  .result-column {
-    min-width: 100%;
+  /* 2. El logo y el perfil se quedan en la primera fila, uno a cada lado */
+  .home {
+    flex: 1;
+    order: 1;
+  }
+
+  .profile {
+    flex: 1;
+    order: 2;
+    justify-content: flex-end;
+  }
+
+  /* 3. La barra de búsqueda se mueve a una nueva fila y toma el 100% */
+  .search-container {
+    flex: 0 0 100%;
+    order: 3;
+    margin: 0;
+  }
+
+  .search-bar {
+    padding: 12px 15px; /* Un poco más grande para facilitar el toque con el dedo */
+  }
+
+  /* 4. Ajustamos el Dropdown de resultados para móviles */
+  .search-results-dropdown {
+    position: fixed; /* En móviles es mejor que flote sobre todo el contenido */
+    top: 135px; /* Ajusta esto según la altura final de tu nav */
+    left: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    max-height: 70vh;
+    border-radius: 12px;
+  }
+
+  .list-item {
+    padding: 12px 15px; /* Más espacio para los dedos */
+  }
+
+  .item-thumb {
+    width: 40px;
+    height: 40px;
+  }
+
+  .item-name {
+    font-size: 0.9rem;
+  }
+
+  .item-type {
+    display: none; /* Ocultamos el texto de tipo (Canción/Álbum) para ganar espacio horizontal */
+  }
+}
+
+/* Para pantallas MUY pequeñas (relojes o móviles antiguos) */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 0.65rem;
+    padding-left: 15px;
+  }
+  
+  .profile span {
+    padding: 6px 12px;
+    font-size: 0.75rem;
   }
 }

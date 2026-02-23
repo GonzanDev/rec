@@ -1,70 +1,63 @@
 <nav>
-  <div class="home">
-    <img
-      src="assets/home-wifi-svgrepo-com.png"
-      (click)="goHome()"
-      class="home-icon"
-    />
-  </div>
-  <div class="search-bar">
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      (input)="onSearchTermChange(searchTerm)"
-      placeholder="Buscar..."
-    />
+  <div class="home" (click)="goHome()">
+    <img src="assets/home-wifi-svgrepo-com.png" class="home-icon" />
   </div>
 
-  <!-- Ícono de Perfil -->
+  <div class="search-container">
+    <div class="search-bar">
+      <i class="fa fa-search icon-search"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchTermChange(searchTerm)"
+        placeholder="¿Qué quieres escuchar?"
+      />
+    </div>
+
+    <div
+      *ngIf="showResults && searchResults"
+      class="search-results-dropdown"
+      [class.has-results]="searchResults.tracks.length || searchResults.albums.length || searchResults.artists.length"
+    >
+      
+      <div class="result-section" *ngIf="searchResults.tracks.length > 0">
+        <h3 class="section-title">Canciones</h3>
+        <div class="list-item" *ngFor="let track of searchResults.tracks" (click)="viewSongDetails(track.id)">
+          <img [src]="track.album?.images[2]?.url" class="item-thumb" alt="track">
+          <div class="item-info">
+            <span class="item-name">{{ track.name }}</span>
+            <span class="item-sub">{{ track.artists[0].name }}</span>
+          </div>
+          <span class="item-type">Canción</span>
+        </div>
+      </div>
+
+      <div class="result-section" *ngIf="searchResults.albums.length > 0">
+        <h3 class="section-title">Álbumes</h3>
+        <div class="list-item" *ngFor="let album of searchResults.albums" (click)="viewAlbumDetails(album.id)">
+          <img [src]="album.images[2]?.url" class="item-thumb" alt="album">
+          <div class="item-info">
+            <span class="item-name">{{ album.name }}</span>
+            <span class="item-sub">{{ album.artists[0].name }}</span>
+          </div>
+          <span class="item-type">Álbum</span>
+        </div>
+      </div>
+
+      <div class="result-section" *ngIf="searchResults.artists.length > 0">
+        <h3 class="section-title">Artistas</h3>
+        <div class="list-item" *ngFor="let artist of searchResults.artists" (click)="viewArtistDetails(artist.id)">
+          <img [src]="artist.images[2]?.url || 'assets/default-artist.png'" class="item-thumb artist-circle" alt="artist">
+          <div class="item-info">
+            <span class="item-name">{{ artist.name }}</span>
+          </div>
+          <span class="item-type">Artista</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="profile" (click)="goToProfile()">
-    <p>{{ userName || "Usuario" }}</p>
-  </div>
-
-  <!-- Resultados -->
-  <div
-    *ngIf="showResults && searchResults"
-    class="search-results animated"
-    [ngClass]="{
-      hidden:
-        !searchResults.tracks.length &&
-        !searchResults.albums.length &&
-        !searchResults.artists.length
-    }"
-    #resultsBox
-  >
-    <div class="result-column" #resultsBox>
-      <h3>Canciones</h3>
-      <ul>
-        <li *ngFor="let track of searchResults.tracks">
-          <button (click)="viewSongDetails(track.id)">
-            {{ track.name }} - {{ track.artists[0].name }}
-          </button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Álbumes -->
-    <div *ngIf="searchResults.albums.length > 0" class="result-column">
-      <h3>Álbumes</h3>
-      <ul>
-        <li *ngFor="let album of searchResults.albums">
-          <button (click)="viewAlbumDetails(album.id)">
-            {{ album.name }} - {{ album.artists[0].name }}
-          </button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- Artistas -->
-    <div *ngIf="searchResults.artists.length > 0" class="result-column">
-      <h3>Artistas</h3>
-      <ul>
-        <li *ngFor="let artist of searchResults.artists">
-          <button (click)="viewArtistDetails(artist.id)">
-            {{ artist.name }}
-          </button>
-        </li>
-      </ul>
-    </div>
+    <span>{{ userName || "Usuario" }}</span>
   </div>
 </nav>
