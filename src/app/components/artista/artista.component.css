@@ -1,77 +1,135 @@
-* {
-  font-family: var(--fuente);
-}
-.artist-details {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s;
+.artist-page {
+  background-color: var(--negro);
+  min-height: 100vh;
+  color: white;
 }
 
-.artist-img {
-  width: 150px;
-  height: 150px;
+/* Header con efecto Hero */
+.artist-header {
+  height: 45vh; /* Un poco más alta */
+  min-height: 400px;
+  background-size: cover;
+  /* Centramos la imagen en el tercio superior para que parezca portada */
+  background-position: center 30%; 
+  display: flex;
+  align-items: flex-end;
+  padding: 40px;
+  position: relative;
+  /* El filtro de brillo ayuda a que el texto resalte más */
+  filter: saturate(1.2); 
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.artist-main-img {
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 4px solid rgba(255,255,255,0.1);
 }
 
-.perfil-artista {
-  width: 50%;
-  height: auto;
+.verified {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+  color: #4cb3ff; /* Azul verificado */
+  margin-bottom: 10px;
 }
 
-.artist-info {
-  font-size: 24px;
-  color: var(--verde);
+.artist-name {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  margin: 0;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
 }
 
-.artist-info p {
-  margin: 5px 0;
-  font-size: 16px;
-  color: #555;
+.artist-stats {
+  margin-top: 15px;
+  color: var(--grisclaro);
+  font-size: 1rem;
 }
 
-.album-list {
+.separator {
+  margin: 0 10px;
+}
+
+/* Acciones */
+.action-bar {
+  padding: 30px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.fav-btn {
+  background-color: transparent;
+  color: white;
+  border: 1px solid var(--grisclaro);
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
   display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  padding: 10px 0;
-  scrollbar-width: none;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
 
-.album-list::-webkit-scrollbar {
-  display: none;
-}
-
-.album-item {
-  text-align: center;
-  width: 120px;
-}
-
-.album-item img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s;
-}
-
-.album-item:hover img {
+.fav-btn:hover {
   transform: scale(1.05);
+  border-color: white;
 }
 
-.album-item p {
-  margin-top: 8px;
-  font-size: 14px;
-  color: #333;
+.fav-btn.is-favorite {
+  background-color: var(--verde);
+  border-color: var(--verde);
+  color: var(--negro);
+}
+
+/* Contenido */
+.artist-content {
+  padding: 0 40px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.artist-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .artist-header {
+    height: auto;
+    padding-top: 100px;
+  }
+
+  .artist-main-img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .action-bar {
+    display: flex;
+    justify-content: center;
+  }
 }

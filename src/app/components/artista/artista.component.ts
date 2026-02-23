@@ -1,17 +1,18 @@
 import { UserService } from './../../services/user.service';
 import { SpotifyService } from './../../services/spotify.service';
 import { AuthStateService } from './../auth/data-access/auth-state.service';
-import { NgIf } from '@angular/common';
+import { NgIf , NgClass } from '@angular/common';
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, Subscription, filter, take } from 'rxjs';
 import { AlbumListComponent } from '../album-list/album-list.component';
 import { toast } from 'ngx-sonner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-artista',
   standalone: true,
-  imports: [NgIf, AlbumListComponent],
+  imports: [NgIf, AlbumListComponent, CommonModule],
   templateUrl: './artista.component.html',
   styleUrls: ['./artista.component.css'],
 })

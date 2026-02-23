@@ -1,27 +1,32 @@
-<div *ngIf="artist">
-  <div class="artist-details">
-    <div class="perfil-artista">
+<div *ngIf="artist" class="artist-page">
+  <header class="artist-header" [style.background-image]="'linear-gradient(to bottom, rgba(0,0,0,0) 0%, var(--negro) 100%), url(' + artist.images[0]?.url + ')'">
+    <div class="header-content">
       <img
-        class="artist-img"
+        class="artist-main-img"
         [src]="artist.images[0]?.url"
         alt="{{ artist.name }}"
       />
-      <h2 class="artist-info">{{ artist.name }}</h2>
+      <div class="artist-text">
+        <span class="verified"><i class="fa fa-check-circle"></i> Artista verificado</span>
+        <h1 class="artist-name">{{ artist.name }}</h1>
+        <div class="artist-stats">
+          <span><strong>{{ formatFollowers(artist.followers.total) }}</strong> seguidores</span>
+          <span class="separator">•</span>
+          <span class="genres">{{ formatGenres(artist.genres) }}</span>
+        </div>
+      </div>
     </div>
-    <div class="data-artista">
-      <p>
-        Seguidores:
-        {{ formatFollowers(artist.followers.total) }}
-      </p>
-      <p>
-        Géneros:
-        {{ formatGenres(artist.genres) }}
-      </p>
-    </div>
-    <div class="botones">
-  <button (click)="addToFavorites()">{{ isFavorite ? '❤️' : '🤍' }}</button>
-</div>
+  </header>
+
+  <div class="action-bar">
+    <button class="fav-btn" [class.is-favorite]="isFavorite" (click)="addToFavorites()">
+      <i class="fa" [ngClass]="isFavorite ? 'fa-heart' : 'fa-heart-o'"></i>
+      {{ isFavorite ? 'En favoritos' : 'Seguir artista' }}
+    </button>
   </div>
-  <!-- Pasa el artistId al AlbumListComponent -->
-  <app-album-list [artistId]="artist.id"></app-album-list>
+
+  <section class="artist-content">
+    <h3>Discografía</h3>
+    <app-album-list [artistId]="artist.id"></app-album-list>
+  </section>
 </div>
