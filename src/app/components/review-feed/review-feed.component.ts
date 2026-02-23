@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ReviewService, Review } from '../../services/review.service';
 import { CommonModule } from '@angular/common';
@@ -16,10 +16,14 @@ import { ReviewComponent } from '../review/review.component';
   templateUrl: './review-feed.component.html',
   styleUrls: ['./review-feed.component.css']
 })
-export class ReviewFeedComponent implements OnInit, OnDestroy {
+export class ReviewFeedComponent implements OnInit, OnDestroy, OnChanges {
   @Input() userId: string = '';
   @Input() highlightReviewId: string | null = null;
   @Input() individualTextFields: boolean = false;
+
+  @Input() mode: 'all' | 'following' = 'all';
+  @Input() followingIds: string[] = [];
+
   reviews: Review[] = [];
   usersInfo: Map<string, any> = new Map();
   albumsInfo: Map<string, any> = new Map();
@@ -54,10 +58,17 @@ export class ReviewFeedComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Si el modo cambia, volvemos a cargar las reseñas
+    if (changes['mode'] && !changes['mode'].firstChange) {
+      this.loadReviews();
+    }
+  }
+
 private loadReviews(): void {
   let reviewsObservable: Observable<Review[]>;
 
-  // Caso 1: viene desde /review/:id
+  // Caso 1: viene desde /review/:id (Vista individual)
   if (this.highlightReviewId) {
     reviewsObservable = from(
       this.reviewService.getReviewById(this.highlightReviewId)
@@ -70,7 +81,7 @@ private loadReviews(): void {
     );
   }
 
-  // Caso 2: perfil de usuario
+  // Caso 2: Perfil de un usuario específico
   else if (this.userId) {
     reviewsObservable = from(
       this.reviewService.getReviewsByUser(this.userId)
@@ -82,7 +93,17 @@ private loadReviews(): void {
     );
   }
 
-  // Caso 3: feed general
+  // Caso 3: NUEVO - Feed de Seguidos
+  else if (this.mode === 'following') {
+    reviewsObservable = this.reviewService.getReviewsByFollowing(this.followingIds).pipe(
+      catchError(error => {
+        console.error('Error al obtener reseñas de seguidos:', error);
+        return of([]);
+      })
+    );
+  }
+
+  // Caso 4: Feed General (Home por defecto)
   else {
     reviewsObservable = this.reviewService.getAllReviews().pipe(
       map(docs => docs as Review[]),
@@ -94,7 +115,6 @@ private loadReviews(): void {
   }
 
   const reviewSub = reviewsObservable.subscribe(reviews => {
-
     // Solo ordenar si NO es vista individual
     this.reviews = this.highlightReviewId
       ? reviews

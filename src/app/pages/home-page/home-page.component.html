@@ -1,8 +1,23 @@
-<app-search-bar/>
-<app-album-list/>
+<app-search-bar></app-search-bar>
+<app-album-list></app-album-list>
+
+<div class="feed-tabs" *ngIf="!reviewIdFromUrl">
+  <button 
+    [class.active]="currentMode === 'all'" 
+    (click)="setMode('all')">
+    Recientes
+  </button>
+  <button 
+    [class.active]="currentMode === 'following'" 
+    (click)="setMode('following')">
+    Seguidos
+  </button>
+</div>
 
 <app-review-feed
-  [highlightReviewId]="reviewIdFromUrl">
+  [highlightReviewId]="reviewIdFromUrl"
+  [mode]="currentMode"
+  [followingIds]="followingIds">
 </app-review-feed>
 
-<router-outlet/>
+<router-outlet></router-outlet>

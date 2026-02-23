@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, docData, doc, setDoc, updateDoc, arrayUnion, arrayRemove, collectionData } from '@angular/fire/firestore';
 import { addDoc, deleteDoc, getDocs, orderBy, query, Timestamp, where } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 export interface Review {
   id?: string;
@@ -112,5 +112,21 @@ export class ReviewService {
     });
   }
 
-
+// En review.service.ts
+getReviewsByFollowing(followingIds: string[]): Observable<Review[]> {
+  if (!followingIds || followingIds.length === 0) {
+    return of([]); // Si no sigue a nadie, devolvemos array vacío
+  }
+  
+  // Limitamos a los primeros 30 para evitar errores de Firestore
+  const limitedIds = followingIds.slice(0, 30);
+  
+  const q = query(
+    this.reviews, 
+    where('userId', 'in', limitedIds), 
+    orderBy('timestamp', 'desc')
+  );
+  
+  return collectionData(q, { idField: 'id' }) as Observable<Review[]>;
+}
 }

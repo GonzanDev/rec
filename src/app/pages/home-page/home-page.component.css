@@ -1,0 +1,29 @@
+.feed-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.feed-tabs button {
+  background-color: #282828;
+  color: #b3b3b3;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feed-tabs button.active {
+  background-color: #4CAF50; /* Tu verde principal */
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.feed-tabs button:hover:not(.active) {
+  background-color: #333;
+  color: white;
+}
