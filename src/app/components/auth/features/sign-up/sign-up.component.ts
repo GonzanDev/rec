@@ -1,5 +1,5 @@
 import { AuthService } from '../../../../services/auth.service';
-import { Component, inject } from '@angular/core';
+import { Component, inject, NgZone } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -25,6 +25,7 @@ export class SignUpComponent {
   private formBuilder = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private zone = inject(NgZone);
 
   constructor() {}
 
@@ -37,35 +38,48 @@ export class SignUpComponent {
     username: new FormControl('', Validators.required),
   });
 
-  async submit() {
-    if (this.form.valid) {
-      const { email, password, username } = this.form.value;
-      const user: User = {
-        email: email!,
-        password: password!,
-        username: username!,
-      };
+async submit() {
+  if (this.form.valid) {
+    const { email, password, username } = this.form.value;
+    const user: User = {
+      email: email!,
+      password: password!,
+      username: username!,
+    };
 
-      try {
-        // Llama a signUp de AuthService y espera el resultado
-        await this.authService.signUp(user);
-        console.log('Usuario registrado y guardado en Firestore');
-
-        // Redirige al usuario a la página de inicio o perfil después del registro
-        this.router.navigate(['/home']);
-      } catch (error) {
-        console.error('Error en el registro:', error);
-      }
-    }
-  }
-
-  async submitWithGoogle() {
     try {
-      await this.authService.signInWithGoogle();
-      toast.success('Usuario creado correctamente.');
-      this.router.navigateByUrl('/home');
-    } catch (error) {
-      toast.error('Ocurrio un error.');
+      // 1. Esperamos a que termine el registro y Firestore
+      await this.authService.signUp(user);
+      
+      // 2. Notificamos al usuario
+      toast.success('Usuario registrado correctamente');
+
+      // 3. Forzamos la redirección dentro de la zona de Angular
+      // Esto soluciona que se quede "colgado"
+      this.zone.run(() => {
+        this.router.navigate(['/home']);
+      });
+
+    } catch (error: any) {
+      console.error('Error en el registro:', error);
+      // Un toque extra: mostrar el error real de Firebase (ej: email ya en uso)
+      toast.error(error.message || 'Hubo un problema al crear tu cuenta');
     }
   }
+}
+
+async submitWithGoogle() {
+  try {
+    await this.authService.signInWithGoogle();
+    toast.success('Bienvenido');
+    
+    // Forzamos a Angular a navegar inmediatamente
+    this.zone.run(() => {
+      this.router.navigate(['/home']);
+    });
+  } catch (error) {
+    console.error('Google sign in error:', error);
+    toast.error('Ocurrió un error.');
+  }
+}
 }

@@ -39,22 +39,24 @@ export  class SignInComponent {
    password:this._formBuilder.control('', Validators.required)
   })
 
-  async submit(){
-  if(this.form.invalid) return;
+async submit() {
+  if (this.form.invalid) return;
 
-  try{
-    const {email, password} = this.form.value;
+  try {
+    const { email, password } = this.form.value;
+    if (!email || !password) return;
 
-    if(!email || !password) return;
-
-    console.log({email, password});
-    const result = await this.authService.signIn({email, password});
-    console.log('Sign in result:', result);
-    console.log('Auth current user:', result.user?.uid);
+    const result = await this.authService.signIn({ email, password });
+    
+    // 1. Mostrar mensaje de éxito
     toast.success('Bienvenido');
-  }catch(error){
+    
+    // 2. REDIRIGIR AL HOME (Esta es la línea que faltaba)
+    await this._router.navigateByUrl('/home');
+    
+  } catch (error) {
     console.error('Sign in error:', error);
-    toast.error('Ocurrio un error.');
+    toast.error('Credenciales incorrectas o error de servidor.');
   }
 }
 
