@@ -2,10 +2,13 @@
   font-family: var(--fuente);
 }
 
-body,
-html {
+/* Limpieza total */
+body, html {
   height: 100%;
   margin: 0;
+  padding: 0;
+  background-color: #000; /* Fondo negro base para evitar destellos grises */
+  overflow-x: hidden;
 }
 
 .container {
@@ -15,72 +18,169 @@ html {
   height: 100vh; /* Full viewport height */
   background-color: var(--fondo); /* Set a background color if needed */
 }
+/* ... (Mantiene tu código anterior hasta .song-details) ... */
 
 .song-details {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 40px; /* Aumentamos el gap para dar aire */
+  padding: 40px;
   background-color: var(--negro);
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  max-width: 900px;
+  margin: 40px auto;
+  color: white;
 }
 
 .album-cover img {
   width: 300px;
-  height: auto;
-  border-radius: 4px;
+  aspect-ratio: 1/1; /* Asegura que sea cuadrada */
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
 }
 
 .song-info {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .song-title {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: clamp(24px, 5vw, 42px); /* Tamaño fluido según la pantalla */
+  font-weight: 900;
+  margin: 0 0 15px;
+}
+.song-page-container {
+  position: relative;
+  min-height: calc(100vh - 75px); /* Restamos la altura de tu Nav para que no haya scroll infinito */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  /* Eliminamos cualquier color de fondo que pueda venir heredado */
+  background-color: transparent !important; 
+}
+
+/* El fondo difuminado debe ser absoluto respecto a la pantalla si el padre molesta */
+.bg-blur {
+  position: fixed; /* Cambiado de absolute a fixed */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  filter: blur(60px) brightness(0.3);
+  transform: scale(1.1);
+  z-index: -1; /* Se queda atrás de todo, incluso del Nav si este es transparente */
+}
+.song-details {
+  position: relative; /* Para estar encima del fondo */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.6); /* Más transparencia para ver el color */
+  backdrop-filter: blur(15px); /* Efecto Glassmorphism */
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+  color: white;
+}
+.album-cover img {
+  width: 350px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.song-title {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
   margin: 0 0 10px;
+  line-height: 1.1;
 }
 
-.artist-name,
-.album-name,
-.release-date {
-  font-size: 18px;
-  margin: 5px 0;
-}
-
-.artist-link,
-.album-link {
-  color: #1db954;
+/* Links Verdes */
+.artist-link, .album-link {
+  color: #1DB954; /* Verde Spotify */
   text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
+  font-weight: 600;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
 }
 
-.artist-link:hover,
-.album-link:hover {
-  color: #1aa34a;
+.artist-link:hover, .album-link:hover {
+  color: #1ed760;
   text-decoration: underline;
 }
 
-.song-controls {
-  margin-top: 20px;
+.comma {
+  color: #b3b3b3;
 }
 
+.release-date {
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Botón Spotify Verde */
 .spotify-link {
   display: inline-block;
-  background-color: #1db954;
+  background-color: #1DB954;
   color: white;
-  padding: 10px 15px;
-  border-radius: 50px;
+  padding: 14px 28px;
+  border-radius: 500px;
   text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  transition: all 0.3s ease;
 }
 
 .spotify-link:hover {
   background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .song-details {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px;
+    gap: 20px;
+  }
+
+  .album-cover img {
+    width: 250px;
+  }
+
+  .song-info {
+    align-items: center;
+  }
+
+  .song-title {
+    font-size: 1.8rem;
+  }
+
+  .artist-name,
+  .album-name,
+  .release-date {
+    font-size: 16px;
+  }
+
+  .spotify-link {
+    width: 100%; /* Botón ancho para pulgares en móvil */
+    max-width: 250px;
+    padding: 15px;
+  }
 }
