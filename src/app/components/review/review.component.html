@@ -59,11 +59,13 @@
   <!-- Comments section -->
   <div class="comments-section">
     <h5>Comentarios</h5>
-    <div *ngFor="let comment of review.comments; let i = index" class="comment-item">
-      <p>
-        <a [routerLink]="['/users', comment.userId]">{{ getUserName(comment.userId) }}</a>
-        {{ comment.content }}
-      </p>
+<div *ngFor="let comment of review.comments; let i = index" class="comment-item">
+  <p>
+    <a [routerLink]="['/users', comment.userId]">
+      {{ getCommentUserName(comment.userId) }}
+    </a>
+    {{ comment.content }}
+  </p>
       <button
         *ngIf="currentUserId && currentUserId !== comment.userId"
         class="report-btn report-btn-small"
