@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Review } from '../../services/review.service';
 import { ReportService, ReportReason } from '../../services/report.service';
 import { toast } from 'ngx-sonner';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   selector: 'app-review',
@@ -25,6 +26,9 @@ export class ReviewComponent {
 
   private reportService = inject(ReportService);
 
+  private reviewService = inject(ReviewService); // Inyectamos el servicio
+  userNamesCache: { [key: string]: string } = {}; // Almacén temporal de nombres
+  
   newCommentContent: string = '';
 
   // Report modal state
@@ -148,6 +152,32 @@ shareX() {
 copyLink() {
   navigator.clipboard.writeText(this.getReviewLink());
   alert('Link copiado');
+}
+
+/// comment section
+
+getCommentUserName(userId: string): string {
+  // 1. Intentar con el input del padre
+  const nameFromInput = this.getUserName ? this.getUserName(userId) : 'Unknown User';
+  if (nameFromInput !== 'Unknown User') return nameFromInput;
+
+  // 2. Revisar caché
+  if (this.userNamesCache[userId]) return this.userNamesCache[userId];
+
+  // 3. Buscar en Firebase
+  this.userNamesCache[userId] = 'Cargando...';
+  this.reviewService.getUserById(userId).subscribe(user => {
+    console.log(`Datos recibidos del usuario ${userId}:`, user); // ESTO TE DIRÁ EL NOMBRE DEL CAMPO
+
+    if (user) {
+      // Probamos todas las variantes posibles de nombres en Firestore
+      this.userNamesCache[userId] = user.displayName || user.name || user.username || 'Usuario';
+    } else {
+      this.userNamesCache[userId] = 'Usuario no encontrado';
+    }
+  });
+
+  return this.userNamesCache[userId];
 }
 
 }
