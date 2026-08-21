@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { SpotifyService } from '../../services/spotify.service';
 import { switchMap, filter, take } from 'rxjs/operators';
@@ -38,7 +39,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private spotifyService: SpotifyService,
     private userService: UserService,
-    private reviewService: ReviewService
+    private reviewService: ReviewService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -196,6 +198,10 @@ export class AlbumComponent implements OnInit, OnDestroy {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  sanitizeUrl(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   getTotalDuration(): string {

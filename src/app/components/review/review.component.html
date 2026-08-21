@@ -1,95 +1,112 @@
-<div class="review" *ngIf="userInfo && albumInfo">
-  <div class="review-header">
-    <h4>
-      <a [routerLink]="['/users', userInfo?.id]">{{ userInfo?.username }}</a>
-    </h4>
-    <div class="review-header-right">
-      <span>{{ review.timestamp.toDate() | date:'short' }}</span>
-      <button
-        *ngIf="currentUserId && currentUserId !== review.userId"
-        class="report-btn"
-        (click)="openReportReviewModal()"
-        title="Reportar reseña">
-        <img src="assets/report_flag.svg" alt="Reportar" class="report-icon">
-      </button>
-    </div>
-  </div>
-
-  <p>{{ review.comment }}</p>
-
-  <!-- Rating stars -->
-  <div class="rating">
-    <span *ngFor="let star of [0,1,2,3,4]; let j = index"
-          [ngClass]="{'filled': j < review.rating}">
-      &#9733;
-    </span>
-  </div>
-
-  <!-- Album info -->
-  <div class="album-info">
-    <img [src]="albumInfo?.images[2]?.url" alt="Album cover" width="50" height="50">
-    <a [routerLink]="['/album', albumInfo?.id]">{{ albumInfo?.name }}</a>
-  </div>
-
-  <!-- Like section -->
-  <div class="like-section">
-    <button (click)="onToggleLike()">
-      <span *ngIf="isLikedByUser">❤️</span>
-      <span *ngIf="!isLikedByUser">🤍</span>
-    </button>
-    <span>{{ review.likes?.length || 0 }} Likes</span>
-  </div>
-
-<div class="share-section">
-  <span style="color: #b3b3b3; font-size: 12px; font-weight: bold; margin-right: 5px;">COMPARTIR EN:</span>
-<button (click)="shareWhatsApp()" class="btn-whatsapp">
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    viewBox="0 0 16 16" 
-    width="16" 
-    height="16" 
-    fill="currentColor">
-    <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.17-.478 1.338-.942.164-.464.164-.86.114-.942-.049-.082-.182-.133-.38-.232z"/>
-  </svg>
-</button>  <button (click)="shareX()">X</button>
-  <button (click)="copyLink()">Copiar link</button>
-</div>
-
-
-  <!-- Comments section -->
-  <div class="comments-section">
-    <h5>Comentarios</h5>
-<div *ngFor="let comment of review.comments; let i = index" class="comment-item">
-  <p>
-    <a [routerLink]="['/users', comment.userId]">
-      {{ getCommentUserName(comment.userId) }}
+<div class="review glass-panel" *ngIf="userInfo && albumInfo">
+  
+  <!-- Columna Izquierda: Portada Grande -->
+  <div class="review-left-col">
+    <a [routerLink]="['/album', albumInfo?.id]">
+      <img [src]="albumInfo?.images[1]?.url || albumInfo?.images[0]?.url" alt="Album cover" class="review-cover">
     </a>
-    {{ comment.content }}
-  </p>
-      <button
-        *ngIf="currentUserId && currentUserId !== comment.userId"
-        class="report-btn report-btn-small"
-        (click)="openReportCommentModal(i)"
-        title="Reportar comentario">
-        <img src="assets/report_flag.svg" alt="Reportar" class="report-icon report-icon-small">
-      </button>
+  </div>
+
+  <!-- Columna Derecha: Contenido -->
+  <div class="review-right-col">
+    
+    <div class="review-header">
+      <div class="review-header-info">
+        <h4>
+          <a [routerLink]="['/users', userInfo?.id]">{{ userInfo?.username }}</a>
+        </h4>
+        <span class="review-action-text">reseñó <a [routerLink]="['/album', albumInfo?.id]" class="album-name-link">{{ albumInfo?.name }}</a></span>
+      </div>
+      
+      <div class="review-header-right">
+        <span class="review-date">{{ review.timestamp.toDate() | date:'shortDate' }}</span>
+        <button
+          *ngIf="currentUserId && currentUserId !== review.userId"
+          class="report-btn"
+          (click)="openReportReviewModal()"
+          title="Reportar reseña">
+          <img src="assets/report_flag.svg" alt="Reportar" class="report-icon">
+        </button>
+      </div>
     </div>
 
-    <!-- Add new comment form -->
-    <div *ngIf="currentUserId">
-      <input
-        [(ngModel)]="newCommentContent"
-        placeholder="Agregar un comentario..." />
-      <button
-        (click)="onAddComment()"
-        [disabled]="!review.id || !newCommentContent.trim()">
-        Comentar
-      </button>
+    <!-- Rating stars -->
+    <div class="rating">
+      <span *ngFor="let star of [0,1,2,3,4]; let j = index"
+            [ngClass]="{'filled': j < review.rating}">
+        &#9733;
+      </span>
+    </div>
+
+    <p class="review-body-text">{{ review.comment }}</p>
+
+    <!-- Like & Share section -->
+    <div class="review-actions-bar">
+      <div class="like-section">
+        <button (click)="onToggleLike()" class="like-btn" [class.liked]="isLikedByUser">
+          <i class="fa" [ngClass]="isLikedByUser ? 'fa-heart' : 'fa-heart-o'"></i>
+        </button>
+        <span>{{ review.likes?.length || 0 }} Likes</span>
+      </div>
+
+      <div class="share-section">
+        <span class="share-label">Compartir:</span>
+        <button (click)="shareWhatsApp()" class="share-btn whatsapp-btn" title="WhatsApp">
+          <i class="fa fa-whatsapp"></i>
+        </button>
+        <button (click)="shareX()" class="share-btn x-btn" title="X (Twitter)">
+          <i class="fa fa-twitter"></i>
+        </button>
+        <button (click)="copyLink()" class="share-btn copy-btn" title="Copiar link">
+          <i class="fa fa-link"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Comments section -->
+    <div class="comments-section">
+      <div class="comments-header">
+        <h5>Comentarios ({{ review.comments?.length || 0 }})</h5>
+        <button class="toggle-comments-btn" (click)="showComments = !showComments">
+          <i class="fa" [ngClass]="showComments ? 'fa-chevron-up' : 'fa-chevron-down'"></i> 
+          {{ showComments ? 'Ocultar comentarios' : 'Ver comentarios' }}
+        </button>
+      </div>
+
+      <div class="comments-accordion" [class.open]="showComments">
+        <div *ngFor="let comment of review.comments; let i = index" class="comment-item">
+          <p>
+            <a [routerLink]="['/users', comment.userId]" class="comment-author">
+              {{ getCommentUserName(comment.userId) }}
+            </a>
+            {{ comment.content }}
+          </p>
+          <button
+            *ngIf="currentUserId && currentUserId !== comment.userId"
+            class="report-btn report-btn-small"
+            (click)="openReportCommentModal(i)"
+            title="Reportar comentario">
+            <img src="assets/report_flag.svg" alt="Reportar" class="report-icon report-icon-small">
+          </button>
+        </div>
+
+        <!-- Add new comment form -->
+        <div *ngIf="currentUserId" class="comment-input-wrapper">
+          <input
+            [(ngModel)]="newCommentContent"
+            placeholder="Agregar un comentario..." />
+          <button
+            (click)="onAddComment()"
+            [disabled]="!review.id || !newCommentContent.trim()">
+            Comentar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Report Modal -->
+<!-- Report Modal (Igual que antes) -->
 <div class="report-modal-overlay" *ngIf="showReportModal" (click)="closeReportModal()">
   <div class="report-modal" (click)="$event.stopPropagation()">
     <div class="report-modal-header">
@@ -101,30 +118,17 @@
       <label>Razón del reporte:</label>
       <div class="report-reasons">
         <label *ngFor="let reason of reportReasons" class="reason-option">
-          <input
-            type="radio"
-            [value]="reason.value"
-            [(ngModel)]="selectedReason"
-            name="reportReason" />
+          <input type="radio" [value]="reason.value" [(ngModel)]="selectedReason" name="reportReason" />
           {{ reason.label }}
         </label>
       </div>
-
       <label for="reportDescription">Descripción adicional (opcional):</label>
-      <textarea
-        id="reportDescription"
-        [(ngModel)]="reportDescription"
-        placeholder="Proporciona más detalles sobre el reporte..."
-        rows="3">
-      </textarea>
+      <textarea id="reportDescription" [(ngModel)]="reportDescription" placeholder="Proporciona más detalles..." rows="3"></textarea>
     </div>
 
     <div class="report-modal-footer">
       <button class="cancel-btn" (click)="closeReportModal()">Cancelar</button>
-      <button
-        class="submit-btn"
-        (click)="submitReport()"
-        [disabled]="isSubmittingReport">
+      <button class="submit-btn" (click)="submitReport()" [disabled]="isSubmittingReport">
         {{ isSubmittingReport ? 'Enviando...' : 'Enviar reporte' }}
       </button>
     </div>

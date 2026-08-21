@@ -1,112 +1,137 @@
 <div *ngIf="isLoading" class="loading">
-  <p>Cargando álbum...</p>
+  <div class="spinner"></div>
 </div>
 
-<div *ngIf="album && !isLoading" class="album-details">
-  <div class="album-header">
-    <div class="album-info">
-      <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
-      <div class="album-data">
-        <h2>{{ album.name }}</h2>
-        <div *ngIf="reviews.length > 0" class="average-rating">
-          <span class="stars">
-            <i *ngFor="let star of [1,2,3,4,5]" class="fa" [ngClass]="star <= roundedAverage ? 'fa-star' : 'fa-star-o'">
-            </i>
-          </span>
-          <span class="average-number">
-            ({{ formattedAverage }})
-          </span>
-
-          <span class="total-reviews">
-            • {{ reviews.length }} {{ reviews.length === 1 ? 'reseña' : 'reseñas' }}
-          </span>
-        </div>
-
-        <p class="album-meta">
-          <a [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0]?.name }}</a>
-          <span class="separator">•</span>
-          <span>{{ album.release_date | slice:0:4 }}</span>
-          <span class="separator">•</span>
-          <span>{{ album.total_tracks }} canciones, {{ getTotalDuration() }}</span>
-        </p>
-      </div>
+<div *ngIf="album && !isLoading" class="album-container">
+  <div class="album-sidebar">
+    <div class="cover-wrapper">
+      <img class="album-cover" [src]="album.images[0]?.url" [alt]="album.name" />
     </div>
-
-    <div class="botones">
-      <button class="favorite-btn" [class.is-favorite]="isFavorite" (click)="toggleFavorite()"
+    
+    <div class="album-actions">
+      <button class="action-btn" [class.is-favorite]="isFavorite" (click)="toggleFavorite()"
         [title]="isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'">
-        {{ isFavorite ? '❤️' : '🤍' }}
+        <i class="fa" [ngClass]="isFavorite ? 'fa-heart' : 'fa-heart-o'"></i>
+        <span>{{ isFavorite ? 'Favorito' : 'Favorito' }}</span>
       </button>
-      <button class="review-btn" (click)="openReviewComponent()">
-        Crear Reseña
+      <button class="action-btn review-btn" (click)="openReviewComponent()">
+        <i class="fa fa-star"></i>
+        <span>Reseñar</span>
       </button>
-      <div class="share-buttons">
-        <button (click)="shareWhatsApp()" class="btn-whatsapp">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-            <path
-              d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.17-.478 1.338-.942.164-.464.164-.86.114-.942-.049-.082-.182-.133-.38-.232z" />
-          </svg>
-        </button> <button (click)="shareX()">X</button>
-        <button (click)="copyLink()">Copiar link</button>
+    </div>
+    
+    <div class="share-links">
+      <button (click)="shareWhatsApp()" class="share-btn" title="Compartir en WhatsApp"><i class="fa fa-whatsapp"></i></button>
+      <button (click)="shareX()" class="share-btn" title="Compartir en X"><i class="fa fa-twitter"></i></button>
+      <button (click)="copyLink()" class="share-btn" title="Copiar link"><i class="fa fa-link"></i></button>
+    </div>
+  </div>
+
+  <div class="album-main">
+    <div class="album-header">
+      <h1 class="album-title">{{ album.name }}</h1>
+      <div class="album-meta-top">
+        <a class="artist-name" [routerLink]="['/artist', album.artists[0]?.id]">{{ album.artists[0]?.name }}</a>
+        <span class="meta-divider">•</span>
+        <span class="year">{{ album.release_date | slice:0:4 }}</span>
+      </div>
+    </div>
+
+    <div class="album-stats" *ngIf="reviews.length > 0">
+      <div class="stat-box">
+        <div class="stat-value">
+          <span class="stars">
+            <i *ngFor="let star of [1,2,3,4,5]" class="fa" [ngClass]="star <= roundedAverage ? 'fa-star' : 'fa-star-o'"></i>
+          </span>
+          <span class="rating-number">{{ formattedAverage }}</span>
+        </div>
+        <div class="stat-label">Valoración Promedio</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value">
+          <i class="fa fa-align-left"></i> 
+          <span>{{ reviews.length }}</span>
+        </div>
+        <div class="stat-label">Reseñas</div>
+      </div>
+    </div>
+
+    <div class="album-info-details">
+      <div class="detail-item">
+        <span class="detail-label">Canciones</span>
+        <span class="detail-val">{{ album.total_tracks }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Duración</span>
+        <span class="detail-val">{{ getTotalDuration() }}</span>
+      </div>
+    </div>
+
+    <div class="track-list">
+      <h3>Canciones</h3>
+      <div class="track-table">
+        <div class="track-row header">
+          <div class="col-num">#</div>
+          <div class="col-title">Título</div>
+          <div class="col-preview">Adelanto</div>
+          <div class="col-time"><i class="fa fa-clock-o"></i></div>
+        </div>
+        <div class="track-row" *ngFor="let track of album.tracks.items">
+          <div class="col-num">{{ track.track_number }}</div>
+          <div class="col-title">
+            <a [routerLink]="['/song', track.id]" class="track-link">{{ track.name }}</a>
+          </div>
+          <div class="col-preview">
+            <audio *ngIf="track.preview_url" controls controlsList="nodownload" class="custom-audio" [src]="sanitizeUrl(track.preview_url)"></audio>
+            <a *ngIf="!track.preview_url" [href]="track.external_urls?.spotify" target="_blank" class="spotify-fallback-btn">
+              <i class="fa fa-spotify"></i> Escuchar en Spotify
+            </a>
+          </div>
+          <div class="col-time">{{ formatDuration(track.duration_ms) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reviews-section">
+      <div class="reviews-header">
+        <h3>Reseñas ({{ reviews.length }})</h3>
+      </div>
+      
+      <div *ngIf="reviews.length === 0" class="no-reviews">
+        <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
       </div>
 
-    </div>
-  </div>
-
-
-
-  <div class="track-list">
-    <h3>Canciones</h3>
-    <ul>
-      <li *ngFor="let track of album.tracks.items">
-        <div class="track-item">
-          <div class="track-info">
-            <span class="track-number">{{ track.track_number }}</span>
-            <span class="track-name">{{ track.name }}</span>
+      <div class="review-grid">
+        <div *ngFor="let review of reviews" class="review-card">
+          <div class="review-card-header">
+            <a [routerLink]="['/users', review.userId]" class="review-author">
+              <div class="avatar"><i class="fa fa-user"></i></div>
+              <span>{{ getUserName(review.userId) }}</span>
+            </a>
+            <span class="review-rating">
+              <i *ngFor="let star of [1, 2, 3, 4, 5]" class="fa"
+                [ngClass]="star <= review.rating ? 'fa-star' : 'fa-star-o'">
+              </i>
+            </span>
           </div>
-          <div class="track-right">
-            <span class="track-duration">{{ formatDuration(track.duration_ms) }}</span>
-            <audio *ngIf="track.preview_url" controls [src]="track.preview_url"></audio>
+          <p class="review-text">{{ review.comment }}</p>
+          <div class="review-footer">
+            <button class="like-button" [class.liked]="isLiked(review)" (click)="toggleLike(review)">
+              <i class="fa" [ngClass]="isLiked(review) ? 'fa-heart' : 'fa-heart-o'"></i>
+              <span>{{ review.likes?.length || 0 }} Likes</span>
+            </button>
           </div>
         </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Review modal -->
-  <app-create-review *ngIf="showReviewComponent" [selectedAlbum]="album" (close)="closeReviewComponent()"
-    (reviewCreated)="onReviewCreated($event)">
-  </app-create-review>
-
-  <div class="reviews-section">
-    <h3>Reseñas ({{ reviews.length }})</h3>
-
-    <div *ngIf="reviews.length === 0" class="no-reviews">
-      <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
+      </div>
     </div>
-
-<div *ngFor="let review of reviews" class="review">
-  <div class="review-header">
-    <a [routerLink]="['/users', review.userId]" class="review-author">
-      {{ getUserName(review.userId) }}
-    </a>
-    <span class="review-rating">
-      <i *ngFor="let star of [1, 2, 3, 4, 5]" class="fa"
-        [ngClass]="star <= review.rating ? 'fa-star' : 'fa-star-o'">
-      </i>
-    </span>
-  </div>
-  
-  <p class="review-text">{{ review.comment }}</p>
-
-  <div class="review-actions">
-    <button class="like-button" [class.liked]="isLiked(review)" (click)="toggleLike(review)">
-      <i class="fa" [ngClass]="isLiked(review) ? 'fa-heart' : 'fa-heart-o'"></i>
-      <span>{{ review.likes?.length || 0 }}</span>
-    </button>
   </div>
 </div>
 
-  <div *ngIf="!album && !isLoading" class="error">
-    <p>No se pudo cargar el álbum.</p>
-  </div>
+<app-create-review *ngIf="showReviewComponent" [selectedAlbum]="album" (close)="closeReviewComponent()"
+  (reviewCreated)="onReviewCreated($event)">
+</app-create-review>
+
+<div *ngIf="!album && !isLoading" class="error-state">
+  <i class="fa fa-exclamation-triangle"></i>
+  <p>No se pudo cargar el álbum.</p>
+</div>

@@ -1,7 +1,10 @@
 .artist-page {
-  background-color: var(--negro);
-  min-height: 100vh;
-  color: white;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* Header con efecto Hero */
@@ -100,10 +103,13 @@
 
 /* Contenido */
 .artist-content {
-  padding: 0 40px 40px;
+  padding: 40px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
+
 
 .artist-content h3 {
   font-size: 1.8rem;

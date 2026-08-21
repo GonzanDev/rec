@@ -1,3 +1,75 @@
+<ng-container *ngIf="userId$ | async as userId; else unauthLayout">
+  <div class="app-layout">
+    <!-- Sidebar Izquierdo (Nav + Profile) -->
+    <aside class="sidebar-left">
+      <div class="sidebar-logo">
+        <i class="fa fa-spotify" style="color: var(--verde); font-size: 2rem;"></i>
+        <h2>Musicboxd</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a routerLink="/home" routerLinkActive="active" class="nav-item">
+          <i class="fa fa-home"></i> <span>Inicio</span>
+        </a>
+        <a routerLink="/explore" routerLinkActive="active" class="nav-item mobile-only">
+          <i class="fa fa-compass"></i> <span>Explorar</span>
+        </a>
 
-<router-outlet></router-outlet>
+        <div class="nav-section-title desktop-only">Tu Biblioteca</div>
+        <a routerLink="/favorites" class="nav-item desktop-only">
+          <i class="fa fa-heart"></i> <span>Canciones Favoritas</span>
+        </a>
+        <a routerLink="/saved" class="nav-item desktop-only">
+          <i class="fa fa-bookmark"></i> <span>Álbumes Guardados</span>
+        </a>
+        <a routerLink="/following" class="nav-item desktop-only">
+          <i class="fa fa-users"></i> <span>Artistas que Sigues</span>
+        </a>
+        <a routerLink="/playlists" class="nav-item desktop-only">
+          <i class="fa fa-list"></i> <span>Mis Playlists</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a [routerLink]="['/users', userId]" class="nav-profile-btn hover-card">
+          <div class="profile-avatar"><i class="fa fa-user"></i></div>
+          <div class="profile-info">
+            <span class="profile-name">Mi Perfil</span>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Columna Central -->
+    <main class="main-content">
+      <header class="main-header">
+        <app-search-bar></app-search-bar>
+      </header>
+      <div class="content-scroll">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+    <!-- Sidebar Derecho (Top 50 / Sugerencias) -->
+    <aside class="sidebar-right">
+      <div class="widget">
+        <h3>Destacados</h3>
+        <app-album-list layout="sidebar"></app-album-list>
+      </div>
+      <div class="widget" style="margin-top: 1.5rem;">
+        <h3>Top 50</h3>
+        <app-album-list layout="sidebar" listType="top50"></app-album-list>
+      </div>
+      <div class="widget" style="margin-top: 1.5rem;">
+        <h3>Lanzamientos</h3>
+        <app-album-list layout="sidebar"></app-album-list>
+      </div>
+    </aside>
+  </div>
+</ng-container>
+
+<ng-template #unauthLayout>
+  <div class="unauth-layout">
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>
+
 <ngx-sonner-toaster/>

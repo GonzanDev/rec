@@ -1,23 +1,33 @@
-<app-search-bar></app-search-bar>
-<app-album-list></app-album-list>
+<div class="home-container">
+  
 
-<div class="feed-tabs" *ngIf="!reviewIdFromUrl">
-  <button 
-    [class.active]="currentMode === 'all'" 
-    (click)="setMode('all')">
-    Recientes
-  </button>
-  <button 
-    [class.active]="currentMode === 'following'" 
-    (click)="setMode('following')">
-    Seguidos
-  </button>
+
+  <section class="home-section">
+    <div class="feed-header">
+      <h2 class="section-title">Actividad Reciente</h2>
+      
+      <div class="feed-tabs" *ngIf="!reviewIdFromUrl">
+        <button 
+          class="pill-btn"
+          [class.active]="currentMode === 'all'" 
+          (click)="setMode('all')">
+          Global
+        </button>
+        <button 
+          class="pill-btn"
+          [class.active]="currentMode === 'following'" 
+          (click)="setMode('following')">
+          Siguiendo
+        </button>
+      </div>
+    </div>
+
+    <app-review-feed
+      [highlightReviewId]="reviewIdFromUrl"
+      [mode]="currentMode"
+      [followingIds]="followingIds">
+    </app-review-feed>
+  </section>
+
+  <router-outlet></router-outlet>
 </div>
-
-<app-review-feed
-  [highlightReviewId]="reviewIdFromUrl"
-  [mode]="currentMode"
-  [followingIds]="followingIds">
-</app-review-feed>
-
-<router-outlet></router-outlet>

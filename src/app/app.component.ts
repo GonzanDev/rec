@@ -9,7 +9,10 @@ import {
 import { FormsModule } from '@angular/forms';
 
 import {NgxSonnerToaster} from 'ngx-sonner';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { AlbumListComponent } from './components/album-list/album-list.component';
 import { AuthStateService } from './components/auth/data-access/auth-state.service';
+import { UserStateService } from './components/auth/data-access/user-state.service';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +23,21 @@ import { AuthStateService } from './components/auth/data-access/auth-state.servi
     RouterOutlet,
     RouterModule,
     FormsModule, // Add FormsModule here
-    NgxSonnerToaster
+    NgxSonnerToaster,
+    SearchBarComponent,
+    AlbumListComponent
   ],
   standalone: true,
 })
 export class AppComponent implements OnInit {
-  constructor(private authStateService: AuthStateService) {}
+  userId$: any;
+  
+  constructor(
+    private authStateService: AuthStateService,
+    private userStateService: UserStateService
+  ) {
+    this.userId$ = this.userStateService.userId$;
+  }
 
   ngOnInit(): void {
     this.authStateService.initAuthStateListener();

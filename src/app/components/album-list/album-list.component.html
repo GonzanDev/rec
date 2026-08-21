@@ -1,21 +1,34 @@
-<div class="carousel-container">
-<button class="carousel-button left" (click)="scrollLeft()">
-  <i class="fa fa-chevron-left"></i>
-</button>
-  <div #carousel class="carousel">
+<div class="mini-carousel-container" [ngClass]="layout" *ngIf="albums.length > 0">
+  <button class="carousel-btn left" (click)="scrollLeft()">
+    <i class="fa fa-chevron-left"></i>
+  </button>
+
+  <div #carousel class="mini-carousel"
+       (mousedown)="onMouseDown($event)"
+       (mouseleave)="onMouseLeave()"
+       (mouseup)="onMouseUp()"
+       (mousemove)="onMouseMove($event)">
+    <!-- El elemento contenedor tiene el snap, pero NO el hover -->
     <div
       *ngFor="let album of albums"
-      class="album"
+      class="album-card"
       (click)="viewAlbumDetails(album.id)"
     >
-      <img [src]="album.images[0]?.url" alt="{{ album.name }}" />
-      <div class="album-info">
-        <h3>{{ album.name }}</h3>
-        <p>{{ album.artists[0].name }}</p>
+      <!-- Mantenemos el vinilo pero quitamos el hover-card -->
+      <div class="album-card-inner">
+        <div class="vinyl-container">
+          <img [src]="album.images[0]?.url" alt="{{ album.name }}" class="vinyl-cover" />
+          <div class="vinyl-record"></div>
+        </div>
+        <div class="album-info">
+          <h3>{{ album.name }}</h3>
+          <p>{{ album.artists[0].name }}</p>
+        </div>
       </div>
     </div>
   </div>
 
-<button class="carousel-button right" (click)="scrollRight()">
-  <i class="fa fa-chevron-right"></i>
-</button></div>
+  <button class="carousel-btn right" (click)="scrollRight()">
+    <i class="fa fa-chevron-right"></i>
+  </button>
+</div>

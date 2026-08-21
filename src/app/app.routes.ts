@@ -5,6 +5,8 @@ import { HomePageComponent } from './pages/home-page/home-page.component';
 import { AlbumPageComponent } from './pages/album-page/album-page.component';
 import { SongPageComponent } from './pages/song-page/song-page.component';
 import { ArtistPageComponent } from './pages/artist-page/artist-page.component';
+import { ExplorePageComponent } from './pages/explore-page/explore-page.component';
+import { LibraryPageComponent } from './pages/library-page/library-page.component';
 import { CreateReviewComponent } from './components/create-review/create-review.component';
 
 
@@ -22,8 +24,17 @@ export const routes: Routes = [
     component: HomePageComponent,
     canActivate: [privateGuard()],
   },
-
-
+  {
+    path: 'explore',
+    component: ExplorePageComponent,
+    canActivate: [privateGuard()],
+  },
+  
+  // Rutas en construcción
+  { path: 'favorites', component: LibraryPageComponent, canActivate: [privateGuard()] },
+  { path: 'saved', component: LibraryPageComponent, canActivate: [privateGuard()] },
+  { path: 'following', component: LibraryPageComponent, canActivate: [privateGuard()] },
+  { path: 'playlists', component: LibraryPageComponent, canActivate: [privateGuard()] },
 
   { path: 'create-review', component: CreateReviewComponent },
 

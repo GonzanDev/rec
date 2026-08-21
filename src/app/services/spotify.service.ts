@@ -90,6 +90,19 @@ export class SpotifyService {
     );
   }
 
+  getTrendingAlbums(): Observable<any[]> {
+    return this.getToken().pipe(
+      switchMap((token) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        });
+        return this.http
+          .get<any>(`${this.API_URL}/search?q=year:2024&type=album&limit=20`, { headers })
+          .pipe(map((data) => data.albums.items));
+      })
+    );
+  }
+
   getAlbumsByArtist(artistId: string): Observable<any[]> {
     return this.getToken().pipe(
       switchMap((token) => {

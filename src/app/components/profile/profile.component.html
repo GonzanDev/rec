@@ -1,96 +1,115 @@
 <div *ngIf="user" class="profile-container">
-<div class="top-nav" *ngIf="user.id === currentUserId">
-  <button class="btn-secondary btn-small" (click)="logOut()">Cerrar sesión</button>
-</div>
-
+  <!-- Profile Header -->
   <div class="profile-header">
-    <div class="header-main">
-      <h2>{{ user.username }}</h2>
-      <div class="stats-container">
-        <div class="stat">
-          <strong>{{ user.followers?.length || 0 }}</strong>
-          <span>Seguidores</span>
-        </div>
-        <div class="stat">
-          <strong>{{ user.following?.length || 0 }}</strong>
-          <span>Seguidos</span>
+    <div class="profile-info-main">
+      <div class="profile-avatar-large">
+        <i class="fa fa-user"></i>
+      </div>
+      <div class="profile-details">
+        <h2 class="profile-username">{{ user.username }}</h2>
+        <p class="profile-email">{{ user.email }}</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ user.followers?.length || 0 }}</span>
+            <span class="stat-label">Seguidores</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ user.following?.length || 0 }}</span>
+            <span class="stat-label">Seguidos</span>
+          </div>
         </div>
       </div>
     </div>
-    <p class="user-email">{{ user.email }}</p>
     
-    <div class="action-bar">
+    <div class="profile-actions">
+      <ng-container *ngIf="user.id === currentUserId">
+        <button class="pill-btn outline" (click)="logOut()">
+          <i class="fa fa-sign-out"></i> Cerrar sesión
+        </button>
+      </ng-container>
+
       <ng-container *ngIf="user.id !== currentUserId">
-        <button *ngIf="!isFollowing" class="btn-primary" (click)="followUser()">Seguir</button>
-        <button *ngIf="isFollowing" class="btn-outline" (click)="unfollowUser()">Dejar de seguir</button>
-        
-        <button (click)="compareProfiles()" class="btn-spotify">
-          {{ isComparing ? 'Analizando...' : 'Comparar Perfil' }}
+        <button class="pill-btn outline" *ngIf="!isFollowing" (click)="followUser()">Seguir</button>
+        <button class="pill-btn outline active" *ngIf="isFollowing" (click)="unfollowUser()">Siguiendo</button>
+        <button class="pill-btn primary" (click)="compareProfiles()">
+          <i class="fa fa-exchange"></i> {{ isComparing ? 'Analizando...' : 'Comparar' }}
         </button>
       </ng-container>
     </div>
   </div>
 
-  <hr class="separator">
-
-  @if (showComparison) {
-    <div class="comparison-results">
-      <div class="comparison-header">
-        <h3>Álbumes reseñados en común</h3>
-        <button class="close-btn" (click)="showComparison = false">✕</button>
-      </div>
-
-      @if (isComparing) {
-        <p class="loading-text">Buscando coincidencias...</p>
-      } @else {
-        @for (match of comparisonResults; track match.albumName) {
-          <div class="match-card">
-            <div class="match-album">
-              <img [src]="match.albumCover" alt="Cover">
-              <strong>{{ match.albumName }}</strong>
-            </div>
-            <div class="match-reviews">
-              <div class="review-box">
-                <small>{{ user.username }}</small>
-                <p>⭐ {{ match.viewedUser.rating }} - {{ match.viewedUser.comment }}</p>
-              </div>
-              <div class="review-box my-box">
-                <small>Tú</small>
-                <p>⭐ {{ match.currentUser.rating }} - {{ match.currentUser.comment }}</p>
-              </div>
-            </div>
-          </div>
-        } @empty {
-          <p class="no-matches">No tienen álbumes reseñados en común todavía.</p>
-        }
-      }
+  <!-- Comparison Results -->
+  <div *ngIf="showComparison" class="comparison-results">
+    <div class="section-header">
+      <h3>Álbumes en común</h3>
+      <button class="close-btn" (click)="showComparison = false"><i class="fa fa-times"></i></button>
     </div>
-  }
 
-  <div class="content-section">
-    <h3>Favoritos</h3>
+    <div *ngIf="isComparing" class="loading-state">
+      <div class="spinner"></div>
+      <p>Buscando coincidencias...</p>
+    </div>
 
-    <h4>Álbumes Favoritos</h4>
-    @if (favoriteAlbumsDetails.length > 0) {
+    <div *ngIf="!isComparing" class="match-grid">
+      <div class="match-card hover-card" *ngFor="let match of comparisonResults">
+        <div class="match-album">
+          <div class="vinyl-container item-thumb-container">
+            <img [src]="match.albumCover" alt="Cover" class="vinyl-cover match-cover">
+            <div class="vinyl-record"></div>
+          </div>
+          <strong>{{ match.albumName }}</strong>
+        </div>
+        <div class="match-reviews">
+          <div class="review-box">
+            <span class="review-author">{{ user.username }}</span>
+            <div class="review-stars">⭐ {{ match.viewedUser.rating }}</div>
+            <p>{{ match.viewedUser.comment }}</p>
+          </div>
+          <div class="review-box my-box">
+            <span class="review-author">Tú</span>
+            <div class="review-stars">⭐ {{ match.currentUser.rating }}</div>
+            <p>{{ match.currentUser.comment }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="comparisonResults.length === 0" class="no-results">
+        <i class="fa fa-meh-o"></i>
+        <p>No tienen álbumes reseñados en común todavía.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="profile-content">
+    <div class="section-header">
+      <h3>Álbumes Favoritos</h3>
+    </div>
+    <div class="favorites-list" *ngIf="favoriteAlbumsDetails.length > 0">
       <app-album-list [albums]="favoriteAlbumsDetails"></app-album-list>
-    } @else {
-      <p class="empty-text">No hay álbumes favoritos.</p>
-    }
+    </div>
+    <div class="no-results" *ngIf="favoriteAlbumsDetails.length === 0">
+      <p>No hay álbumes favoritos.</p>
+    </div>
 
-    <h4>Artistas Favoritos</h4>
-    @if (favoriteArtistsDetails.length > 0) {
+    <div class="section-header mt-4">
+      <h3>Artistas Favoritos</h3>
+    </div>
+    <div class="favorites-list" *ngIf="favoriteArtistsDetails.length > 0">
       <app-artist-list [artists]="favoriteArtistsDetails"></app-artist-list>
-    } @else {
-      <p class="empty-text">No hay artistas favoritos.</p>
-    }
+    </div>
+    <div class="no-results" *ngIf="favoriteArtistsDetails.length === 0">
+      <p>No hay artistas favoritos.</p>
+    </div>
 
-    <hr class="separator">
-
-    <h3>Reseñas</h3>
+    <div class="section-header mt-4">
+      <h3>Reseñas Publicadas</h3>
+    </div>
     <app-review-feed [userId]="user.id"></app-review-feed>
   </div>
 </div>
 
 <div *ngIf="!user" class="loading-state">
+  <div class="spinner"></div>
   <p>Cargando perfil...</p>
 </div>

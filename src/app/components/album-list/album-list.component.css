@@ -1,126 +1,148 @@
 :host {
   display: block;
   width: 100%;
-  overflow-x: hidden; /* Evita que las flechas estiren la página */
 }
 
-.carousel-container {
+.mini-carousel-container {
+  width: 100%;
+  position: relative;
+  margin: 10px 0;
   display: flex;
   align-items: center;
-  position: relative;
-  width: 100%;
-  max-width: 1100px;
-  margin: 20px auto;
-  /* El padding crea el espacio "fuera" del carrusel para las flechas */
-  padding: 0 60px; 
-  box-sizing: border-box;
 }
 
-.carousel {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  gap: 20px;
-  padding: 15px 0;
-  width: 100%;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.carousel::-webkit-scrollbar {
-  display: none;
-}
-
-/* --- BOTONES (Flechas) --- */
-.carousel-button {
+.carousel-btn {
   position: absolute;
-  /* Centrado vertical perfecto respecto al contenedor */
-  top: 50%;
-  transform: translateY(-50%); 
-  
-  /* Color original: Negro transparente */
-  background-color: rgba(0, 0, 0, 0.6);
+  top: 80px; /* Center relative to the 160px album cover */
+  transform: translateY(-50%);
+  background: rgba(20, 24, 28, 0.7);
+  backdrop-filter: blur(5px);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 10;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Transición suave solo para el brillo */
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  backdrop-filter: blur(5px);
-}
-
-/* Posicionados en el espacio del padding (FUERA de los álbumes) */
-.carousel-button.left {
-  left: 5px;
-}
-
-.carousel-button.right {
-  right: 5px;
-}
-
-.carousel-button:hover {
-  background-color: rgba(0, 0, 0, 0.9);
-  /* Eliminamos la animación de bajada, solo un leve aumento de tamaño */
-  /* Importante mantener el translateY(-50%) para que no se mueva de su centro */
-  transform: translateY(-50%) scale(1.1); 
-}
-
-/* --- ALBUMS --- */
-.album {
-  flex: 0 0 auto;
-  text-align: center;
-  width: 180px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  z-index: 10;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-.album img {
+.carousel-btn:hover {
+  background: var(--verde);
+  color: var(--negro);
+  border-color: var(--verde);
+}
+
+.carousel-btn.left { left: -10px; }
+.carousel-btn.right { right: -10px; }
+
+.mini-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 10px;
+  padding: 10px 0 20px 0; /* Espacio para la sombra */
+  scrollbar-width: none; /* Firefox */
+  -webkit-overflow-scrolling: touch;
   width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
 
-.album h3 {
-  font-size: 14px;
-  margin: 10px 0 5px;
-  color: white;
+.mini-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* --- ALBUM CARD (Snap Center) --- */
+.sidebar .album-card {
+  flex: 0 0 100%; /* Ocupa el 100% de su contenedor (1 disco a la vez) */
+}
+
+.grid .album-card {
+  flex: 0 0 160px; /* Tamaño cuadrado original */
+}
+
+/* --- WRAP LAYOUT (Library Grid) --- */
+.wrap.mini-carousel-container {
+  display: block;
+}
+.wrap .carousel-btn {
+  display: none;
+}
+.wrap .mini-carousel {
+  flex-wrap: wrap;
+  overflow: visible;
+  justify-content: flex-start;
+  gap: 25px;
+}
+.wrap .album-card {
+  flex: 0 0 180px;
+  scroll-snap-align: none;
+}
+
+.album-card {
+  display: flex;
+  justify-content: center; /* Centrar el inner */
+  background-color: transparent;
+}
+
+.album-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.vinyl-container {
+  width: 160px;
+  height: 160px;
+  margin-bottom: 15px;
+  position: relative; /* Para que el vinyl-record se posicione bien si vuelve */
+}
+
+.sidebar .vinyl-container {
+  width: 160px;
+  height: 160px;
+}
+
+.vinyl-cover {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+.album-info {
+  width: 100%;
+}
+
+.album-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.2;
+  /* 2-line clamp and fixed height to enforce uniform layout */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  height: 2.4em; 
+}
+
+.album-card p {
+  font-size: 0.85rem;
+  margin: 5px 0 0 0;
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.album p {
-  font-size: 13px;
-  color: #b3b3b3;
-}
-
-.album:hover {
-  transform: translateY(-5px); /* Pequeña elevación del album al pasar el mouse */
-}
-
-/* --- RESPONSIVE --- */
-@media (max-width: 768px) {
-  .carousel-container {
-    padding: 0 15px; /* En móvil quitamos el padding de las flechas */
-  }
-
-  .carousel-button {
-    display: none; /* En móvil usamos gesto de arrastre */
-  }
-
-  .carousel {
-    padding: 10px 0;
-  }
-
-  .album {
-    width: 150px;
-  }
 }

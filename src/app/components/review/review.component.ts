@@ -38,6 +38,8 @@ export class ReviewComponent {
   selectedReason: ReportReason = 'spam';
   reportDescription: string = '';
   isSubmittingReport: boolean = false;
+  
+  showComments: boolean = false;
 
   reportReasons: { value: ReportReason; label: string }[] = [
     { value: 'spam', label: 'Spam' },

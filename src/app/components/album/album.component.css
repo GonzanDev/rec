@@ -1,453 +1,433 @@
-.album-details {
-  font-family: var(--fuente);
-  padding: 20px;
-  max-width: 1200px;
+/* Container layout: Two columns on desktop */
+.album-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  width: 100%;
   margin: 0 auto;
 }
 
-.loading, .error {
+@media (min-width: 768px) {
+  .album-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+/* Sidebar (Cover + actions) */
+.album-sidebar {
+  flex: 0 0 200px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 200px;
-  color: var(--grisclaro);
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Header */
-.album-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding: 30px;
-  background: linear-gradient(135deg, var(--gris) 0%, var(--negro) 100%);
-  border-radius: 15px;
+@media (min-width: 1024px) {
+  .album-sidebar {
+    flex: 0 0 240px;
+  }
 }
 
-.album-info {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.album-header img {
-  width: 180px;
-  height: 180px;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-
-.album-data h2 {
-  font-size: 2rem;
-  margin: 0 0 10px 0;
-  color: var(--grisclaro);
-}
-
-.album-meta {
-  color: var(--grisclaro);
-  opacity: 0.8;
-}
-
-.album-meta a {
-  color: var(--verde);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.album-meta a:hover {
-  text-decoration: underline;
-}
-
-.separator {
-  margin: 0 8px;
-}
-
-/* Buttons */
-.botones {
-  display: flex;
-  gap: 15px;
-}
-
-.botones button {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 25px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.favorite-btn {
-  background-color: transparent;
-  border: 2px solid var(--verde) !important;
-  font-size: 1.5rem !important;
-  padding: 10px 20px !important;
-}
-
-.favorite-btn:hover {
-  transform: scale(1.1);
-}
-
-.favorite-btn.is-favorite {
-  background-color: rgba(77, 189, 88, 0.2);
-}
-
-.review-btn {
-  background-color: var(--verde);
-  color: var(--negro);
-  font-weight: bold;
-}
-
-.review-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 15px rgba(77, 189, 88, 0.4);
-}
-
-/* Track list */
-.track-list {
-  margin-top: 30px;
-}
-
-.track-list h3 {
-  color: var(--verde);
-  margin-bottom: 15px;
-}
-
-.track-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.track-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--gris);
-  margin: 8px 0;
-  padding: 12px 20px;
+.cover-wrapper {
   border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.album-cover {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Actions */
+.album-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.track-item:hover {
-  background-color: rgba(77, 189, 88, 0.1);
-  transform: translateX(5px);
+.action-btn:hover {
+  background-color: var(--bg-card-hover);
 }
 
-.track-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.track-number {
-  color: var(--grisclaro);
-  opacity: 0.6;
-  width: 25px;
-}
-
-.track-name {
-  color: var(--grisclaro);
-}
-
-.track-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.track-duration {
-  color: var(--grisclaro);
-  opacity: 0.6;
-  font-size: 0.9rem;
-}
-
-.track-item audio {
-  height: 30px;
-  width: 200px;
-}
-
-/* Modal overlay */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal {
-  background-color: var(--negro);
-  border-radius: 15px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-/* Reviews section */
-.reviews-section {
-  margin-top: 40px;
-  padding: 25px;
-  background-color: var(--gris);
-  border-radius: 15px;
-}
-
-.reviews-section h3 {
+.action-btn.is-favorite {
   color: var(--verde);
-  margin-bottom: 20px;
 }
 
-.no-reviews {
-  text-align: center;
-  color: var(--grisclaro);
-  opacity: 0.7;
-  padding: 30px;
+.action-btn.review-btn {
+  background-color: var(--verde);
+  color: var(--negro);
 }
 
-.review {
-  background-color: var(--negro);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 15px;
+.action-btn.review-btn:hover {
+  background-color: var(--verde-hover);
 }
 
-.review-header {
+/* Share Links */
+.share-links {
   display: flex;
-  justify-content: space-between; /* Manda el nombre a la izquierda y estrellas a la derecha */
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.share-btn {
+  background-color: var(--bg-card);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.share-btn:hover {
+  background-color: var(--bg-card-hover);
+  color: var(--text-main);
+}
+
+/* Main Content */
+.album-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.album-title {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.album-meta-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.artist-name {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.artist-name:hover {
+  text-decoration: underline;
+}
+
+.meta-divider {
+  opacity: 0.5;
+}
+
+/* Stats */
+.album-stats {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stars {
+  color: var(--verde);
+  font-size: 1.2rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+}
+
+/* Details */
+.album-info-details {
+  display: flex;
+  gap: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-val {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* Tracklist */
+.track-list h3, .reviews-header h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.track-table {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.track-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 200px 60px;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.track-row:last-child {
+  border-bottom: none;
+}
+
+.track-row:hover:not(.header) {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.track-row.header {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.col-num {
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.track-link {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.track-link:hover {
+  color: var(--verde);
+  text-decoration: underline;
+}
+
+.col-time {
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.col-preview {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 1rem;
+}
+
+/* Custom Audio */
+.custom-audio {
+  height: 30px;
+  width: 100%;
+  max-width: 180px;
+  outline: none;
+}
+
+.custom-audio::-webkit-media-controls-panel {
+  background-color: var(--bg-card);
+}
+.custom-audio::-webkit-media-controls-play-button,
+.custom-audio::-webkit-media-controls-mute-button,
+.custom-audio::-webkit-media-controls-timeline,
+.custom-audio::-webkit-media-controls-current-time-display,
+.custom-audio::-webkit-media-controls-time-remaining-display,
+.custom-audio::-webkit-media-controls-volume-slider {
+  filter: invert(1);
+}
+
+.spotify-fallback-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.spotify-fallback-btn i {
+  color: var(--verde);
+}
+
+.spotify-fallback-btn:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+/* Reviews */
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .review-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.review-card {
+  background-color: var(--bg-card);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.review-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .review-author {
-  color: var(--verde); /* Usamos tu variable de verde */
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-}
-
-.review-author:hover {
-  color: var(--grisclaro); /* Efecto sutil al pasar el mouse */
-  text-decoration: underline;
-}
-
-/* Aseguramos que las estrellas no se amontonen */
-.review-rating {
   display: flex;
-  gap: 2px;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 500;
 }
 
-.review-rating i {
-  color: gold;
-  margin-right: 2px;
+.avatar {
+  width: 32px;
+  height: 32px;
+  background-color: var(--bg-main);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
 }
 
-.review-rating i.fa-star-o {
-  color: var(--grisclaro);
-  opacity: 0.3;
+.review-rating {
+  color: var(--verde);
+  font-size: 0.9rem;
 }
 
 .review-text {
+  margin: 0;
+  line-height: 1.5;
   color: var(--grisclaro);
-  line-height: 1.6;
+  font-size: 0.95rem;
 }
 
-
-.average-rating {
-  margin: 6px 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.average-rating .fa-star {
-  color: #f5c518;
-}
-
-.average-rating .fa-star-o {
-  color: #ccc;
-}
-
-.average-number {
-  font-weight: 600;
-}
-
-.review-actions {
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
+.review-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .like-button {
-  background: transparent;
+  background: none;
   border: none;
-  color: var(--grisclaro);
+  color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
   cursor: pointer;
+  padding: 0;
   font-size: 0.9rem;
-  padding: 5px 10px;
-  border-radius: 20px;
-  transition: all 0.2s ease;
-  opacity: 0.8;
+  transition: color 0.2s;
 }
 
 .like-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  opacity: 1;
+  color: var(--text-main);
 }
 
-.like-button i {
-  font-size: 1.1rem;
-}
-
-/* Estado cuando ya le diste like */
 .like-button.liked {
-  color: #e91e63; /* Color corazón (Rosa/Rojo) */
-  opacity: 1;
+  color: var(--verde);
 }
 
-.like-button.liked i {
-  animation: pulse 0.3s ease-in-out;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
-}
-
-/* Contenedor de botones de compartir */
-.share-buttons {
+.loading, .error-state {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap; /* Permite que los botones bajen si no hay espacio */
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: var(--text-muted);
+  gap: 1rem;
 }
 
-/* Botones individuales de compartir */
-.share-buttons button {
-  background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
-  color: var(--grisclaro);
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  padding: 8px 16px !important; /* Más compactos que los botones principales */
-  font-size: 0.85rem !important;
-  font-weight: 500;
-  border-radius: 20px;
-  transition: all 0.2s ease;
+.error-state i {
+  font-size: 3rem;
+  color: #e74c3c;
 }
 
-/* Efectos Hover */
-.share-buttons button:hover {
-  background-color: var(--grisclaro);
-  color: var(--negro);
-  border-color: var(--grisclaro) !important;
-  transform: translateY(-2px);
+.spinner {
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top: 3px solid var(--verde);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
 }
 
-/* Color específico para WhatsApp al pasar el mouse */
-.share-buttons button:nth-child(1):hover {
-  background-color: #25D366;
-  border-color: #25D366 !important;
-  color: white;
-}
-
-/* Color específico para X (Twitter) al pasar el mouse */
-.share-buttons button:nth-child(2):hover {
-  background-color: #ffffff;
-  border-color: #ffffff !important;
-  color: #000000;
-}
-
-/* Botón copiar link - resaltado sutil con el verde de tu variable */
-.share-buttons button:last-child:hover {
-  background-color: var(--verde);
-  border-color: var(--verde) !important;
-  color: var(--negro);
-}
-
-.average-rating {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.total-reviews {
-  color: #b3b3b3; /* Gris claro tipo Spotify */
-  font-size: 0.9rem;
-  font-weight: normal;
-}
-
-.average-number {
-  color: #4CAF50; /* Tu verde principal */
-  font-weight: bold;
-}
-
-/* Tablets y Celulares grandes */
-@media (max-width: 992px) {
-  .album-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 25px;
-  }
-
-  .album-info {
-    flex-direction: column;
-  }
-
-  .botones {
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-  }
-
-  .share-buttons {
-    justify-content: center;
-    width: 100%;
-  }
-
-
-  .album-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 25px;
-  }
-
-  /* Centramos el contenedor flex de las estrellas */
-  .average-rating {
-    justify-content: center; 
-    margin: 10px 0; /* Un poco más de aire en móviles */
-  }
-
-  .album-data {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Asegura que todo lo que esté dentro de album-data se centre */
-  }
-}
-
-/* Celulares pequeños */
-@media (max-width: 480px) {
-  .album-header img {
-    width: 150px;
-    height: 150px;
-  }
-
-  .album-data h2 {
-    font-size: 1.5rem;
-  }
-
-  .share-buttons button {
-    flex: 1 1 calc(50% - 10px); /* Dos botones por fila en móviles muy chicos */
-    text-align: center;
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

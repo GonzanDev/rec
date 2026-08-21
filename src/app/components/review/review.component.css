@@ -1,437 +1,330 @@
 .review {
-  background-color: #282828;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease;
+  display: flex;
+  gap: 20px;
+  border-radius: 12px;
+  padding: 20px;
 }
 
-.review:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+/* Columna Izquierda */
+.review-left-col {
+  flex: 0 0 200px; /* Ancho ampliado para mayor protagonismo */
+}
+
+.review-cover {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  transition: transform 0.2s;
+}
+
+.review-cover:hover {
+  transform: scale(1.02);
+}
+
+/* Columna Derecha */
+.review-right-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* previene overflow */
 }
 
 .review-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.review-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .review-header h4 {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin: 0;
 }
 
 .review-header h4 a {
-  color: #4CAF50;
+  color: var(--text-main);
   text-decoration: none;
 }
 
 .review-header h4 a:hover {
-  text-decoration: underline;
+  color: var(--verde);
 }
 
-.review-header span {
-  font-size: 14px;
-  color: #b3b3b3;
+.review-action-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
-.review p {
-  font-size: 16px;
-  color: #e1e1e1;
-  line-height: 1.5;
-}
-
-.rating {
-  color: #404040;
-  display: flex;
-  gap: 5px;
-  margin-top: 10px;
-}
-
-.rating span {
-  font-size: 18px;
-  color: #d3d3d3;
-}
-
-.rating span.filled {
-  color: #f39c12;
-}
-
-.album-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.album-info img {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-}
-
-.album-info a {
-  color: #4CAF50;
+.album-name-link {
+  color: var(--text-main);
+  font-weight: 600;
   text-decoration: none;
 }
 
-.album-info a:hover {
+.album-name-link:hover {
   text-decoration: underline;
+  color: var(--verde);
 }
 
-.like-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.like-section button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  font-size: 16px;
-}
-
-.like-section span {
-  color: #b3b3b3;
-  font-size: 14px;
-}
-
-.comments-section {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #404040;
-}
-
-.comments-section h5 {
-  font-size: 16px;
-  color: #e1e1e1;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.comments-section p {
-  font-size: 14px;
-  color: #b3b3b3;
-  margin: 5px 0;
-  background-color: #282828;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease;
-}
-
-.comments-section p a {
-  color: #2a9d4d;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.comments-section p a:hover {
-  color: #1db954;
-}
-
-.comments-section input {
-  width: 100%;
-  padding: 8px;
-  background-color: #282828;
-  color: #e1e1e1;
-  border: 1px solid #404040;
-  border-radius: 4px;
-  margin: 10px 0;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
-}
-
-.comments-section input:focus {
-  outline: none;
-  border-color: #1db954;
-}
-
-.comments-section button {
-  background-color: #1db954;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.comments-section button:disabled {
-  background-color: #333;
-  color: #666;
-  cursor: not-allowed;
-}
-
-/* Review header right section */
 .review-header-right {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Report button */
-.report-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-  padding: 4px;
+.review-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Estrellas */
+.rating {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 3px;
+  margin-bottom: 10px;
 }
 
-.report-btn:hover {
-  opacity: 1;
+.rating span {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.1);
 }
 
-.report-icon {
-  width: 18px;
-  height: 18px;
+.rating span.filled {
+  color: var(--verde);
 }
 
-.report-icon-small {
-  width: 14px;
-  height: 14px;
+/* Cuerpo de la Reseña */
+.review-body-text {
+  font-size: 1rem;
+  color: var(--text-main);
+  line-height: 1.6;
+  margin: 0 0 15px 0;
 }
 
-.report-btn-small {
-  padding: 2px;
-}
-
-/* Comment item with report button */
-.comment-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.comment-item p {
-  flex: 1;
-}
-
-.comment-item .report-btn {
-  flex-shrink: 0;
-  margin-top: 8px;
-}
-
-/* Report Modal Overlay */
-.report-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Report Modal */
-.report-modal {
-  background-color: #282828;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 450px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-.report-modal-header {
+/* Barra de Acciones (Likes y Share) */
+.review-actions-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #404040;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
-.report-modal-header h3 {
-  margin: 0;
-  color: #ffffff;
-  font-size: 18px;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: #b3b3b3;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.close-btn:hover {
-  color: #ffffff;
-}
-
-.report-modal-body {
-  padding: 20px;
-}
-
-.report-modal-body label {
-  display: block;
-  color: #e1e1e1;
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.report-reasons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.reason-option {
+.like-section {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #b3b3b3;
-  cursor: pointer;
-  font-weight: normal;
 }
 
-.reason-option input[type="radio"] {
-  accent-color: #1db954;
-}
-
-.reason-option:hover {
-  color: #e1e1e1;
-}
-
-.report-modal-body textarea {
-  width: 100%;
-  padding: 10px;
-  background-color: #1a1a1a;
-  color: #e1e1e1;
-  border: 1px solid #404040;
-  border-radius: 6px;
-  resize: vertical;
-  font-family: inherit;
-  box-sizing: border-box;
-}
-
-.report-modal-body textarea:focus {
-  outline: none;
-  border-color: #1db954;
-}
-
-.report-modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 16px 20px;
-  border-top: 1px solid #404040;
-}
-
-.cancel-btn {
-  background-color: #404040;
-  color: #e1e1e1;
+.like-btn {
+  background: transparent;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+  color: var(--text-muted);
   cursor: pointer;
-  font-weight: 500;
+  font-size: 1.2rem;
+  transition: color 0.2s, transform 0.2s;
+  padding: 0;
 }
 
-.cancel-btn:hover {
-  background-color: #535353;
+.like-btn.liked, .like-btn:hover {
+  color: var(--verde);
+  transform: scale(1.1);
 }
 
-.submit-btn {
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
+.like-section span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background-color: #c0392b;
-}
-
-.submit-btn:disabled {
-  background-color: #666;
-  cursor: not-allowed;
-}
-
-
-/* Share Section Container */
 .share-section {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 15px;
-  padding: 10px 0;
-  border-top: 1px solid #404040; /* Separador sutil */
+  gap: 10px;
 }
 
-/* Botones base de compartir */
-.share-section button {
-  background-color: #333333;
-  color: #b3b3b3;
-  border: 1px solid transparent;
-  padding: 6px 14px;
-  border-radius: 20px; /* Estilo píldora de Spotify */
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
+.share-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.share-btn {
+  background: rgba(255,255,255,0.05);
+  border: none;
+  color: var(--text-muted);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* Hover general */
-.share-section button:hover {
-  background-color: #404040;
-  color: #ffffff;
-  transform: translateY(-1px); /* Pequeño salto al pasar el mouse */
+.share-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-main);
 }
 
-/* Estilo específico para WhatsApp (opcional, para dar color) */
-.share-section button:nth-child(1):hover {
-  border-color: #25D366;
-  color: #25D366;
+.whatsapp-btn:hover { color: #25D366; }
+.copy-btn:hover { color: var(--verde); }
+
+/* Comentarios */
+.comments-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Estilo específico para X / Twitter */
-.share-section button:nth-child(2):hover {
-  border-color: #ffffff;
-  color: #ffffff;
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-/* Estilo para Copiar Link (más corporativo/Spotify) */
-.share-section button:last-child {
+.comments-header h5 {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.toggle-comments-btn {
   background-color: transparent;
-  border: 1px solid #b3b3b3;
+  color: var(--text-muted);
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.share-section button:last-child:hover {
-  border-color: #1db954;
-  color: #1db954;
-  background-color: rgba(29, 185, 84, 0.1);
+.toggle-comments-btn:hover {
+  color: var(--text-main);
 }
 
-/* Adaptabilidad para móviles */
-@media (max-width: 480px) {
-  .share-section {
-    flex-wrap: wrap; /* Si no caben, se envuelven */
-    gap: 8px;
+.comments-accordion {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+}
+
+.comments-accordion.open {
+  max-height: 1000px;
+  transition: max-height 0.6s ease-in-out;
+}
+
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: rgba(0,0,0,0.2);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.comment-item p {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  margin: 0;
+  flex: 1;
+}
+
+.comment-author {
+  color: var(--text-main);
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.comment-author:hover {
+  color: var(--verde);
+}
+
+.comment-input-wrapper {
+  display: flex;
+  flex-wrap: wrap; /* Fix mobile overflow */
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.comments-section input {
+  flex: 1;
+  padding: 10px 15px;
+  background-color: rgba(0,0,0,0.3);
+  color: var(--text-main);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  font-family: inherit;
+}
+
+.comments-section input:focus {
+  outline: none;
+  border-color: var(--verde);
+}
+
+.comments-section button {
+  background-color: var(--verde);
+  color: var(--negro);
+  border: none;
+  padding: 0 15px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.comments-section button:disabled {
+  background-color: rgba(255,255,255,0.1);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .review {
+    flex-direction: column;
   }
-  
-  .share-section button {
-    flex: 1; /* Crecen para ocupar el ancho disponible */
-    font-size: 12px;
+  .review-left-col {
+    flex: 0 0 auto;
+    width: 100px; /* Portada más pequeña en móvil si está apilada */
   }
 }
+
+/* Modal de Reporte se mantiene igual... */
+.report-btn { background: none; border: none; cursor: pointer; opacity: 0.5; padding: 5px; }
+.report-btn:hover { opacity: 1; }
+.report-icon { width: 14px; height: 14px; filter: invert(1); }
+.report-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.report-modal { background-color: var(--bg-card); border-radius: 12px; width: 90%; max-width: 450px; border: 1px solid rgba(255,255,255,0.1); }
+.report-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.report-modal-header h3 { margin: 0; font-size: 1.2rem; }
+.close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+.close-btn:hover { color: var(--text-main); }
+.report-modal-body { padding: 20px; }
+.report-modal-body label { color: var(--text-main); font-weight: 600; margin-bottom: 15px; display: block; }
+.report-reasons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.reason-option { color: var(--text-muted); cursor: pointer; }
+.reason-option input[type="radio"] { accent-color: var(--verde); margin-right: 10px; }
+.report-modal-body textarea { width: 100%; padding: 12px; background-color: rgba(0,0,0,0.3); color: var(--text-main); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; resize: vertical; font-family: inherit; }
+.report-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+.cancel-btn { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--text-main); padding: 8px 20px; border-radius: 50px; cursor: pointer; }
+.submit-btn { background: #e74c3c; border: none; color: white; padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; }

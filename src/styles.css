@@ -1,13 +1,155 @@
 :root {
+  /* Spotify Colors */
   --verde: #1db954;
-  --negro: #121212;
-  --negroclaro: #212121;
+  --verde-hover: #1ed760;
+  
+  /* Letterboxd-style dark backgrounds */
+  --negro: #000000;
+  --bg-main: #14181c; /* Deep Letterboxd blue/grey */
+  --bg-card: #2c3440; /* Card background */
+  --bg-card-hover: #37404d;
+  --bg-navbar: #111519;
+  
+  /* Text Colors */
+  --text-main: #ffffff;
+  --text-muted: #99aabb;
   --gris: #535353;
   --grisclaro: #b3b3b3;
-  --fuente: "Varela Round", sans-serif;
+  
+  --fuente: "Roboto", sans-serif;
 }
 
 body {
-  background-color: var(--negroclaro);
-  color: var(--grisclaro);
+  background: var(--bg-main) 
+    radial-gradient(circle at 15% 20%, rgba(29, 185, 84, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(29, 185, 84, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(20, 24, 28, 1) 0%, transparent 60%) no-repeat fixed;
+  background-color: var(--bg-main);
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--fuente);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* --- ANIMACIONES GLOBALES (VINILO Y HOVERS) --- */
+
+/* Glassmorphism general */
+.glass-panel {
+  background: rgba(20, 24, 28, 0.6);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Hover elástico general para tarjetas */
+.hover-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hover-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Efecto Vinilo Giratorio */
+.vinyl-container {
+  position: relative;
+  display: inline-block;
+  overflow: visible; /* Permitir que el vinilo salga de la funda */
+  padding-right: 25px; /* Margen transparente para que el vinilo no tape textos */
+}
+
+/* La carátula del álbum actúa como la "funda" */
+.vinyl-cover {
+  position: relative;
+  z-index: 2;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  transition: transform 0.4s cubic-bezier(0.3, 1, 0.3, 1);
+}
+
+/* El disco de vinilo escondido detrás */
+.vinyl-record {
+  position: absolute;
+  top: 2%;
+  left: 5%;
+  width: 96%;
+  height: 96%;
+  background: radial-gradient(circle, #000 30%, #111 40%, #000 60%, #111 80%, #000 100%);
+  border-radius: 50%;
+  z-index: 1;
+  transition: transform 0.5s cubic-bezier(0.3, 1, 0.3, 1);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,0.1), 0 0 10px rgba(0,0,0,0.8);
+}
+
+/* Sello central del vinilo con color Spotify */
+.vinyl-record::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 33%;
+  height: 33%;
+  background-color: var(--verde);
+  border-radius: 50%;
+  border: 2px solid #000;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* Hueco central del vinilo */
+.vinyl-record::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5%;
+  height: 5%;
+  background-color: #000; /* Fondo central */
+  border-radius: 50%;
+  z-index: 2;
+}
+
+/* Surcos del vinilo */
+.vinyl-grooves {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 
+    inset 0 0 0 10px rgba(0,0,0,0),
+    inset 0 0 0 11px rgba(255,255,255,0.05),
+    inset 0 0 0 20px rgba(0,0,0,0),
+    inset 0 0 0 21px rgba(255,255,255,0.05),
+    inset 0 0 0 30px rgba(0,0,0,0),
+    inset 0 0 0 31px rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+/* Animación al hacer hover en el contenedor */
+.vinyl-container {
+  cursor: pointer;
+}
+
+.vinyl-container:hover .vinyl-cover {
+  transform: translateX(-15px); /* La funda se desplaza a la izquierda */
+}
+
+.vinyl-container:hover .vinyl-record {
+  transform: translateX(25px) rotate(360deg); /* El disco sale a la derecha y gira */
+  animation: spin 3s linear infinite; /* Animación de giro constante */
+  animation-delay: 0.2s; /* Espera a salir para empezar a girar continuo */
+}
+
+@keyframes spin {
+  from { transform: translateX(25px) rotate(0deg); }
+  to { transform: translateX(25px) rotate(360deg); }
 }

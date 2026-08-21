@@ -1,7 +1,6 @@
 <div *ngIf="song" class="song-page-container">
-  <div class="bg-blur" [style.background-image]="'url(' + song.album.images[0]?.url + ')'"></div>
-
-  <div class="song-details">
+  
+  <div class="song-details glass-panel">
     <div class="album-cover">
       <img [src]="song.album.images[0]?.url" alt="{{ song.name }}" />
     </div>
@@ -17,7 +16,13 @@
       <p class="album-name">
         <a [routerLink]="['/album', song.album.id]" class="album-link">{{ song.album.name }}</a>
       </p>
-      <p class="release-date">{{ song.album.release_date }}</p>
+      
+      <div class="song-meta">
+        <span class="meta-item"><i class="fas fa-calendar-alt"></i> {{ song.album.release_date }}</span>
+        <span class="meta-item"><i class="fas fa-clock"></i> {{ formatDuration(song.duration_ms) }}</span>
+        <span class="meta-item"><i class="fas fa-fire"></i> {{ song.popularity }} / 100 Popularidad</span>
+        <span class="meta-item explicit-badge" *ngIf="song.explicit"><i class="fas fa-exclamation-triangle"></i> EXPLICIT</span>
+      </div>
 
       <div class="song-controls">
         <a [href]="song.external_urls.spotify" target="_blank" class="spotify-link">
