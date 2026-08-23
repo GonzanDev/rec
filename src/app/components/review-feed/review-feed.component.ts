@@ -23,6 +23,7 @@ export class ReviewFeedComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() mode: 'all' | 'following' = 'all';
   @Input() followingIds: string[] = [];
+  @Input() sort: 'recent' | 'popular' = 'recent';
 
   reviews: Review[] = [];
   usersInfo: Map<string, any> = new Map();
@@ -59,8 +60,11 @@ export class ReviewFeedComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Si el modo cambia, volvemos a cargar las reseñas
-    if (changes['mode'] && !changes['mode'].firstChange) {
+    // Si el modo o el orden cambian, volvemos a cargar las reseñas
+    if (
+      (changes['mode'] && !changes['mode'].firstChange) ||
+      (changes['sort'] && !changes['sort'].firstChange)
+    ) {
       this.loadReviews();
     }
   }
@@ -125,16 +129,26 @@ else if (this.mode === 'following') {
     // Solo ordenar si NO es vista individual
     this.reviews = this.highlightReviewId
       ? reviews
-      : reviews.sort((a, b) =>
-          (b.timestamp as unknown as number) -
-          (a.timestamp as unknown as number)
-        );
+      : this.sortReviews(reviews);
 
     this.loadUserAndAlbumDetails(this.reviews);
   });
 
   this.subscriptions.push(reviewSub);
 }
+
+  private sortReviews(reviews: Review[]): Review[] {
+    if (this.sort === 'popular') {
+      return [...reviews].sort((a, b) =>
+        (b.likes?.length || 0) - (a.likes?.length || 0)
+      );
+    }
+
+    return [...reviews].sort((a, b) =>
+      (b.timestamp as unknown as number) -
+      (a.timestamp as unknown as number)
+    );
+  }
 
 
   private loadUserAndAlbumDetails(reviews: Review[]) {

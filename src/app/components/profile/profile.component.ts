@@ -37,6 +37,14 @@ isComparing: boolean = false;
   isFollowing: boolean = false;
   isLoading: boolean = true;
 
+  stats = {
+    total: 0,
+    average: 0,
+    distribution: [0, 0, 0, 0, 0],
+    topRating: 0,
+    topAlbumName: ''
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -82,6 +90,7 @@ isComparing: boolean = false;
         }
 
         this.checkIfFollowing();
+        this.loadStats();
       },
       error: (error) => {
         console.error('Error loading user profile:', error);
@@ -148,6 +157,46 @@ getFavoriteAlbumsDetails() {
     }
   });
 }
+
+  loadStats() {
+    this.reviewService.getReviewsByUser(this.userId).then((reviews) => {
+      const total = reviews.length;
+      const distribution = [0, 0, 0, 0, 0];
+
+      let sum = 0;
+      let topReview: any = null;
+
+      reviews.forEach((review) => {
+        sum += review.rating;
+        if (review.rating >= 1 && review.rating <= 5) {
+          distribution[review.rating - 1]++;
+        }
+
+        if (!topReview || review.rating > topReview.rating) {
+          topReview = review;
+        }
+      });
+
+      this.stats.total = total;
+      this.stats.average = total > 0 ? sum / total : 0;
+      this.stats.distribution = distribution;
+      this.stats.topRating = topReview?.rating || 0;
+
+      if (topReview?.albumId) {
+        const sub = this.spotifyService.getAlbumDetails(topReview.albumId).subscribe({
+          next: (album) => {
+            this.stats.topAlbumName = album?.name || '';
+          },
+          error: () => {
+            this.stats.topAlbumName = '';
+          }
+        });
+        this.subscriptions.push(sub);
+      }
+    }).catch((error) => {
+      console.error('Error loading stats:', error);
+    });
+  }
 
   checkIfFollowing() {
     if (this.user && this.currentUserId) {

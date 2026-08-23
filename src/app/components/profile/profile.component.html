@@ -38,6 +38,36 @@
     </div>
   </div>
 
+  <!-- Stats -->
+  <div *ngIf="stats.total > 0" class="stats-section">
+    <div class="section-header">
+      <h3>Estadísticas</h3>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-number">{{ stats.total }}</span>
+        <span class="stat-label">Reseñas</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">{{ stats.average.toFixed(1) }}</span>
+        <span class="stat-label">Puntuación media</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number top-album">{{ stats.topAlbumName || '—' }}</span>
+        <span class="stat-label">Mejor álbum ({{ stats.topRating }} ⭐)</span>
+      </div>
+    </div>
+    <div class="distribution">
+      <div class="dist-row" *ngFor="let count of stats.distribution; let i = index">
+        <span class="dist-stars">{{ i + 1 }} ⭐</span>
+        <div class="dist-bar">
+          <div class="dist-fill" [style.width.%]="(count / stats.total) * 100"></div>
+        </div>
+        <span class="dist-count">{{ count }}</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Comparison Results -->
   <div *ngIf="showComparison" class="comparison-results">
     <div class="section-header">

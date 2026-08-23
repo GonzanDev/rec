@@ -145,6 +145,85 @@
 
 .mt-4 { margin-top: 2rem; }
 
+/* Stats Section */
+.stats-section {
+  background-color: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background-color: rgba(255,255,255,0.03);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.stat-card .stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--verde);
+}
+
+.stat-card .stat-number.top-album {
+  font-size: 1rem;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dist-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dist-stars {
+  min-width: 40px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.dist-bar {
+  flex: 1;
+  height: 10px;
+  background-color: rgba(255,255,255,0.06);
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.dist-fill {
+  height: 100%;
+  background-color: var(--verde);
+  border-radius: 50px;
+  transition: width 0.4s ease-out;
+}
+
+.dist-count {
+  min-width: 24px;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
 /* Comparison Section */
 .comparison-results {
   background-color: var(--bg-card);

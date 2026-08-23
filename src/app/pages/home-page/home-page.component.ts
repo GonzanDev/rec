@@ -20,6 +20,7 @@ export class HomePageComponent implements OnInit {
   
   // Variables para el filtro
   currentMode: 'all' | 'following' = 'all';
+  currentSort: 'recent' | 'popular' = 'recent';
   followingIds: string[] = [];
 
   private route = inject(ActivatedRoute);
@@ -46,5 +47,9 @@ export class HomePageComponent implements OnInit {
 
   setMode(mode: 'all' | 'following') {
     this.currentMode = mode;
+  }
+
+  setSort(sort: 'recent' | 'popular') {
+    this.currentSort = sort;
   }
 }

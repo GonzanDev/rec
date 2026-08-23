@@ -19,12 +19,26 @@
           (click)="setMode('following')">
           Siguiendo
         </button>
+        <span class="tab-divider"></span>
+        <button 
+          class="pill-btn"
+          [class.active]="currentSort === 'recent'" 
+          (click)="setSort('recent')">
+          Recientes
+        </button>
+        <button 
+          class="pill-btn"
+          [class.active]="currentSort === 'popular'" 
+          (click)="setSort('popular')">
+          Más gustadas
+        </button>
       </div>
     </div>
 
     <app-review-feed
       [highlightReviewId]="reviewIdFromUrl"
       [mode]="currentMode"
+      [sort]="currentSort"
       [followingIds]="followingIds">
     </app-review-feed>
   </section>
