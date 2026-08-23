@@ -10,8 +10,18 @@
       [currentUserId]="currentUser?.uid"
       [getUserName]="getUserName.bind(this)"
       (likeToggled)="toggleLike($event)"
-      (commentAdded)="addCommentToReview($event.reviewId, $event.comment)">
+      (commentAdded)="addCommentToReview($event.reviewId, $event.comment)"
+      (editRequested)="onEditRequested($event)"
+      (deleteRequested)="onDeleteRequested($event)">
     </app-review>
 
   </div>
+
+  <app-create-review
+    *ngIf="reviewToEdit"
+    [reviewToEdit]="reviewToEdit"
+    [selectedAlbum]="editingAlbum"
+    (close)="closeEditor()"
+    (reviewUpdated)="onReviewUpdated($event)">
+  </app-create-review>
 </div>

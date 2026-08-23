@@ -312,6 +312,15 @@
 /* Modal de Reporte se mantiene igual... */
 .report-btn { background: none; border: none; cursor: pointer; opacity: 0.5; padding: 5px; }
 .report-btn:hover { opacity: 1; }
+
+.edit-btn { color: var(--verde); }
+.delete-btn { color: #e74c3c; }
+
+.delete-confirm-text {
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
 .report-icon { width: 14px; height: 14px; filter: invert(1); }
 .report-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
 .report-modal { background-color: var(--bg-card); border-radius: 12px; width: 90%; max-width: 450px; border: 1px solid rgba(255,255,255,0.1); }

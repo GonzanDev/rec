@@ -18,9 +18,11 @@ export class CreateReviewComponent {
   albums: any[] = [];
   @Input() selectedAlbum: any;
     @Input() highlightReviewId: string | null = null;
+  @Input() reviewToEdit?: Review;
 
   @Output() close = new EventEmitter<void>();
   @Output() reviewCreated = new EventEmitter<Review>();
+  @Output() reviewUpdated = new EventEmitter<Review>();
 
   comment: string = '';
   rating: number = 0;
@@ -38,6 +40,11 @@ export class CreateReviewComponent {
     const currentUser = this.auth.currentUser;
     if (currentUser) {
       this.userId = currentUser.uid;
+    }
+
+    if (this.reviewToEdit) {
+      this.comment = this.reviewToEdit.comment;
+      this.rating = this.reviewToEdit.rating;
     }
   }
 
@@ -68,6 +75,37 @@ export class CreateReviewComponent {
 
     if (this.rating === 0) {
       toast.error('Selecciona una calificación');
+      return;
+    }
+
+    if (this.reviewToEdit?.id) {
+      this.isSubmitting = true;
+
+      try {
+        await this.reviewService.updateReview(this.reviewToEdit.id, {
+          comment: this.comment,
+          rating: this.rating,
+        });
+
+        const updatedReview: Review = {
+          ...this.reviewToEdit,
+          comment: this.comment,
+          rating: this.rating,
+        };
+
+        this.reviewUpdated.emit(updatedReview);
+        toast.success('Reseña actualizada');
+
+        this.comment = '';
+        this.rating = 0;
+        this.closeReview();
+      } catch (error) {
+        console.error('Error al actualizar la reseña:', error);
+        toast.error('Error al actualizar la reseña');
+      } finally {
+        this.isSubmitting = false;
+      }
+
       return;
     }
 

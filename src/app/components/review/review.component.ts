@@ -23,6 +23,8 @@ export class ReviewComponent {
 
   @Output() likeToggled = new EventEmitter<Review>();
   @Output() commentAdded = new EventEmitter<{ reviewId: string; comment: string }>();
+  @Output() editRequested = new EventEmitter<Review>();
+  @Output() deleteRequested = new EventEmitter<Review>();
 
   private reportService = inject(ReportService);
 
@@ -40,6 +42,9 @@ export class ReviewComponent {
   isSubmittingReport: boolean = false;
   
   showComments: boolean = false;
+
+  // Delete confirmation modal state
+  showDeleteModal: boolean = false;
 
   reportReasons: { value: ReportReason; label: string }[] = [
     { value: 'spam', label: 'Spam' },
@@ -64,6 +69,23 @@ export class ReviewComponent {
       comment: this.newCommentContent
     });
     this.newCommentContent = '';
+  }
+
+  onEditRequested(): void {
+    this.editRequested.emit(this.review);
+  }
+
+  openDeleteModal(): void {
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete(): void {
+    this.showDeleteModal = false;
+    this.deleteRequested.emit(this.review);
   }
 
   // Open report modal for a review

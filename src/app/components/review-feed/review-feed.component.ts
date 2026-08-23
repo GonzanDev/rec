@@ -7,12 +7,13 @@ import { SpotifyService } from '../../services/spotify.service';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { filter, take } from 'rxjs/operators';
 import { ReviewComponent } from '../review/review.component';
+import { CreateReviewComponent } from '../create-review/create-review.component';
 
 
 @Component({
   selector: 'app-review-feed',
   standalone: true,
-  imports: [CommonModule, ReviewComponent],
+  imports: [CommonModule, ReviewComponent, CreateReviewComponent],
   templateUrl: './review-feed.component.html',
   styleUrls: ['./review-feed.component.css']
 })
@@ -30,6 +31,9 @@ export class ReviewFeedComponent implements OnInit, OnDestroy, OnChanges {
   albumsInfo: Map<string, any> = new Map();
   isLoading: boolean = true;
   currentUser: any = null;
+
+  reviewToEdit: Review | null = null;
+  editingAlbum: any = null;
 
   private reviewService = inject(ReviewService);
   private spotifyService = inject(SpotifyService);
@@ -243,5 +247,35 @@ else if (this.mode === 'following') {
 
     this.reviewService.addComment(reviewId, this.currentUser.uid, comment)
       .catch(error => console.error('Error al agregar comentario:', error));
+  }
+
+  onEditRequested(review: Review) {
+    this.reviewToEdit = review;
+    this.editingAlbum = this.albumsInfo.get(review.albumId) || null;
+  }
+
+  closeEditor() {
+    this.reviewToEdit = null;
+    this.editingAlbum = null;
+  }
+
+  onReviewUpdated(updatedReview: Review) {
+    if (!updatedReview.id) return;
+
+    const index = this.reviews.findIndex(r => r.id === updatedReview.id);
+    if (index !== -1) {
+      this.reviews[index] = updatedReview;
+    }
+    this.closeEditor();
+  }
+
+  onDeleteRequested(review: Review) {
+    if (!review.id) return;
+
+    this.reviewService.deleteReview(review.id)
+      .then(() => {
+        this.reviews = this.reviews.filter(r => r.id !== review.id);
+      })
+      .catch(error => console.error('Error al borrar la reseña:', error));
   }
 }

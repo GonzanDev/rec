@@ -21,6 +21,20 @@
       <div class="review-header-right">
         <span class="review-date">{{ review.timestamp.toDate() | date:'shortDate' }}</span>
         <button
+          *ngIf="currentUserId === review.userId"
+          class="report-btn edit-btn"
+          (click)="onEditRequested()"
+          title="Editar reseña">
+          <i class="fa fa-pencil"></i>
+        </button>
+        <button
+          *ngIf="currentUserId === review.userId"
+          class="report-btn delete-btn"
+          (click)="openDeleteModal()"
+          title="Borrar reseña">
+          <i class="fa fa-trash"></i>
+        </button>
+        <button
           *ngIf="currentUserId && currentUserId !== review.userId"
           class="report-btn"
           (click)="openReportReviewModal()"
@@ -131,6 +145,25 @@
       <button class="submit-btn" (click)="submitReport()" [disabled]="isSubmittingReport">
         {{ isSubmittingReport ? 'Enviando...' : 'Enviar reporte' }}
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="report-modal-overlay" *ngIf="showDeleteModal" (click)="cancelDelete()">
+  <div class="report-modal" (click)="$event.stopPropagation()">
+    <div class="report-modal-header">
+      <h3>Borrar reseña</h3>
+      <button class="close-btn" (click)="cancelDelete()">✕</button>
+    </div>
+
+    <div class="report-modal-body">
+      <p class="delete-confirm-text">¿Seguro que quieres borrar esta reseña? Esta acción no se puede deshacer.</p>
+    </div>
+
+    <div class="report-modal-footer">
+      <button class="cancel-btn" (click)="cancelDelete()">Cancelar</button>
+      <button class="submit-btn" (click)="confirmDelete()">Borrar</button>
     </div>
   </div>
 </div>
