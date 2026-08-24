@@ -15,6 +15,8 @@ import { SignUpComponent } from './components/auth/features/sign-up/sign-up.comp
 import { privateGuard, publicGuard } from './auth.guard';
 
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { ListsPageComponent } from './pages/lists-page/lists-page.component';
+import { ListDetailPageComponent } from './pages/list-detail-page/list-detail-page.component';
 
 
 export const routes: Routes = [
@@ -35,6 +37,17 @@ export const routes: Routes = [
   { path: 'saved', component: LibraryPageComponent, canActivate: [privateGuard()] },
   { path: 'following', component: LibraryPageComponent, canActivate: [privateGuard()] },
   { path: 'playlists', component: LibraryPageComponent, canActivate: [privateGuard()] },
+
+  {
+    path: 'lists',
+    component: ListsPageComponent,
+    canActivate: [privateGuard()],
+  },
+  {
+    path: 'list/:listId',
+    component: ListDetailPageComponent,
+    canActivate: [privateGuard()],
+  },
 
   { path: 'create-review', component: CreateReviewComponent },
 

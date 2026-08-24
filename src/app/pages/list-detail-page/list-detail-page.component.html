@@ -1,0 +1,128 @@
+<div *ngIf="isLoading" class="loading-state">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!isLoading && !list" class="no-results">
+  <i class="fa fa-meh-o"></i>
+  <p>No se encontró esta lista.</p>
+</div>
+
+<div *ngIf="!isLoading && list" class="list-detail-container">
+  <div class="list-detail-header">
+    <div class="header-main" *ngIf="!isEditing">
+      <h1 class="list-title">{{ list.title }}</h1>
+      <p class="list-description" *ngIf="list.description">{{ list.description }}</p>
+      <div class="list-meta">
+        <span>Por {{ ownerName }}</span>
+        <span>· {{ list.items.length || 0 }} elementos</span>
+        <span *ngIf="!list.ranked">· Sin orden</span>
+        <span *ngIf="list.privacy === 'private'"><i class="fa fa-lock"></i> Privada</span>
+      </div>
+      <div class="tag-list" *ngIf="list.tags && list.tags.length > 0">
+        <span class="tag-chip" *ngFor="let tag of list.tags">{{ tag }}</span>
+      </div>
+    </div>
+
+    <div class="header-edit" *ngIf="isEditing">
+      <input type="text" [(ngModel)]="editTitle" maxlength="80" placeholder="Título" />
+      <input type="text" [(ngModel)]="editDescription" maxlength="200" placeholder="Descripción (opcional)" />
+
+      <app-tag-input [tags]="editTags" (tagsChange)="editTags = $event"></app-tag-input>
+
+      <div class="edit-options">
+        <div class="privacy-toggle">
+          <button
+            type="button"
+            class="option-btn"
+            [class.active]="editPrivacy === 'public'"
+            (click)="editPrivacy = 'public'"
+          >
+            <i class="fa fa-globe"></i> Pública
+          </button>
+          <button
+            type="button"
+            class="option-btn"
+            [class.active]="editPrivacy === 'private'"
+            (click)="editPrivacy = 'private'"
+          >
+            <i class="fa fa-lock"></i> Privada
+          </button>
+        </div>
+
+        <label class="ranked-toggle">
+          <input type="checkbox" [(ngModel)]="editRanked" />
+          Lista ordenada (con ranking)
+        </label>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="action-btn" [class.is-favorite]="isLiked" (click)="toggleLike()">
+        <i class="fa" [ngClass]="isLiked ? 'fa-heart' : 'fa-heart-o'"></i>
+        <span>{{ list.likes?.length || 0 }}</span>
+      </button>
+
+      <ng-container *ngIf="isOwner">
+        <button class="action-btn" [class.is-favorite]="showItemSearch" (click)="showItemSearch = !showItemSearch">
+          <i class="fa fa-plus"></i>
+          <span>Agregar elementos</span>
+        </button>
+        <button class="action-btn" (click)="toggleEdit()">
+          <i class="fa" [ngClass]="isEditing ? 'fa-check' : 'fa-pencil'"></i>
+          <span>{{ isEditing ? 'Guardar' : 'Editar' }}</span>
+        </button>
+        <button class="action-btn danger" (click)="deleteList()">
+          <i class="fa fa-trash"></i>
+          <span>Eliminar</span>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <app-item-search
+    *ngIf="isOwner && showItemSearch"
+    class="item-search-panel"
+    [existingItems]="list.items"
+    (itemAdded)="addItemFromSearch($event)"
+    (itemRemoved)="removeItemFromSearch($event)"
+  ></app-item-search>
+
+  <div class="items-list" *ngIf="resolvedItems.length > 0">
+    <div class="item-row hover-card" *ngFor="let resolved of resolvedItems; let i = index">
+      <span class="item-index" *ngIf="list.ranked">{{ i + 1 }}</span>
+
+      <a [routerLink]="routeFor(resolved)" class="item-link">
+        <img *ngIf="coverFor(resolved)" [src]="coverFor(resolved)" alt="" class="item-cover" />
+        <div *ngIf="!coverFor(resolved)" class="item-cover placeholder">
+          <i class="fa fa-music"></i>
+        </div>
+        <div class="item-info">
+          <span class="item-name">{{ nameFor(resolved) }}</span>
+          <span class="item-subtitle" *ngIf="subtitleFor(resolved)">{{ subtitleFor(resolved) }}</span>
+        </div>
+      </a>
+
+      <span class="item-type-badge">{{ resolved.item.type }}</span>
+
+      <div class="item-actions" *ngIf="isOwner">
+        <ng-container *ngIf="list.ranked">
+          <button class="icon-btn" (click)="moveItem(i, -1)" [disabled]="i === 0" title="Subir">
+            <i class="fa fa-chevron-up"></i>
+          </button>
+          <button class="icon-btn" (click)="moveItem(i, 1)" [disabled]="i === resolvedItems.length - 1" title="Bajar">
+            <i class="fa fa-chevron-down"></i>
+          </button>
+        </ng-container>
+        <button class="icon-btn danger" (click)="removeItem(i)" title="Quitar">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" *ngIf="resolvedItems.length === 0">
+    <i class="fa fa-list"></i>
+    <p *ngIf="isOwner">Esta lista todavía no tiene elementos. Usá "Agregar elementos" arriba, o agregalos desde la página de un artista, álbum o canción.</p>
+    <p *ngIf="!isOwner">Esta lista todavía no tiene elementos.</p>
+  </div>
+</div>

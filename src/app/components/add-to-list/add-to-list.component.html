@@ -1,0 +1,34 @@
+<div class="overlay" (click)="closeModal()">
+  <div class="add-to-list-container" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeModal()">✕</button>
+
+    <h3 class="title">Añadir a una lista</h3>
+
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="!isLoading" class="lists-scroll">
+      <label class="list-row" *ngFor="let list of lists">
+        <input type="checkbox" [checked]="isInList(list)" (change)="toggleList(list)" />
+        <span class="list-row-title">{{ list.title }}</span>
+        <span class="list-row-count">{{ list.items.length || 0 }}</span>
+      </label>
+
+      <p class="no-lists" *ngIf="lists.length === 0">Todavía no tenés listas.</p>
+    </div>
+
+    <div class="new-list-row">
+      <input
+        type="text"
+        [(ngModel)]="newListTitle"
+        placeholder="Nueva lista, ej: The 80s"
+        maxlength="80"
+        (keydown.enter)="createAndAdd()"
+      />
+      <button class="create-btn" (click)="createAndAdd()" [disabled]="isCreating || !newListTitle.trim()">
+        <i class="fa fa-plus"></i>
+      </button>
+    </div>
+  </div>
+</div>

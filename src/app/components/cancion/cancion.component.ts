@@ -1,18 +1,24 @@
 import { NgFor, NgIf } from '@angular/common';
 import { SpotifyService } from '../../services/spotify.service';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { filter, switchMap, take } from 'rxjs';
+import { toast } from 'ngx-sonner';
+import { AuthStateService } from '../auth/data-access/auth-state.service';
+import { AddToListComponent } from '../add-to-list/add-to-list.component';
 
 @Component({
   selector: 'app-cancion',
   standalone: true,
-  imports: [NgIf, NgFor, RouterLink],
+  imports: [NgIf, NgFor, RouterLink, AddToListComponent],
   templateUrl: './cancion.component.html',
   styleUrls: ['./cancion.component.css']
 })
 export class CancionComponent {
   song: any;
+  userId: string = '';
+  showAddToList: boolean = false;
+  private authState = inject(AuthStateService);
 
   constructor(
     private route: ActivatedRoute,
@@ -20,6 +26,15 @@ export class CancionComponent {
   ) {}
 
   ngOnInit() {
+    this.authState.authState$
+      .pipe(
+        filter((auth) => auth !== undefined),
+        take(1)
+      )
+      .subscribe((authState) => {
+        if (authState) this.userId = authState.uid;
+      });
+
     this.route.paramMap
       .pipe(
         switchMap((params) => {
@@ -38,6 +53,14 @@ export class CancionComponent {
           console.error('Error fetching song details:', error);
         }
       );
+  }
+
+  openAddToList() {
+    if (!this.userId) {
+      toast.error('Debes iniciar sesión');
+      return;
+    }
+    this.showAddToList = true;
   }
 
   formatDuration(ms: number): string {

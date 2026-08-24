@@ -1,0 +1,113 @@
+<div class="lists-page-container">
+  <div class="lists-page-header">
+    <div>
+      <h2>Mis Listas</h2>
+      <p class="subtitle">Agrupa artistas, álbumes y canciones como quieras.</p>
+    </div>
+    <button class="pill-btn primary" (click)="toggleCreateForm()">
+      <i class="fa fa-plus"></i> Nueva lista
+    </button>
+  </div>
+
+  <div class="create-form" *ngIf="showCreateForm">
+    <input
+      type="text"
+      [(ngModel)]="newTitle"
+      placeholder="Título, ej: The 80s"
+      maxlength="80"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newDescription"
+      placeholder="Descripción (opcional)"
+      maxlength="200"
+    />
+
+    <app-tag-input [tags]="newTags" (tagsChange)="newTags = $event"></app-tag-input>
+
+    <div class="create-form-options">
+      <div class="privacy-toggle">
+        <button
+          type="button"
+          class="option-btn"
+          [class.active]="newPrivacy === 'public'"
+          (click)="newPrivacy = 'public'"
+        >
+          <i class="fa fa-globe"></i> Pública
+        </button>
+        <button
+          type="button"
+          class="option-btn"
+          [class.active]="newPrivacy === 'private'"
+          (click)="newPrivacy = 'private'"
+        >
+          <i class="fa fa-lock"></i> Privada
+        </button>
+      </div>
+
+      <label class="ranked-toggle">
+        <input type="checkbox" [(ngModel)]="newRanked" />
+        Lista ordenada (con ranking)
+      </label>
+    </div>
+
+    <div class="draft-items" *ngIf="newItems.length > 0">
+      <div class="draft-item" *ngFor="let draft of newItems; let i = index">
+        <img *ngIf="coverFor(draft)" [src]="coverFor(draft)" alt="" class="draft-item-cover" />
+        <div *ngIf="!coverFor(draft)" class="draft-item-cover placeholder"><i class="fa fa-music"></i></div>
+        <div class="draft-item-info">
+          <span class="draft-item-name">{{ nameFor(draft) }}</span>
+          <span class="draft-item-subtitle" *ngIf="subtitleFor(draft)">{{ subtitleFor(draft) }}</span>
+        </div>
+        <span class="item-type-badge">{{ draft.item.type }}</span>
+        <button type="button" class="icon-btn danger" (click)="removeDraftItem(i)" title="Quitar">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <app-item-search
+      [existingItems]="newListItems"
+      (itemAdded)="onNewItemAdded($event)"
+      (itemRemoved)="onNewItemRemoved($event)"
+    ></app-item-search>
+
+    <div class="create-form-actions">
+      <button class="pill-btn outline" (click)="toggleCreateForm()">Cancelar</button>
+      <button class="pill-btn primary" (click)="createList()" [disabled]="isCreating || !newTitle.trim()">
+        {{ isCreating ? 'Creando...' : 'Crear' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="tag-filter-bar" *ngIf="!isLoading && allTags.length > 0">
+    <i class="fa fa-filter"></i>
+    <input type="text" [(ngModel)]="tagFilter" placeholder="Filtrar por tag..." />
+    <button
+      type="button"
+      class="tag-suggestion"
+      *ngFor="let tag of allTags"
+      (click)="tagFilter = tag"
+    >
+      {{ tag }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+  </div>
+
+  <div class="lists-grid" *ngIf="!isLoading && filteredLists.length > 0">
+    <app-list-card *ngFor="let list of filteredLists" [list]="list"></app-list-card>
+  </div>
+
+  <div class="no-results" *ngIf="!isLoading && lists.length > 0 && filteredLists.length === 0">
+    <i class="fa fa-filter"></i>
+    <p>Ninguna lista tiene ese tag.</p>
+  </div>
+
+  <div class="no-results" *ngIf="!isLoading && lists.length === 0">
+    <i class="fa fa-list"></i>
+    <p>No tenés listas todavía. Creá la primera.</p>
+  </div>
+</div>

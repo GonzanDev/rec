@@ -8,11 +8,12 @@ import { switchMap, Subscription, filter, take } from 'rxjs';
 import { AlbumListComponent } from '../album-list/album-list.component';
 import { toast } from 'ngx-sonner';
 import { CommonModule } from '@angular/common';
+import { AddToListComponent } from '../add-to-list/add-to-list.component';
 
 @Component({
   selector: 'app-artista',
   standalone: true,
-  imports: [NgIf, AlbumListComponent, CommonModule],
+  imports: [NgIf, AlbumListComponent, CommonModule, AddToListComponent],
   templateUrl: './artista.component.html',
   styleUrls: ['./artista.component.css'],
 })
@@ -20,6 +21,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
   artist: any;
   userId: string = '';
   isFavorite: boolean = false;
+  showAddToList: boolean = false;
   private subscriptions: Subscription[] = [];
   private authState = inject(AuthStateService);
 
@@ -117,6 +119,14 @@ export class ArtistaComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  openAddToList() {
+    if (!this.userId) {
+      toast.error('Debes iniciar sesión');
+      return;
+    }
+    this.showAddToList = true;
   }
 
   formatGenres(genres: string[]): string {

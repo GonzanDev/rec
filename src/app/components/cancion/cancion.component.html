@@ -28,7 +28,17 @@
         <a [href]="song.external_urls.spotify" target="_blank" class="spotify-link">
           Escuchar en Spotify
         </a>
+        <button class="list-link" (click)="openAddToList()">
+          <i class="fa fa-list"></i> Añadir a lista
+        </button>
       </div>
     </div>
   </div>
+
+  <app-add-to-list
+    *ngIf="showAddToList"
+    itemType="song"
+    [itemId]="song.id"
+    (close)="showAddToList = false"
+  ></app-add-to-list>
 </div>
