@@ -88,6 +88,32 @@
 }
 
 .song-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.list-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  color: white;
+  border: 1px solid var(--grisclaro);
+  padding: 13px 24px;
+  border-radius: 500px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.list-link:hover {
+  border-color: white;
+  transform: scale(1.05);
 }
 
 /* Botón Spotify Verde */

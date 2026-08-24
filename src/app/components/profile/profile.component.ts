@@ -10,11 +10,14 @@ import { ReviewFeedComponent } from '../review-feed/review-feed.component';
 import { catchError, filter, take, timeout } from 'rxjs/operators';
 import { combineLatest, Subscription, forkJoin, Observable, of } from 'rxjs';
 import { ReviewService } from '../../services/review.service';
+import { ListService, MusicList } from '../../services/list.service';
+import { ListCardComponent } from '../list-card/list-card.component';
+import { toast } from 'ngx-sonner';
 
 @Component({
   standalone: true,
   selector: 'app-profile',
-  imports: [NgIf, NgFor, NgClass, AlbumListComponent, ArtistListComponent, ReviewFeedComponent],
+  imports: [NgIf, NgFor, NgClass, AlbumListComponent, ArtistListComponent, ReviewFeedComponent, ListCardComponent],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
@@ -25,6 +28,9 @@ export class ProfileComponent implements OnInit {
   private subscriptions: Subscription[] = [];
 
   private reviewService = inject(ReviewService);
+  private listService = inject(ListService);
+
+  lists: MusicList[] = [];
 
   // Variables para la comparación
 comparisonResults: any[] = [];
@@ -91,6 +97,7 @@ isComparing: boolean = false;
 
         this.checkIfFollowing();
         this.loadStats();
+        this.loadLists();
       },
       error: (error) => {
         console.error('Error loading user profile:', error);
@@ -196,6 +203,24 @@ getFavoriteAlbumsDetails() {
     }).catch((error) => {
       console.error('Error loading stats:', error);
     });
+  }
+
+  loadLists() {
+    const lists$ =
+      this.userId === this.currentUserId
+        ? this.listService.getByUser(this.userId)
+        : this.listService.getPublicByUser(this.userId);
+
+    const sub = lists$.subscribe({
+      next: (lists) => {
+        this.lists = lists;
+      },
+      error: (error) => {
+        console.error('Error al cargar las listas:', error);
+        toast.error('Error al cargar las listas: ' + (error?.message || error?.code || 'error desconocido'));
+      },
+    });
+    this.subscriptions.push(sub);
   }
 
   checkIfFollowing() {

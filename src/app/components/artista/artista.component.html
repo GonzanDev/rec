@@ -23,7 +23,18 @@
       <i class="fa" [ngClass]="isFavorite ? 'fa-heart' : 'fa-heart-o'"></i>
       {{ isFavorite ? 'En favoritos' : 'Seguir artista' }}
     </button>
+    <button class="fav-btn" (click)="openAddToList()">
+      <i class="fa fa-list"></i>
+      Añadir a lista
+    </button>
   </div>
+
+  <app-add-to-list
+    *ngIf="showAddToList"
+    itemType="artist"
+    [itemId]="artist.id"
+    (close)="showAddToList = false"
+  ></app-add-to-list>
 
   <section class="artist-content">
       <h3>Discografía</h3>

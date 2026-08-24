@@ -224,6 +224,12 @@
   color: var(--text-main);
 }
 
+.lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.25rem;
+}
+
 /* Comparison Section */
 .comparison-results {
   background-color: var(--bg-card);

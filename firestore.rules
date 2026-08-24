@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function onlyChangedFields(fields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
+    }
+
+    function listOrEmpty(data, field) {
+      return field in data ? data[field] : [];
+    }
+
+    // True if newList differs from oldList by exactly one toggle of request.auth.uid.
+    function toggledSelfOnly(oldList, newList) {
+      return (newList.size() == oldList.size() + 1
+              && newList.hasAll(oldList)
+              && newList.hasAny([request.auth.uid])
+              && !oldList.hasAny([request.auth.uid]))
+          || (newList.size() == oldList.size() - 1
+              && oldList.hasAll(newList)
+              && oldList.hasAny([request.auth.uid])
+              && !newList.hasAny([request.auth.uid]));
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+
+      allow create: if isOwner(userId)
+        && request.resource.data.id == userId
+        && !('password' in request.resource.data);
+
+      // Owner can edit their own profile; never allowed to store a password field.
+      allow update: if isOwner(userId) && !('password' in request.resource.data);
+
+      // Any other signed-in user may only toggle themselves in/out of `followers`.
+      allow update: if isSignedIn()
+        && !isOwner(userId)
+        && onlyChangedFields(['followers'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'followers'), listOrEmpty(request.resource.data, 'followers'));
+
+      allow delete: if isOwner(userId);
+    }
+
+    match /reviews/{reviewId} {
+      allow read: if isSignedIn();
+
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+
+      // Owner can fully edit/delete their own review.
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+
+      // Any other signed-in user may only toggle their own uid in `likes`.
+      allow update: if isSignedIn()
+        && resource.data.userId != request.auth.uid
+        && onlyChangedFields(['likes'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'likes'), listOrEmpty(request.resource.data, 'likes'));
+
+      // Any other signed-in user may append exactly one comment authored as themselves.
+      allow update: if isSignedIn()
+        && resource.data.userId != request.auth.uid
+        && onlyChangedFields(['comments'])
+        && request.resource.data.comments.size() == listOrEmpty(resource.data, 'comments').size() + 1
+        && request.resource.data.comments[request.resource.data.comments.size() - 1].userId == request.auth.uid;
+    }
+
+    match /lists/{listId} {
+      // Owner can always read their own list; everyone else only if it's not private.
+      allow read: if isSignedIn()
+        && (resource.data.userId == request.auth.uid || resource.data.privacy != 'private');
+
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.privacy in ['public', 'private'];
+
+      // Owner can fully edit/delete their own list.
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+
+      // Any other signed-in user may only toggle their own uid in `likes`, and only on public lists.
+      allow update: if isSignedIn()
+        && resource.data.userId != request.auth.uid
+        && resource.data.privacy != 'private'
+        && onlyChangedFields(['likes'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'likes'), listOrEmpty(request.resource.data, 'likes'));
+    }
+  }
+}

@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { User } from '../../../../services/user.service';
 import { Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { toast } from 'ngx-sonner';
@@ -41,15 +40,14 @@ export class SignUpComponent {
 async submit() {
   if (this.form.valid) {
     const { email, password, username } = this.form.value;
-    const user: User = {
-      email: email!,
-      password: password!,
-      username: username!,
-    };
 
     try {
       // 1. Esperamos a que termine el registro y Firestore
-      await this.authService.signUp(user);
+      await this.authService.signUp({
+        email: email!,
+        password: password!,
+        username: username!,
+      });
       
       // 2. Notificamos al usuario
       toast.success('Usuario registrado correctamente');

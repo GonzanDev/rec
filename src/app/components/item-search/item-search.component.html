@@ -1,0 +1,69 @@
+<div class="item-search">
+  <div class="search-box">
+    <i class="fa fa-search"></i>
+    <input
+      type="text"
+      [ngModel]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      placeholder="Buscar artistas, álbumes o canciones..."
+    />
+  </div>
+
+  <div class="search-results" *ngIf="searchTerm.trim()">
+    <div class="result-section" *ngIf="results.artists.length > 0">
+      <h5>Artistas</h5>
+      <button
+        type="button"
+        class="result-row"
+        *ngFor="let artist of results.artists"
+        [class.added]="isAdded('artist', artist.id)"
+        (click)="toggle('artist', artist)"
+      >
+        <img *ngIf="cover('artist', artist)" [src]="cover('artist', artist)" alt="" class="result-cover round" />
+        <div *ngIf="!cover('artist', artist)" class="result-cover round placeholder"><i class="fa fa-user"></i></div>
+        <span class="result-name">{{ artist.name }}</span>
+        <i class="fa" [ngClass]="isAdded('artist', artist.id) ? 'fa-check-circle' : 'fa-plus-circle'"></i>
+      </button>
+    </div>
+
+    <div class="result-section" *ngIf="results.albums.length > 0">
+      <h5>Álbumes</h5>
+      <button
+        type="button"
+        class="result-row"
+        *ngFor="let album of results.albums"
+        [class.added]="isAdded('album', album.id)"
+        (click)="toggle('album', album)"
+      >
+        <img *ngIf="cover('album', album)" [src]="cover('album', album)" alt="" class="result-cover" />
+        <div *ngIf="!cover('album', album)" class="result-cover placeholder"><i class="fa fa-music"></i></div>
+        <div class="result-info">
+          <span class="result-name">{{ album.name }}</span>
+          <span class="result-subtitle">{{ subtitle('album', album) }}</span>
+        </div>
+        <i class="fa" [ngClass]="isAdded('album', album.id) ? 'fa-check-circle' : 'fa-plus-circle'"></i>
+      </button>
+    </div>
+
+    <div class="result-section" *ngIf="results.tracks.length > 0">
+      <h5>Canciones</h5>
+      <button
+        type="button"
+        class="result-row"
+        *ngFor="let track of results.tracks"
+        [class.added]="isAdded('song', track.id)"
+        (click)="toggle('song', track)"
+      >
+        <img *ngIf="cover('song', track)" [src]="cover('song', track)" alt="" class="result-cover" />
+        <div *ngIf="!cover('song', track)" class="result-cover placeholder"><i class="fa fa-music"></i></div>
+        <div class="result-info">
+          <span class="result-name">{{ track.name }}</span>
+          <span class="result-subtitle">{{ subtitle('song', track) }}</span>
+        </div>
+        <i class="fa" [ngClass]="isAdded('song', track.id) ? 'fa-check-circle' : 'fa-plus-circle'"></i>
+      </button>
+    </div>
+
+    <p class="no-results-inline" *ngIf="!isSearching && !hasResults()">Sin resultados.</p>
+  </div>
+</div>

@@ -10,17 +10,19 @@ import { AuthStateService } from '../auth/data-access/auth-state.service';
 import { ReviewService, Review } from '../../services/review.service';
 import { Subscription, combineLatest, catchError, of } from 'rxjs';
 import { toast } from 'ngx-sonner';
+import { AddToListComponent } from '../../components/add-to-list/add-to-list.component';
 
 @Component({
   standalone: true,
   selector: 'app-album',
-  imports: [NgFor, NgIf, RouterLink, CreateReviewComponent, CommonModule],
+  imports: [NgFor, NgIf, RouterLink, CreateReviewComponent, CommonModule, AddToListComponent],
   templateUrl: './album.component.html',
   styleUrls: ['./album.component.css'],
 })
 export class AlbumComponent implements OnInit, OnDestroy {
   album: any = null;
   showReviewComponent = false;
+  showAddToList = false;
   reviews: Review[] = [];
   userId: string = '';
   isFavorite: boolean = false;
@@ -185,6 +187,14 @@ export class AlbumComponent implements OnInit, OnDestroy {
 
   closeReviewComponent(): void {
     this.showReviewComponent = false;
+  }
+
+  openAddToList() {
+    if (!this.userId) {
+      toast.error('Debes iniciar sesión');
+      return;
+    }
+    this.showAddToList = true;
   }
 
   onReviewCreated(review: Review) {

@@ -133,6 +133,16 @@
     </div>
 
     <div class="section-header mt-4">
+      <h3>Listas</h3>
+    </div>
+    <div class="lists-grid" *ngIf="lists.length > 0">
+      <app-list-card *ngFor="let list of lists" [list]="list"></app-list-card>
+    </div>
+    <div class="no-results" *ngIf="lists.length === 0">
+      <p>No hay listas todavía.</p>
+    </div>
+
+    <div class="section-header mt-4">
       <h3>Reseñas Publicadas</h3>
     </div>
     <app-review-feed [userId]="user.id"></app-review-feed>

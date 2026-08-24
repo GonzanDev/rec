@@ -18,7 +18,18 @@
         <i class="fa fa-star"></i>
         <span>Reseñar</span>
       </button>
+      <button class="action-btn" (click)="openAddToList()">
+        <i class="fa fa-list"></i>
+        <span>Añadir a lista</span>
+      </button>
     </div>
+
+    <app-add-to-list
+      *ngIf="showAddToList"
+      itemType="album"
+      [itemId]="album.id"
+      (close)="showAddToList = false"
+    ></app-add-to-list>
     
     <div class="share-links">
       <button (click)="shareWhatsApp()" class="share-btn" title="Compartir en WhatsApp"><i class="fa fa-whatsapp"></i></button>

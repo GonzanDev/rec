@@ -10,20 +10,19 @@ export class AuthService {
   private userService = inject(UserService);
 
 
-  async signUp(user: User): Promise<UserCredential> {
+  async signUp(credentials: { email: string; password: string; username?: string } & Partial<User>): Promise<UserCredential> {
     try {
-      const userCredential = await createUserWithEmailAndPassword(this._auth, user.email, user.password);
+      const userCredential = await createUserWithEmailAndPassword(this._auth, credentials.email, credentials.password);
 
       await this.userService.create({
         id: userCredential.user.uid,
-        email: user.email,
-        password: user.password,
-        username: user.username,
-        favoriteAlbums: user.favoriteAlbums || [],
-        favoriteArtists: user.favoriteArtists || [],
-        reviews: user.reviews || [],
-        followers: user.followers || [],
-        following: user.following || [],
+        email: credentials.email,
+        username: credentials.username,
+        favoriteAlbums: credentials.favoriteAlbums || [],
+        favoriteArtists: credentials.favoriteArtists || [],
+        reviews: credentials.reviews || [],
+        followers: credentials.followers || [],
+        following: credentials.following || [],
       });
 
       return userCredential;
@@ -33,8 +32,8 @@ export class AuthService {
     }
   }
 
-  signIn(user: User) {
-    return signInWithEmailAndPassword(this._auth, user.email, user.password);
+  signIn(credentials: { email: string; password: string }) {
+    return signInWithEmailAndPassword(this._auth, credentials.email, credentials.password);
   }
 
   async signInWithGoogle(): Promise<UserCredential> {
@@ -52,7 +51,6 @@ export class AuthService {
         await this.userService.create({
           id: result.user.uid,
           email: result.user.email || '',
-          password: '', // No password for Google users
           username: result.user.displayName || result.user.email?.split('@')[0] || 'User',
           favoriteAlbums: [],
           favoriteArtists: [],
