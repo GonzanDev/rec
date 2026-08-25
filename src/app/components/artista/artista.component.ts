@@ -77,9 +77,9 @@ export class ArtistaComponent implements OnInit, OnDestroy {
 
   checkIfFavorite() {
     this.userService.getById(this.userId).then(user => {
-      if (user?.favoriteArtists?.includes(this.artist.id)) {
-        this.isFavorite = true;
-      }
+      this.isFavorite = !!user?.favoriteArtists?.includes(this.artist.id);
+    }).catch((error) => {
+      console.error('Error al verificar favorito:', error);
     });
   }
 

@@ -38,8 +38,11 @@ service cloud.firestore {
         && request.resource.data.id == userId
         && !('password' in request.resource.data);
 
-      // Owner can edit their own profile; never allowed to store a password field.
-      allow update: if isOwner(userId) && !('password' in request.resource.data);
+      // Owner can edit their own profile. Never allowed to newly introduce a password
+      // field — but don't permanently lock out accounts that already have a legacy one
+      // sitting in their doc from an old version of signUp(); just forbid adding one.
+      allow update: if isOwner(userId)
+        && (!('password' in request.resource.data) || 'password' in resource.data);
 
       // Any other signed-in user may only toggle themselves in/out of `followers`.
       allow update: if isSignedIn()
