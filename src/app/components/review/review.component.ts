@@ -46,6 +46,10 @@ export class ReviewComponent {
   // Delete confirmation modal state
   showDeleteModal: boolean = false;
 
+  // Dropdown menus state
+  showOptionsMenu: boolean = false;
+  showShareMenu: boolean = false;
+
   reportReasons: { value: ReportReason; label: string }[] = [
     { value: 'spam', label: 'Spam' },
     { value: 'offensive', label: 'Contenido ofensivo' },
@@ -73,6 +77,21 @@ export class ReviewComponent {
 
   onEditRequested(): void {
     this.editRequested.emit(this.review);
+  }
+
+  toggleOptionsMenu(): void {
+    this.showOptionsMenu = !this.showOptionsMenu;
+    this.showShareMenu = false;
+  }
+
+  toggleShareMenu(): void {
+    this.showShareMenu = !this.showShareMenu;
+    this.showOptionsMenu = false;
+  }
+
+  closeAllMenus(): void {
+    this.showOptionsMenu = false;
+    this.showShareMenu = false;
   }
 
   openDeleteModal(): void {
@@ -175,7 +194,7 @@ shareX() {
 
 copyLink() {
   navigator.clipboard.writeText(this.getReviewLink());
-  alert('Link copiado');
+  toast.success('Link copiado');
 }
 
 /// comment section

@@ -1,36 +1,79 @@
-/* --- RESET Y FUENTE --- */
-.container {
+/* --- LAYOUT GENERAL --- */
+.auth-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.form-side {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 90vh;
   padding: 20px;
+  overflow-y: auto;
 }
 
-form {
+form.auth-card {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  max-width: 400px;
+  gap: 1.4rem;
+  max-width: 520px;
   width: 100%;
   padding: 2.5rem;
-  border-radius: 12px;
-  background-color: rgba(20, 24, 28, 0.7); /* Carta de fondo semitransparente */
+  border-radius: 16px;
+  background-color: rgba(20, 24, 28, 0.7);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  animation: fade-in 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.brand-mark i.fa-spotify {
+  color: var(--verde);
+  font-size: 1.3rem;
+}
+
+.brand-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: var(--verde);
+  vertical-align: middle;
 }
 
 .form-header {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
 }
 
 .form-header h2 {
-  margin: 0;
-  font-size: 1.8rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.7rem;
   color: var(--text-main);
+}
+
+.form-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
 }
 
 /* --- CAMPOS DE ENTRADA --- */
@@ -46,12 +89,26 @@ label {
   font-size: 0.9rem;
 }
 
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap i.fa {
+  position: absolute;
+  left: 16px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  pointer-events: none;
+}
+
 input {
   font-size: 1rem;
-  padding: 12px 16px;
+  padding: 12px 16px 12px 42px;
   width: 100%;
   outline: none;
-  background: var(--bg-main); /* Fondo más oscuro para el input */
+  background: var(--bg-main);
   color: var(--text-main);
   border: 1px solid transparent;
   border-radius: 8px;
@@ -64,8 +121,38 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.2);
 }
 
+input:focus + .toggle-visibility,
+.input-wrap:focus-within i.fa:first-child {
+  color: var(--verde);
+}
+
 input::placeholder {
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.input.has-error input {
+  border-color: rgba(255, 77, 77, 0.6);
+}
+
+.toggle-visibility {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.toggle-visibility:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 /* Mensajes de error */
@@ -80,19 +167,23 @@ small {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 button[type="submit"] {
   background-color: var(--verde);
   color: var(--negro);
   border: none;
-  border-radius: 500px; /* Estilo cápsula */
+  border-radius: 500px;
   padding: 14px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
@@ -103,9 +194,27 @@ button[type="submit"]:hover:not(:disabled) {
 }
 
 button[type="submit"]:disabled {
-  background-color: var(--bg-main);
+  background-color: rgba(255, 255, 255, 0.08);
   color: var(--text-muted);
   cursor: not-allowed;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 app-google-button {
@@ -113,11 +222,11 @@ app-google-button {
 }
 
 /* --- PIE DE FORMULARIO --- */
-p {
+.switch-auth {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.9rem;
-  margin-top: 1rem;
+  margin: 0.5rem 0 0;
 }
 
 a {
@@ -133,10 +242,17 @@ a:hover {
 
 /* --- RESPONSIVE --- */
 @media (max-width: 480px) {
-  form {
+  .form-side {
+    align-items: flex-start;
+    padding: 32px 12px;
+  }
+
+  form.auth-card {
     padding: 1.5rem;
     box-shadow: none;
     border: none;
     background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }

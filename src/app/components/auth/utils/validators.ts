@@ -10,3 +10,8 @@ export const hasEmailError = (form: FormGroup) => {
   const control = form.get('email');
   return control && control?.touched && control.hasError('email');
 }
+
+export const hasMinLengthError = (form: FormGroup) => {
+  const control = form.get('password');
+  return control && control?.touched && control.hasError('minlength');
+}

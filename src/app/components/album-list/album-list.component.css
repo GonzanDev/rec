@@ -63,7 +63,10 @@
 
 .carousel-btn {
   position: absolute;
-  top: 80px; /* Center relative to the 160px album cover */
+  /* Centrado respecto a la portada de 160px: 10px padding de .mini-carousel
+     + 10px padding de .album-card-inner por encima de la portada + la mitad
+     de sus 160px de alto. */
+  top: 100px;
   transform: translateY(-50%);
   background: rgba(20, 24, 28, 0.7);
   backdrop-filter: blur(5px);
@@ -208,4 +211,17 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* En mobile no hay hover real: el toque puede dejar el vinilo "afuera"
+   hasta el próximo tap. Desactivamos la animación del disco en este carrusel. */
+@media (max-width: 600px), (hover: none) {
+  .vinyl-container:hover .vinyl-cover {
+    transform: none;
+  }
+
+  .vinyl-container:hover .vinyl-record {
+    transform: none;
+    animation: none;
+  }
 }

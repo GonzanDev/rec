@@ -1,5 +1,5 @@
 import { AuthService } from '../../../../services/auth.service';
-import { Component, inject, NgZone } from '@angular/core';
+import { Component, inject, NgZone, signal } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -7,16 +7,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { NgIf } from '@angular/common';
 import { toast } from 'ngx-sonner';
 
-import { hasEmailError, isRequired } from './../../utils/validators';
+import { hasEmailError, hasMinLengthError, isRequired } from './../../utils/validators';
 import { GoogleButtonComponent } from '../../ui/google-button/google-button.component';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, RouterLink, GoogleButtonComponent],
+  imports: [ReactiveFormsModule, RouterLink, GoogleButtonComponent],
   templateUrl: 'sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
 })
@@ -26,7 +25,24 @@ export class SignUpComponent {
   private router = inject(Router);
   private zone = inject(NgZone);
 
-  constructor() {}
+  showPassword = signal(false);
+  isLoading = signal(false);
+
+  togglePassword() {
+    this.showPassword.update((value) => !value);
+  }
+
+  isRequired(field: 'email' | 'password' | 'username') {
+    return isRequired(field, this.form);
+  }
+
+  hasEmailError() {
+    return hasEmailError(this.form);
+  }
+
+  hasMinLengthError() {
+    return hasMinLengthError(this.form);
+  }
 
   form = this.formBuilder.group({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -38,31 +54,34 @@ export class SignUpComponent {
   });
 
 async submit() {
-  if (this.form.valid) {
-    const { email, password, username } = this.form.value;
+  if (this.form.invalid || this.isLoading()) return;
 
-    try {
-      // 1. Esperamos a que termine el registro y Firestore
-      await this.authService.signUp({
-        email: email!,
-        password: password!,
-        username: username!,
-      });
-      
-      // 2. Notificamos al usuario
-      toast.success('Usuario registrado correctamente');
+  const { email, password, username } = this.form.value;
 
-      // 3. Forzamos la redirección dentro de la zona de Angular
-      // Esto soluciona que se quede "colgado"
-      this.zone.run(() => {
-        this.router.navigate(['/home']);
-      });
+  this.isLoading.set(true);
+  try {
+    // 1. Esperamos a que termine el registro y Firestore
+    await this.authService.signUp({
+      email: email!,
+      password: password!,
+      username: username!,
+    });
 
-    } catch (error: any) {
-      console.error('Error en el registro:', error);
-      // Un toque extra: mostrar el error real de Firebase (ej: email ya en uso)
-      toast.error(error.message || 'Hubo un problema al crear tu cuenta');
-    }
+    // 2. Notificamos al usuario
+    toast.success('Usuario registrado correctamente');
+
+    // 3. Forzamos la redirección dentro de la zona de Angular
+    // Esto soluciona que se quede "colgado"
+    this.zone.run(() => {
+      this.router.navigate(['/home']);
+    });
+
+  } catch (error: any) {
+    console.error('Error en el registro:', error);
+    // Un toque extra: mostrar el error real de Firebase (ej: email ya en uso)
+    toast.error(error.message || 'Hubo un problema al crear tu cuenta');
+  } finally {
+    this.isLoading.set(false);
   }
 }
 
@@ -70,7 +89,7 @@ async submitWithGoogle() {
   try {
     await this.authService.signInWithGoogle();
     toast.success('Bienvenido');
-    
+
     // Forzamos a Angular a navegar inmediatamente
     this.zone.run(() => {
       this.router.navigate(['/home']);

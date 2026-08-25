@@ -189,6 +189,113 @@
   color: var(--text-main);
 }
 
+.icon-btn.active {
+  background: rgba(255,255,255,0.06);
+  color: var(--verde);
+}
+
+/* Dropdowns (opciones de reseña y compartir) */
+.options-wrapper,
+.share-wrapper {
+  position: relative;
+}
+
+.options-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.options-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-main);
+}
+
+.options-btn.active {
+  background: rgba(255,255,255,0.08);
+  color: var(--verde);
+}
+
+.dropdown-menu {
+  position: absolute;
+  z-index: 950;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdown-in 0.15s ease;
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.options-dropdown {
+  top: calc(100% + 6px);
+  right: 0;
+}
+
+.share-dropdown {
+  bottom: calc(100% + 6px);
+  right: 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item i {
+  width: 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.dropdown-item-danger {
+  color: #e74c3c;
+}
+
+.dropdown-item-danger i {
+  color: #e74c3c;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: transparent;
+}
+
 /* Comentarios */
 .comments-section {
   margin-top: 4px;
@@ -326,9 +433,6 @@
 /* Modal de Reporte se mantiene igual... */
 .report-btn { background: none; border: none; cursor: pointer; opacity: 0.5; padding: 5px; }
 .report-btn:hover { opacity: 1; }
-
-.edit-btn { color: var(--verde); }
-.delete-btn { color: #e74c3c; }
 
 .delete-confirm-text {
   color: var(--text-muted);

@@ -18,20 +18,25 @@
 
     <div class="review-header-right">
       <span class="review-date">{{ review.timestamp.toDate() | date:'shortDate' }}</span>
-      <button
-        *ngIf="currentUserId === review.userId"
-        class="report-btn edit-btn"
-        (click)="onEditRequested()"
-        title="Editar reseña">
-        <i class="fa fa-pencil"></i>
-      </button>
-      <button
-        *ngIf="currentUserId === review.userId"
-        class="report-btn delete-btn"
-        (click)="openDeleteModal()"
-        title="Borrar reseña">
-        <i class="fa fa-trash"></i>
-      </button>
+
+      <div class="options-wrapper" *ngIf="currentUserId === review.userId">
+        <button
+          class="options-btn"
+          [class.active]="showOptionsMenu"
+          (click)="toggleOptionsMenu()"
+          title="Opciones">
+          <i class="fa fa-ellipsis-v"></i>
+        </button>
+        <div class="dropdown-menu options-dropdown" *ngIf="showOptionsMenu">
+          <button class="dropdown-item" (click)="onEditRequested(); closeAllMenus()">
+            <i class="fa fa-pencil"></i> Editar reseña
+          </button>
+          <button class="dropdown-item dropdown-item-danger" (click)="openDeleteModal(); closeAllMenus()">
+            <i class="fa fa-trash"></i> Eliminar reseña
+          </button>
+        </div>
+      </div>
+
       <button
         *ngIf="currentUserId && currentUserId !== review.userId"
         class="report-btn"
@@ -41,6 +46,8 @@
       </button>
     </div>
   </div>
+
+  <div class="dropdown-backdrop" *ngIf="showOptionsMenu || showShareMenu" (click)="closeAllMenus()"></div>
 
   <!-- Resto del contenido: siempre a todo el ancho, debajo del encabezado -->
   <div class="review-body-wrap">
@@ -71,15 +78,26 @@
 
       <div class="action-spacer"></div>
 
-      <button (click)="shareWhatsApp()" class="icon-btn" title="Compartir por WhatsApp">
-        <i class="fa fa-whatsapp"></i>
-      </button>
-      <button (click)="shareX()" class="icon-btn" title="Compartir en X">
-        <i class="fa fa-twitter"></i>
-      </button>
-      <button (click)="copyLink()" class="icon-btn" title="Copiar link">
-        <i class="fa fa-link"></i>
-      </button>
+      <div class="share-wrapper">
+        <button
+          class="icon-btn"
+          [class.active]="showShareMenu"
+          (click)="toggleShareMenu()"
+          title="Compartir">
+          <i class="fa fa-share-alt"></i>
+        </button>
+        <div class="dropdown-menu share-dropdown" *ngIf="showShareMenu">
+          <button class="dropdown-item" (click)="shareWhatsApp(); closeAllMenus()">
+            <i class="fa fa-whatsapp"></i> WhatsApp
+          </button>
+          <button class="dropdown-item" (click)="shareX(); closeAllMenus()">
+            <i class="fa fa-twitter"></i> X (Twitter)
+          </button>
+          <button class="dropdown-item" (click)="copyLink(); closeAllMenus()">
+            <i class="fa fa-link"></i> Copiar link
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Comments section -->

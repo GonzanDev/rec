@@ -1,5 +1,5 @@
 import { hasEmailError, isRequired } from './../../utils/validators';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { toast } from 'ngx-sonner';
@@ -23,6 +23,13 @@ export  class SignInComponent {
   private authService = inject(AuthService);
   private _router = inject(Router);
 
+  showPassword = signal(false);
+  isLoading = signal(false);
+
+  togglePassword() {
+    this.showPassword.update((value) => !value);
+  }
+
   isRequired(field: 'email' | 'password'){
    return isRequired(field, this.form);
   }
@@ -40,23 +47,26 @@ export  class SignInComponent {
   })
 
 async submit() {
-  if (this.form.invalid) return;
+  if (this.form.invalid || this.isLoading()) return;
 
+  this.isLoading.set(true);
   try {
     const { email, password } = this.form.value;
     if (!email || !password) return;
 
     const result = await this.authService.signIn({ email, password });
-    
+
     // 1. Mostrar mensaje de éxito
     toast.success('Bienvenido');
-    
+
     // 2. REDIRIGIR AL HOME (Esta es la línea que faltaba)
     await this._router.navigateByUrl('/home');
-    
+
   } catch (error: any) {
     console.error('Sign in error:', error);
     toast.error(this.messageForAuthError(error?.code));
+  } finally {
+    this.isLoading.set(false);
   }
 }
 
