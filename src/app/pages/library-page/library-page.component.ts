@@ -109,6 +109,21 @@ import { forkJoin, Subscription, Observable, of } from 'rxjs';
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+    @media (max-width: 767px) {
+      .library-container {
+        padding: 1rem;
+      }
+      .library-header h2 {
+        font-size: 1.8rem;
+      }
+      .library-header i {
+        font-size: 2rem;
+      }
+      .subtitle {
+        margin-bottom: 24px;
+      }
+    }
   `]
 })
 export class LibraryPageComponent implements OnInit, OnDestroy {

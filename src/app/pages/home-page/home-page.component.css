@@ -69,3 +69,26 @@
   background-color: var(--bg-card-hover);
   color: var(--text-main);
 }
+
+@media (max-width: 767px) {
+  .home-container {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .feed-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .feed-tabs {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .pill-btn {
+    padding: 7px 14px;
+    font-size: 0.8rem;
+  }
+}

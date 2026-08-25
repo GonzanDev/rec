@@ -145,3 +145,10 @@
   background: var(--bg-card-hover);
   border-radius: 6px;
 }
+
+/* En móvil, deja espacio para el botón flotante de perfil (top-right). */
+@media (max-width: 1023px) {
+  .search-container {
+    padding-right: 72px;
+  }
+}

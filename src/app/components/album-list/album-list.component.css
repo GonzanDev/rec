@@ -37,6 +37,12 @@
   border-color: var(--verde);
 }
 
+.carousel-btn::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+}
+
 .carousel-btn.left { left: -10px; }
 .carousel-btn.right { right: -10px; }
 

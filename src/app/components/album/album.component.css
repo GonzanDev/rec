@@ -431,3 +431,63 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* --- Móvil --- */
+@media (max-width: 767px) {
+  .album-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .album-sidebar {
+    flex: 1 1 auto;
+    align-items: center;
+  }
+
+  .cover-wrapper,
+  .album-actions,
+  .share-links {
+    max-width: 260px;
+    width: 100%;
+  }
+
+  .album-title {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .album-stats {
+    gap: 1.25rem;
+  }
+
+  .album-info-details {
+    gap: 1.25rem;
+  }
+
+  /* La tabla de canciones se reestructura: número + título + duración en la
+     primera fila y el adelanto (audio) en la segunda. La cabecera se oculta. */
+  .track-row.header {
+    display: none;
+  }
+
+  .track-row {
+    grid-template-columns: 28px 1fr auto;
+    grid-template-areas:
+      "num title time"
+      "num preview preview";
+    row-gap: 0.5rem;
+    padding: 0.75rem 0.75rem;
+  }
+
+  .col-num { grid-area: num; }
+  .col-title { grid-area: title; }
+  .col-preview {
+    grid-area: preview;
+    justify-content: flex-start;
+    padding-right: 0;
+  }
+  .col-time { grid-area: time; }
+
+  .custom-audio {
+    max-width: 100%;
+  }
+}

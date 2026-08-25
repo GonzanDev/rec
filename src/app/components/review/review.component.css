@@ -172,6 +172,13 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
+  position: relative;
+}
+
+.share-btn::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
 }
 
 .share-btn:hover {

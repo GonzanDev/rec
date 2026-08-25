@@ -94,3 +94,15 @@
   position: absolute;
   right: -50px;
 }
+
+/* En móvil los carruseles se desplazan con el dedo; las flechas quedan fuera
+   de la pantalla y se ocultan. */
+@media (max-width: 768px) {
+  .carousel-container {
+    width: 100%;
+  }
+
+  .carousel-button {
+    display: none;
+  }
+}

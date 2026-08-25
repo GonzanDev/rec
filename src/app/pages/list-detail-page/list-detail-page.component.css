@@ -275,6 +275,13 @@
   align-items: center;
   justify-content: center;
   transition: all 0.15s ease;
+  position: relative;
+}
+
+.icon-btn::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
 }
 
 .icon-btn:hover:not(:disabled) {
@@ -325,4 +332,23 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 767px) {
+  .list-detail-container {
+    padding: 1rem;
+  }
+
+  .list-title {
+    font-size: 1.8rem;
+  }
+
+  .item-row {
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .item-actions {
+    margin-left: auto;
+  }
 }

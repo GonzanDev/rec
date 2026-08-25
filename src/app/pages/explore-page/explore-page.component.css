@@ -56,3 +56,14 @@
   font-size: 2rem;
   color: var(--verde);
 }
+
+@media (max-width: 767px) {
+  .explore-container {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+}

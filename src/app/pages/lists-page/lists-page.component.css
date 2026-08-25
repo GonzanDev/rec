@@ -225,6 +225,13 @@
   justify-content: center;
   transition: all 0.15s ease;
   flex-shrink: 0;
+  position: relative;
+}
+
+.icon-btn::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
 }
 
 .icon-btn:hover {
@@ -322,4 +329,18 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 767px) {
+  .lists-page-container {
+    padding: 1rem;
+  }
+
+  .lists-page-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .create-form {
+    padding: 1rem;
+  }
 }
