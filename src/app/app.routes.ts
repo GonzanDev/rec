@@ -15,6 +15,7 @@ import { SignUpComponent } from './components/auth/features/sign-up/sign-up.comp
 import { privateGuard, publicGuard } from './auth.guard';
 
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
 import { ListsPageComponent } from './pages/lists-page/lists-page.component';
 import { ListDetailPageComponent } from './pages/list-detail-page/list-detail-page.component';
 
@@ -54,6 +55,12 @@ export const routes: Routes = [
   {
     path: 'users/:userId',
     component: ProfilePageComponent,
+    canActivate: [privateGuard()],
+  },
+
+  {
+    path: 'settings',
+    component: SettingsPageComponent,
     canActivate: [privateGuard()],
   },
 

@@ -1,0 +1,205 @@
+.settings-container {
+  padding: 40px;
+  max-width: 640px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  .settings-container {
+    padding: 1rem;
+  }
+}
+
+.settings-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  color: white;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0.4rem 0 2rem 0;
+}
+
+.settings-card {
+  background-color: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.avatar-preview {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background-color: var(--bg-card-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.avatar-actions .pill-btn.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.field input[type="text"],
+.field textarea {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.field input[type="text"]:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--verde);
+}
+
+.char-count {
+  align-self: flex-end;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.privacy-toggle {
+  display: flex;
+  gap: 6px;
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.option-btn.active {
+  border-color: var(--verde);
+  color: var(--verde);
+  background-color: rgba(29, 185, 84, 0.1);
+}
+
+.pill-btn {
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  width: fit-content;
+}
+
+.pill-btn.primary {
+  background-color: var(--verde);
+  color: var(--negro);
+}
+
+.pill-btn.primary:hover:not(:disabled) {
+  background-color: var(--verde-hover);
+  transform: translateY(-2px);
+}
+
+.pill-btn.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pill-btn.outline {
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pill-btn.outline:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 3rem;
+}
+
+.spinner {
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--verde);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

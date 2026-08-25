@@ -11,6 +11,56 @@
   align-items: center;
 }
 
+/* Reserva el mismo alto que ocupan las portadas para que el widget no
+   "salte" (colapse a 0px) mientras carga o si falla el fetch. */
+.carousel-status {
+  width: 100%;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.carousel-status.grid,
+.carousel-status.wrap {
+  min-height: 190px;
+}
+
+.carousel-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top: 3px solid var(--verde);
+  border-radius: 50%;
+  animation: albumListSpin 1s linear infinite;
+}
+
+@keyframes albumListSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.carousel-retry-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background-color: transparent;
+  color: var(--text-main);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.carousel-retry-btn:hover {
+  border-color: var(--verde);
+  color: var(--verde);
+}
+
 .carousel-btn {
   position: absolute;
   top: 80px; /* Center relative to the 160px album cover */
@@ -37,10 +87,17 @@
   border-color: var(--verde);
 }
 
+/* Área táctil más grande que el ícono visible, para que sea fácil tocarlo en mobile. */
 .carousel-btn::after {
   content: '';
   position: absolute;
   inset: -6px;
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
 }
 
 .carousel-btn.left { left: -10px; }

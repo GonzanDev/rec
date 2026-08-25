@@ -32,7 +32,13 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isSignedIn();
+      // El dueño siempre puede leer su propio perfil. Cualquier otro usuario
+      // logueado puede leerlo salvo que sea privado, en cuyo caso solo pueden
+      // sus propios seguidores (mismo criterio que las listas privadas).
+      allow read: if isOwner(userId)
+        || (isSignedIn()
+            && (!('isPrivate' in resource.data) || resource.data.isPrivate != true
+                || request.auth.uid in listOrEmpty(resource.data, 'followers')));
 
       allow create: if isOwner(userId)
         && request.resource.data.id == userId

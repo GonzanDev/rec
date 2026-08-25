@@ -116,3 +116,23 @@
   color: var(--text-muted);
   align-self: center;
 }
+
+@media (max-width: 600px) {
+  .list-card-info {
+    padding: 0.6rem 0.7rem;
+    gap: 0.15rem;
+  }
+
+  .list-card-title {
+    font-size: 0.9rem;
+  }
+
+  .list-card-desc {
+    font-size: 0.78rem;
+    -webkit-line-clamp: 1;
+  }
+
+  .list-card-meta {
+    font-size: 0.7rem;
+  }
+}

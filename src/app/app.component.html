@@ -28,13 +28,29 @@
           <i class="fa fa-list"></i> <span>Mis Listas</span>
         </a>
       </nav>
-      <div class="sidebar-footer">
-        <a [routerLink]="['/users', userId]" class="nav-profile-btn hover-card">
-          <div class="profile-avatar"><i class="fa fa-user"></i></div>
+      <div class="sidebar-footer profile-menu desktop-only">
+        <button type="button" class="nav-profile-btn hover-card" (click)="toggleProfileMenu($event)">
+          <div class="profile-avatar">
+            <img *ngIf="photoURL$ | async as photoURL" [src]="photoURL" alt="">
+            <i *ngIf="!(photoURL$ | async)" class="fa fa-user"></i>
+          </div>
           <div class="profile-info">
             <span class="profile-name">Mi Perfil</span>
           </div>
-        </a>
+          <i class="fa fa-chevron-up profile-menu-caret" [class.open]="profileMenuOpen"></i>
+        </button>
+
+        <div class="profile-dropdown" *ngIf="profileMenuOpen">
+          <a [routerLink]="['/users', userId]" class="profile-dropdown-item" (click)="closeProfileMenu()">
+            <i class="fa fa-user"></i> Mi Perfil
+          </a>
+          <a routerLink="/settings" class="profile-dropdown-item" (click)="closeProfileMenu()">
+            <i class="fa fa-cog"></i> Configuración
+          </a>
+          <button type="button" class="profile-dropdown-item danger" (click)="logOut()">
+            <i class="fa fa-sign-out"></i> Cerrar sesión
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -42,6 +58,29 @@
     <main class="main-content">
       <header class="main-header">
         <app-search-bar></app-search-bar>
+
+        <!-- En mobile no hay sidebar izquierdo visible, así que el acceso al
+             perfil vive acá, pegado a la búsqueda, en vez de flotar suelto. -->
+        <div class="profile-menu header-profile-menu mobile-only">
+          <button type="button" class="header-profile-btn" (click)="toggleProfileMenu($event)" aria-label="Menú de perfil">
+            <div class="profile-avatar">
+              <img *ngIf="photoURL$ | async as photoURL" [src]="photoURL" alt="">
+              <i *ngIf="!(photoURL$ | async)" class="fa fa-user"></i>
+            </div>
+          </button>
+
+          <div class="profile-dropdown" *ngIf="profileMenuOpen">
+            <a [routerLink]="['/users', userId]" class="profile-dropdown-item" (click)="closeProfileMenu()">
+              <i class="fa fa-user"></i> Mi Perfil
+            </a>
+            <a routerLink="/settings" class="profile-dropdown-item" (click)="closeProfileMenu()">
+              <i class="fa fa-cog"></i> Configuración
+            </a>
+            <button type="button" class="profile-dropdown-item danger" (click)="logOut()">
+              <i class="fa fa-sign-out"></i> Cerrar sesión
+            </button>
+          </div>
+        </div>
       </header>
       <div class="content-scroll">
         <router-outlet></router-outlet>
@@ -52,7 +91,7 @@
     <aside class="sidebar-right">
       <div class="widget">
         <h3>Destacados</h3>
-        <app-album-list layout="sidebar"></app-album-list>
+        <app-album-list layout="sidebar" listType="featured"></app-album-list>
       </div>
       <div class="widget" style="margin-top: 1.5rem;">
         <h3>Top 50</h3>
@@ -60,7 +99,7 @@
       </div>
       <div class="widget" style="margin-top: 1.5rem;">
         <h3>Lanzamientos</h3>
-        <app-album-list layout="sidebar"></app-album-list>
+        <app-album-list layout="sidebar" listType="new"></app-album-list>
       </div>
     </aside>
   </div>

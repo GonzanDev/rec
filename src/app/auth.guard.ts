@@ -28,7 +28,7 @@ export const publicGuard = (): CanActivateFn => {
     return authState.authStateReady$.pipe(
       map(user => {
         if (user) {
-          router.navigateByUrl('home');
+          router.navigateByUrl('/home');
           return false;
         }
         return true;

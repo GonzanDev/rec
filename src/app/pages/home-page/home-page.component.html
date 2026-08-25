@@ -1,44 +1,30 @@
 <div class="home-container">
-  
-
 
   <section class="home-section">
-    <div class="feed-header">
-      <h2 class="section-title">Actividad Reciente</h2>
-      
-      <div class="feed-tabs" *ngIf="!reviewIdFromUrl">
-        <button 
-          class="pill-btn"
-          [class.active]="currentMode === 'all'" 
-          (click)="setMode('all')">
-          Global
-        </button>
-        <button 
-          class="pill-btn"
-          [class.active]="currentMode === 'following'" 
-          (click)="setMode('following')">
-          Siguiendo
-        </button>
-        <span class="tab-divider"></span>
-        <button 
-          class="pill-btn"
-          [class.active]="currentSort === 'recent'" 
-          (click)="setSort('recent')">
-          Recientes
-        </button>
-        <button 
-          class="pill-btn"
-          [class.active]="currentSort === 'popular'" 
-          (click)="setSort('popular')">
-          Más gustadas
-        </button>
-      </div>
+    <div class="feed-tabs" *ngIf="!reviewIdFromUrl" role="tablist">
+      <button
+        type="button"
+        role="tab"
+        class="feed-tab"
+        [class.active]="currentMode === 'all'"
+        [attr.aria-selected]="currentMode === 'all'"
+        (click)="setMode('all')">
+        Para ti
+      </button>
+      <button
+        type="button"
+        role="tab"
+        class="feed-tab"
+        [class.active]="currentMode === 'following'"
+        [attr.aria-selected]="currentMode === 'following'"
+        (click)="setMode('following')">
+        Siguiendo
+      </button>
     </div>
 
     <app-review-feed
       [highlightReviewId]="reviewIdFromUrl"
       [mode]="currentMode"
-      [sort]="currentSort"
       [followingIds]="followingIds">
     </app-review-feed>
   </section>

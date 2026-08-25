@@ -1,5 +1,14 @@
-<div class="mini-carousel-container" [ngClass]="layout" *ngIf="albums.length > 0">
-  <button class="carousel-btn left" (click)="scrollLeft()">
+<div class="carousel-status" [ngClass]="layout" *ngIf="isLoading">
+  <div class="carousel-spinner"></div>
+</div>
+
+<div class="carousel-status" [ngClass]="layout" *ngIf="hasError && !isLoading">
+  <p>No se pudieron cargar los discos.</p>
+  <button type="button" class="carousel-retry-btn" (click)="retry()">Reintentar</button>
+</div>
+
+<div class="mini-carousel-container" [ngClass]="layout" *ngIf="!isLoading && !hasError && albums.length > 0">
+  <button class="carousel-btn left" (click)="scrollLeft()" [disabled]="carouselLocked">
     <i class="fa fa-chevron-left"></i>
   </button>
 
@@ -28,7 +37,7 @@
     </div>
   </div>
 
-  <button class="carousel-btn right" (click)="scrollRight()">
+  <button class="carousel-btn right" (click)="scrollRight()" [disabled]="carouselLocked">
     <i class="fa fa-chevron-right"></i>
   </button>
 </div>

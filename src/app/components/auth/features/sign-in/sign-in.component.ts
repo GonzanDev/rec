@@ -54,9 +54,24 @@ async submit() {
     // 2. REDIRIGIR AL HOME (Esta es la línea que faltaba)
     await this._router.navigateByUrl('/home');
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Sign in error:', error);
-    toast.error('Credenciales incorrectas o error de servidor.');
+    toast.error(this.messageForAuthError(error?.code));
+  }
+}
+
+private messageForAuthError(code?: string): string {
+  switch (code) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return 'Correo o contraseña incorrectos.';
+    case 'auth/too-many-requests':
+      return 'Demasiados intentos. Probá de nuevo en unos minutos.';
+    case 'auth/network-request-failed':
+      return 'Error de conexión. Revisá tu internet.';
+    default:
+      return 'Ocurrió un error al iniciar sesión.';
   }
 }
 

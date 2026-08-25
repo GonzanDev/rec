@@ -1,0 +1,58 @@
+<div class="settings-container" *ngIf="!isLoading">
+  <div class="settings-header">
+    <h2>Configuración de perfil</h2>
+    <p class="subtitle">Editá cómo te ven los demás usuarios</p>
+  </div>
+
+  <div class="settings-card">
+    <div class="avatar-row">
+      <div class="avatar-preview">
+        <img *ngIf="user?.photoURL" [src]="user?.photoURL" alt="Foto de perfil">
+        <i *ngIf="!user?.photoURL" class="fa fa-user"></i>
+      </div>
+      <div class="avatar-actions">
+        <label class="pill-btn outline" [class.disabled]="isUploadingAvatar">
+          <i class="fa" [ngClass]="isUploadingAvatar ? 'fa-spinner fa-spin' : 'fa-camera'"></i>
+          {{ isUploadingAvatar ? 'Subiendo...' : 'Cambiar foto' }}
+          <input type="file" accept="image/*" (change)="onAvatarSelected($event)" [disabled]="isUploadingAvatar" hidden>
+        </label>
+        <span class="hint">JPG o PNG, máximo 5MB</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="username">Nombre de usuario</label>
+      <input id="username" type="text" [(ngModel)]="username" placeholder="Tu nombre de usuario">
+    </div>
+
+    <div class="field">
+      <label for="bio">Bio</label>
+      <textarea id="bio" [(ngModel)]="bio" maxlength="280" rows="3" placeholder="Contá algo sobre vos"></textarea>
+      <span class="char-count">{{ bio.length }}/280</span>
+    </div>
+
+    <div class="field">
+      <label>Privacidad de la cuenta</label>
+      <div class="privacy-toggle">
+        <button type="button" class="option-btn" [class.active]="!isPrivate" (click)="isPrivate = false">
+          <i class="fa fa-globe"></i> Pública
+        </button>
+        <button type="button" class="option-btn" [class.active]="isPrivate" (click)="isPrivate = true">
+          <i class="fa fa-lock"></i> Privada
+        </button>
+      </div>
+      <span class="hint">Si es privada, solo tus seguidores pueden ver tu perfil, listas y reseñas.</span>
+    </div>
+
+    <div class="settings-actions">
+      <button class="pill-btn primary" [disabled]="isSaving" (click)="save()">
+        {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-state" *ngIf="isLoading">
+  <div class="spinner"></div>
+  <p>Cargando...</p>
+</div>

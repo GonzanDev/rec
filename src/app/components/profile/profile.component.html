@@ -3,11 +3,12 @@
   <div class="profile-header">
     <div class="profile-info-main">
       <div class="profile-avatar-large">
-        <i class="fa fa-user"></i>
+        <img *ngIf="user.photoURL" [src]="user.photoURL" alt="{{ user.username }}">
+        <i *ngIf="!user.photoURL" class="fa fa-user"></i>
       </div>
       <div class="profile-details">
         <h2 class="profile-username">{{ user.username }}</h2>
-        <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-bio" *ngIf="user.bio">{{ user.bio }}</p>
         <div class="profile-stats">
           <div class="stat-item">
             <span class="stat-number">{{ user.followers?.length || 0 }}</span>
@@ -20,14 +21,8 @@
         </div>
       </div>
     </div>
-    
-    <div class="profile-actions">
-      <ng-container *ngIf="user.id === currentUserId">
-        <button class="pill-btn outline" (click)="logOut()">
-          <i class="fa fa-sign-out"></i> Cerrar sesión
-        </button>
-      </ng-container>
 
+    <div class="profile-actions">
       <ng-container *ngIf="user.id !== currentUserId">
         <button class="pill-btn outline" *ngIf="!isFollowing" (click)="followUser()">Seguir</button>
         <button class="pill-btn outline active" *ngIf="isFollowing" (click)="unfollowUser()">Siguiendo</button>
@@ -102,7 +97,7 @@
           </div>
         </div>
       </div>
-      
+
       <div *ngIf="comparisonResults.length === 0" class="no-results">
         <i class="fa fa-meh-o"></i>
         <p>No tienen álbumes reseñados en común todavía.</p>
@@ -149,7 +144,17 @@
   </div>
 </div>
 
-<div *ngIf="!user" class="loading-state">
+
+<div *ngIf="!user && isPrivateBlocked" class="loading-state">
+  <i class="fa fa-lock" style="font-size: 2rem; opacity: 0.5;"></i>
+  <p>Esta cuenta es privada. Seguila para ver su perfil.</p>
+</div>
+
+<div *ngIf="!user && !isPrivateBlocked && !isLoading" class="loading-state">
+  <p>No se encontró este perfil.</p>
+</div>
+
+<div *ngIf="!user && isLoading" class="loading-state">
   <div class="spinner"></div>
   <p>Cargando perfil...</p>
 </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, switchMap, catchError, filter, take, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, catchError, shareReplay, finalize } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,21 +11,18 @@ export class SpotifyService {
   private clientId = `eea8b97c4e754c898bc58978c62ac4a1`;
   private clientSecret = `b737690ab26b4fc7b1b41fcdd5512e1a`;
 
-  private tokenSubject = new BehaviorSubject<string | null>(null);
-  private token$ = this.tokenSubject.asObservable().pipe(
-    filter((token): token is string => !!token),
-    take(1) // Always take 1 and complete
-  );
+  // Cache del token de client-credentials. Se pide de forma perezosa (recién
+  // cuando algo lo necesita) y se vuelve a pedir solo cuando expiró o cuando
+  // el pedido anterior falló — antes se pedía una única vez al arrancar la
+  // app y, si esa llamada fallaba o pasaba la hora de expiración, todo el
+  // resto de la app se quedaba esperando un token que nunca iba a llegar.
+  private cachedToken: string | null = null;
+  private tokenExpiresAt = 0;
+  private tokenRequest$: Observable<string> | null = null;
 
-  constructor(private http: HttpClient) {
-    this.fetchToken().subscribe();
-  }
+  constructor(private http: HttpClient) {}
 
   private fetchToken(): Observable<string> {
-    if (this.tokenSubject.value) {
-      return of(this.tokenSubject.value);
-    }
-
     const headers = new HttpHeaders({
       'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${btoa(`${this.clientId}:${this.clientSecret}`)}`,
@@ -38,24 +35,31 @@ export class SpotifyService {
       .pipe(
         map((response) => {
           const token = response.access_token;
-          if (token) {
-            this.tokenSubject.next(token);
-            return token;
-          } else {
-            throw new Error('No access token returned');
-          }
+          if (!token) throw new Error('No access token returned');
+          this.cachedToken = token;
+          // Restamos un margen de 60s para no usar un token a punto de vencer.
+          this.tokenExpiresAt = Date.now() + Math.max((response.expires_in || 3600) - 60, 0) * 1000;
+          return token as string;
         })
       );
   }
 
   private getToken(): Observable<string> {
-    if (this.tokenSubject.value) {
-      return of(this.tokenSubject.value);
+    if (this.cachedToken && Date.now() < this.tokenExpiresAt) {
+      return of(this.cachedToken);
     }
-    return this.tokenSubject.asObservable().pipe(
-      filter((token): token is string => !!token),
-      take(1)
-    );
+
+    // Si ya hay un pedido de token en curso, todos los que llegan mientras
+    // tanto se enganchan al mismo en vez de disparar uno por cada uno.
+    if (!this.tokenRequest$) {
+      this.tokenRequest$ = this.fetchToken().pipe(
+        shareReplay(1),
+        finalize(() => {
+          this.tokenRequest$ = null;
+        })
+      );
+    }
+    return this.tokenRequest$;
   }
 
   search(query: string): Observable<any> {
@@ -77,7 +81,8 @@ export class SpotifyService {
     );
   }
 
-  getTopAlbums(): Observable<any[]> {
+  /** Discos recién publicados en Spotify. Usado por el widget "Lanzamientos". */
+  getNewReleases(): Observable<any[]> {
     return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
@@ -90,14 +95,31 @@ export class SpotifyService {
     );
   }
 
+  /** Discos del año en curso. Usado por el widget "Top 50". */
   getTrendingAlbums(): Observable<any[]> {
+    const year = new Date().getFullYear();
     return this.getToken().pipe(
       switchMap((token) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`,
         });
         return this.http
-          .get<any>(`${this.API_URL}/search?q=year:2024&type=album&limit=20`, { headers })
+          .get<any>(`${this.API_URL}/search?q=year:${year}&type=album&limit=20`, { headers })
+          .pipe(map((data) => data.albums.items));
+      })
+    );
+  }
+
+  /** Discos aclamados del año pasado. Usado por el widget "Destacados". */
+  getFeaturedAlbums(): Observable<any[]> {
+    const lastYear = new Date().getFullYear() - 1;
+    return this.getToken().pipe(
+      switchMap((token) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+        });
+        return this.http
+          .get<any>(`${this.API_URL}/search?q=year:${lastYear}&type=album&limit=20`, { headers })
           .pipe(map((data) => data.albums.items));
       })
     );

@@ -1,5 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { SpotifyService } from '../../services/spotify.service';
 import { NgFor, NgClass, NgIf } from '@angular/common';
 
@@ -13,129 +14,150 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
 export class AlbumListComponent implements OnInit, OnChanges {
   @Input() artistId?: string;
   @Input() albums: any[] = [];
-  @Input() favoriteAlbums: any[] = [];
   @Input() layout: 'sidebar' | 'grid' | 'wrap' = 'grid';
-  @Input() listType: 'top' | 'top50' = 'top';
+  @Input() listType: 'featured' | 'top50' | 'new' = 'featured';
   @ViewChild('carousel') carousel!: ElementRef;
 
-  currentRoute: string = '';
   isDragging = false;
   startX = 0;
   scrollLeftPos = 0;
 
+  isLoading = false;
+  hasError = false;
+
+  // true si el padre nos está pasando `[albums]` explícitamente (aunque
+  // todavía esté vacío porque carga async, como en "Álbumes Guardados").
+  // Angular dispara ngOnChanges con esta key apenas hay un binding en el
+  // template, exista o no valor todavía — a diferencia de artistId/albums
+  // sin bindear, que nunca generan un ngOnChanges.
+  private albumsBoundByParent = false;
+
+  private lastLoad: (() => void) | null = null;
+
   constructor(
     private spotifyService: SpotifyService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.detectRoute();  // Detectar la ruta actual al iniciar
+    // Si nadie nos pasó álbumes ni un artista puntual, somos un widget de
+    // "descubrí música" (sidebar derecho / Explorar): siempre cargamos según
+    // listType, sin importar en qué página estemos. Antes esto dependía de
+    // la ruta actual, así que apenas navegabas (o refrescabas con F5) a
+    // cualquier página que no fuera /home o /explore, el widget se quedaba
+    // vacío para siempre sin loading ni error.
+    if (!this.artistId && !this.albumsBoundByParent) {
+      this.loadByListType();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes['albums']) {
+      this.albumsBoundByParent = true;
+    }
     if (changes['artistId'] && this.artistId) {
       this.loadAlbumsByArtist();
     }
   }
 
-  private detectRoute() {
-    this.currentRoute = this.router.url;
-
-    // Verificar la ruta y cargar los álbumes correspondientes
-    if (this.currentRoute.startsWith('/home') || this.currentRoute.startsWith('/explore')) {
-      if (this.listType === 'top50') {
-        this.loadTrendingAlbums();
-      } else {
-        this.loadTopAlbums();
-      }
-    } else if (this.currentRoute.startsWith('/user')) {
-      this.loadFavoriteAlbums(); // Si estamos en la página de un usuario, cargar los álbumes favoritos
-    } else if (this.currentRoute.startsWith('/artist')) {
-      if (this.artistId) {
-        this.loadAlbumsByArtist(); // Si estamos en la página de un artista, cargar los álbumes del artista
-      }
+  private loadByListType() {
+    if (this.listType === 'top50') {
+      this.loadTrendingAlbums();
+    } else if (this.listType === 'new') {
+      this.loadNewReleases();
+    } else {
+      this.loadFeaturedAlbums();
     }
   }
 
-  private loadTopAlbums() {
-    this.spotifyService.getTopAlbums().subscribe({
-      next: (albums) => {
-        this.albums = albums;
-      },
-      error: (error) => {
-        console.error('Error fetching top albums:', error);
-      },
-    });
+  private loadNewReleases() {
+    this.lastLoad = () => this.loadNewReleases();
+    this.runLoad(this.spotifyService.getNewReleases(), 'new releases');
+  }
+
+  private loadFeaturedAlbums() {
+    this.lastLoad = () => this.loadFeaturedAlbums();
+    this.runLoad(this.spotifyService.getFeaturedAlbums(), 'featured albums');
   }
 
   private loadTrendingAlbums() {
-    this.spotifyService.getTrendingAlbums().subscribe({
-      next: (albums) => {
-        this.albums = albums;
-      },
-      error: (error) => {
-        console.error('Error fetching trending albums:', error);
-      },
-    });
-  }
-
-  private loadFavoriteAlbums() {
-    if (this.favoriteAlbums.length > 0) {
-      this.albums = this.favoriteAlbums; // Si hay álbumes favoritos, mostrarlos
-    } else {
-      console.log('No se encontraron álbumes favoritos');
-    }
+    this.lastLoad = () => this.loadTrendingAlbums();
+    this.runLoad(this.spotifyService.getTrendingAlbums(), 'trending albums');
   }
 
   private loadAlbumsByArtist() {
     if (this.artistId) {
-      this.spotifyService.getAlbumsByArtist(this.artistId).subscribe({
-        next: (albums) => {
-          this.albums = albums;
-        },
-        error: (error) => {
-          console.error('Error fetching albums by artist:', error);
-        },
-      });
+      this.lastLoad = () => this.loadAlbumsByArtist();
+      this.runLoad(this.spotifyService.getAlbumsByArtist(this.artistId), 'albums by artist');
     }
   }
 
-scrollLeft() {
-  const container = this.carousel.nativeElement;
-  let step = 0;
-  if (this.layout === 'sidebar') {
-    step = container.clientWidth + 10;
-  } else {
-    // 160px width + 10px gap = 170px
-    const visibleCards = Math.max(1, Math.floor(container.clientWidth / 170));
-    step = visibleCards * 170;
+  private runLoad(source: Observable<any[]>, label: string) {
+    this.isLoading = true;
+    this.hasError = false;
+    source.subscribe({
+      next: (albums) => {
+        this.albums = albums;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error(`Error fetching ${label}:`, error);
+        this.isLoading = false;
+        this.hasError = true;
+      },
+    });
   }
 
-  if (container.scrollLeft <= 10) {
-    const maxScroll = container.scrollWidth - container.clientWidth;
-    container.scrollTo({ left: maxScroll, behavior: 'smooth' });
-  } else {
-    container.scrollBy({ left: -step, behavior: 'smooth' });
+  retry() {
+    this.lastLoad?.();
   }
+
+private stepFor(container: HTMLElement): number {
+  if (this.layout === 'sidebar') {
+    return container.clientWidth + 10;
+  }
+  // 160px width + 10px gap = 170px
+  const visibleCards = Math.max(1, Math.floor(container.clientWidth / 170));
+  return visibleCards * 170;
+}
+
+scrollLeft() {
+  const container = this.carousel.nativeElement;
+  const step = this.stepFor(container);
+  const maxScroll = container.scrollWidth - container.clientWidth;
+  const target = container.scrollLeft <= 10 ? maxScroll : Math.max(0, container.scrollLeft - step);
+  this.runCarouselScroll(container, target);
 }
 
 scrollRight() {
   const container = this.carousel.nativeElement;
-  let step = 0;
-  if (this.layout === 'sidebar') {
-    step = container.clientWidth + 10;
-  } else {
-    const visibleCards = Math.max(1, Math.floor(container.clientWidth / 170));
-    step = visibleCards * 170;
-  }
-
+  const step = this.stepFor(container);
   const maxScroll = container.scrollWidth - container.clientWidth;
-  if (container.scrollLeft >= maxScroll - 10) {
-    container.scrollTo({ left: 0, behavior: 'smooth' });
-  } else {
-    container.scrollBy({ left: step, behavior: 'smooth' });
-  }
+  const target = container.scrollLeft >= maxScroll - 10 ? 0 : Math.min(maxScroll, container.scrollLeft + step);
+  this.runCarouselScroll(container, target);
+}
+
+// Clickear varias veces seguidas mientras el scroll suave todavía está
+// animando hacía que cada click nuevo leyera un scrollLeft "a mitad de
+// camino" y recalculara mal el destino/el wrap-around, dejando el
+// carrusel trabado a mitad de una portada. Mientras hay una animación en
+// curso, ignoramos los clicks nuevos hasta que termine.
+carouselLocked = false;
+
+private runCarouselScroll(container: HTMLElement, target: number) {
+  if (this.carouselLocked) return;
+  this.carouselLocked = true;
+
+  const unlock = () => {
+    this.carouselLocked = false;
+    container.removeEventListener('scrollend', unlock);
+  };
+  container.addEventListener('scrollend', unlock, { once: true });
+  // Red de seguridad para navegadores sin soporte de `scrollend` (Safari
+  // viejo) o si el scroll ya estaba en el destino y el evento no llega a disparar.
+  setTimeout(unlock, 500);
+
+  container.scrollTo({ left: target, behavior: 'smooth' });
 }
 
 onMouseDown(e: MouseEvent) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthStateService } from '../auth/data-access/auth-state.service';
@@ -21,7 +21,7 @@ import { toast } from 'ngx-sonner';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
    userId: string = '';
   currentUserId: string = '';
   private authState = inject(AuthStateService);
@@ -42,6 +42,7 @@ isComparing: boolean = false;
   favoriteArtistsDetails: any[] = [];
   isFollowing: boolean = false;
   isLoading: boolean = true;
+  isPrivateBlocked: boolean = false;
 
   stats = {
     total: 0,
@@ -77,6 +78,10 @@ isComparing: boolean = false;
   this.subscriptions.push(sub);
 }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+
   loadUserProfile(userId: string): void {
     this.isLoading = true;
 
@@ -102,6 +107,7 @@ isComparing: boolean = false;
       error: (error) => {
         console.error('Error loading user profile:', error);
         this.isLoading = false;
+        this.isPrivateBlocked = error?.code === 'permission-denied';
       }
     });
 
@@ -217,7 +223,12 @@ getFavoriteAlbumsDetails() {
       },
       error: (error) => {
         console.error('Error al cargar las listas:', error);
-        toast.error('Error al cargar las listas: ' + (error?.message || error?.code || 'error desconocido'));
+        // permission-denied es esperable acá: o el usuario cerró sesión mientras
+        // este componente seguía montado, o el perfil es privado. En ambos casos
+        // no tiene sentido molestar con un toast.
+        if (error?.code !== 'permission-denied') {
+          toast.error('Error al cargar las listas: ' + (error?.message || error?.code || 'error desconocido'));
+        }
       },
     });
     this.subscriptions.push(sub);
@@ -249,11 +260,6 @@ getFavoriteAlbumsDetails() {
         console.error('Error al dejar de seguir al usuario:', error);
       });
     }
-  }
-
-  async logOut() {
-    await this.authState.logOut();
-    this.router.navigateByUrl('/auth/sign-in');
   }
 
   async compareProfiles() {

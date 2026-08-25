@@ -1,12 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, docData, doc } from '@angular/fire/firestore';
 import { arrayRemove, arrayUnion, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 
 export interface User {
   id?: string;
   email: string;
   username?: string;
+  bio?: string;
+  photoURL?: string;
+  isPrivate?: boolean;
   reviews?: string[];
   favoriteAlbums?: string[];
   favoriteArtists?: string[];
@@ -21,7 +25,21 @@ const PATH = 'users';
 })
 export class UserService {
   private firestore = inject(Firestore);
+  private storage = inject(Storage);
   private users = collection(this.firestore, PATH);
+
+  updateProfile(userId: string, changes: Pick<User, 'username' | 'bio' | 'photoURL' | 'isPrivate'>) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userDocRef, { ...changes });
+  }
+
+  async uploadAvatar(userId: string, file: File): Promise<string> {
+    const avatarRef = ref(this.storage, `avatars/${userId}/${Date.now()}-${file.name}`);
+    await uploadBytes(avatarRef, file);
+    const photoURL = await getDownloadURL(avatarRef);
+    await this.updateProfile(userId, { photoURL });
+    return photoURL;
+  }
 
   create(user: User) {
     const userDocRef = doc(this.firestore, `users/${user.id}`);
