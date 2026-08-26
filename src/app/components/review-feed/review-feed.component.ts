@@ -190,6 +190,9 @@ else if (this.mode === 'following') {
         }
       });
 
+      // Ocultar reseñas cuyo autor no se pudo cargar (perfil privado o borrado).
+      this.reviews = this.reviews.filter(review => this.usersInfo.has(review.userId));
+
       this.isLoading = false;
     });
   }

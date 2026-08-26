@@ -37,6 +37,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   formattedAverage: string = '0,0';
 
   usersInfo: Map<string, any> = new Map(); // datos usuarios de reseñas
+  usersLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -121,6 +122,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
     
     if (userIds.length === 0) return;
 
+    this.usersLoading = true;
+
     const userRequests = userIds.map(id =>
       this.reviewService.getUserById(id).pipe(catchError(() => of(null)))
     );
@@ -131,6 +134,11 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.usersInfo.set(id, users[index]);
         }
       });
+
+      this.usersLoading = false;
+      // Ocultar reseñas cuyo autor no se pudo cargar (perfil privado o borrado).
+      this.reviews = this.reviews.filter(review => this.usersInfo.has(review.userId));
+      this.updateAverage();
     });
   }
 
