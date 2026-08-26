@@ -16,6 +16,7 @@ export interface User {
   favoriteArtists?: string[];
   followers?: string[];
   following?: string[];
+  followRequests?: string[];
 }
 
 const PATH = 'users';
@@ -121,6 +122,41 @@ export class UserService {
       return updateDoc(followerDocRef, {
         following: arrayRemove(userId),  // Eliminar el 'userId' de la lista de 'following' del seguidor
       });
+    });
+  }
+
+  requestFollow(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayUnion(requesterId),
+    });
+  }
+
+  cancelFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayRemove(requesterId),
+    });
+  }
+
+  acceptFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
+
+    return updateDoc(targetDocRef, {
+      followers: arrayUnion(requesterId),
+      followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        following: arrayUnion(targetId),
+      });
+    });
+  }
+
+  declineFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayRemove(requesterId),
     });
   }
 

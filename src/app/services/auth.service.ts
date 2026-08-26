@@ -23,6 +23,7 @@ export class AuthService {
         reviews: credentials.reviews || [],
         followers: credentials.followers || [],
         following: credentials.following || [],
+        followRequests: [],
       });
 
       return userCredential;
@@ -55,6 +56,7 @@ export class AuthService {
           reviews: [],
           followers: [],
           following: [],
+          followRequests: [],
         });
       }
     } catch {

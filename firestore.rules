@@ -51,10 +51,28 @@ service cloud.firestore {
         && (!('password' in request.resource.data) || 'password' in resource.data);
 
       // Any other signed-in user may only toggle themselves in/out of `followers`.
+      // Self-follow is only allowed on public profiles; unfollow (removing self)
+      // is always allowed, even from a private profile.
       allow update: if isSignedIn()
         && !isOwner(userId)
         && onlyChangedFields(['followers'])
-        && toggledSelfOnly(listOrEmpty(resource.data, 'followers'), listOrEmpty(request.resource.data, 'followers'));
+        && toggledSelfOnly(listOrEmpty(resource.data, 'followers'), listOrEmpty(request.resource.data, 'followers'))
+        && (!('isPrivate' in resource.data) || resource.data.isPrivate != true
+            || !listOrEmpty(request.resource.data, 'followers').hasAny([request.auth.uid]));
+
+      // A signed-in non-owner may send/cancel a follow request by toggling their
+      // own uid in `followRequests`. Accept/decline is done by the owner below.
+      allow update: if isSignedIn()
+        && !isOwner(userId)
+        && onlyChangedFields(['followRequests'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'followRequests'), listOrEmpty(request.resource.data, 'followRequests'));
+
+      // A signed-in non-owner may toggle their own uid in `following`. Used when a
+      // private account accepts a follow request and mirrors itself onto the requester.
+      allow update: if isSignedIn()
+        && !isOwner(userId)
+        && onlyChangedFields(['following'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'following'), listOrEmpty(request.resource.data, 'following'));
 
       allow delete: if isOwner(userId);
     }

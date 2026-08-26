@@ -43,6 +43,9 @@ isComparing: boolean = false;
   isFollowing: boolean = false;
   isLoading: boolean = true;
   isPrivateBlocked: boolean = false;
+  requestSent: boolean = false;
+  isSendingRequest: boolean = false;
+  followRequests: { id: string; username: string }[] = [];
 
   stats = {
     total: 0,
@@ -102,6 +105,7 @@ isComparing: boolean = false;
         this.checkIfFollowing();
         this.loadStats();
         this.loadLists();
+        this.loadFollowRequests();
       },
       error: (error) => {
         this.isLoading = false;
@@ -229,6 +233,59 @@ getFavoriteAlbumsDetails() {
         this.isFollowing = false; // Actualizar estado a "no siguiendo"
       }).catch(() => {});
     }
+  }
+
+  loadFollowRequests() {
+    const ids = this.user?.followRequests || [];
+    if (ids.length === 0) {
+      this.followRequests = [];
+      return;
+    }
+
+    const requests: Observable<any>[] = ids.map((id: string) =>
+      this.userService.getUserProfile(id).pipe(catchError(() => of(null)))
+    );
+
+    forkJoin(requests).subscribe((users: any[]) => {
+      this.followRequests = ids.map((id: string, index: number) => ({
+        id,
+        username: users[index]?.username || 'Usuario',
+      }));
+    });
+  }
+
+  sendFollowRequest() {
+    if (!this.currentUserId || !this.userId) return;
+    this.isSendingRequest = true;
+    this.userService.requestFollow(this.userId, this.currentUserId).then(() => {
+      this.requestSent = true;
+      this.isSendingRequest = false;
+    }).catch(() => {
+      this.isSendingRequest = false;
+      toast.error('No se pudo enviar la solicitud');
+    });
+  }
+
+  acceptFollowRequest(requesterId: string) {
+    if (!this.userId) return;
+    this.userService.acceptFollowRequest(this.userId, requesterId).then(() => {
+      this.user.followers = [...(this.user.followers || []), requesterId];
+      this.user.followRequests = (this.user.followRequests || []).filter((id: string) => id !== requesterId);
+      this.followRequests = this.followRequests.filter((r) => r.id !== requesterId);
+      toast.success('Solicitud aceptada');
+    }).catch(() => {
+      toast.error('Error al aceptar la solicitud');
+    });
+  }
+
+  declineFollowRequest(requesterId: string) {
+    if (!this.userId) return;
+    this.userService.declineFollowRequest(this.userId, requesterId).then(() => {
+      this.user.followRequests = (this.user.followRequests || []).filter((id: string) => id !== requesterId);
+      this.followRequests = this.followRequests.filter((r) => r.id !== requesterId);
+    }).catch(() => {
+      toast.error('Error al rechazar la solicitud');
+    });
   }
 
   async compareProfiles() {
