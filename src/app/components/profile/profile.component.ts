@@ -89,7 +89,6 @@ isComparing: boolean = false;
     const sub = this.userService.getUserProfile(userId).pipe(take(1)).subscribe({
       next: (userProfile) => {
         this.user = userProfile;
-        console.log(this.user);
         this.isLoading = false;
 
         if (this.user?.favoriteAlbums?.length > 0) {
@@ -105,7 +104,6 @@ isComparing: boolean = false;
         this.loadLists();
       },
       error: (error) => {
-        console.error('Error loading user profile:', error);
         this.isLoading = false;
         this.isPrivateBlocked = error?.code === 'permission-denied';
       }
@@ -115,59 +113,37 @@ isComparing: boolean = false;
   }
 
 getFavoriteArtistsDetails() {
-  console.log('=== getFavoriteArtistsDetails called ===');
-  console.log('favoriteArtists:', this.user.favoriteArtists);
-
   this.favoriteArtistsDetails = [];
 
   const artistRequests: Observable<any>[] = this.user.favoriteArtists.map((artistId: string) => {
-    console.log('Creating request for artist:', artistId);
     return this.spotifyService.getArtistDetails(artistId).pipe(
       timeout(10000),
-      catchError(error => {
-        console.error('Error fetching artist:', artistId, error);
-        return of(null);
-      })
+      catchError(() => of(null))
     );
   });
 
-  console.log('Total requests:', artistRequests.length);
-
   forkJoin(artistRequests).subscribe({
     next: (artists: any[]) => {
-      console.log('=== Artists received ===', artists);
       this.favoriteArtistsDetails = artists.filter(artist => artist !== null);
-      console.log('Filtered artists:', this.favoriteArtistsDetails);
     },
-    error: (error) => {
-      console.error('=== Error in forkJoin ===', error);
-    }
+    error: () => {}
   });
 }
 
 getFavoriteAlbumsDetails() {
-  console.log('=== getFavoriteAlbumsDetails called ===');
-
   this.favoriteAlbumsDetails = [];
 
   const albumRequests: Observable<any>[] = this.user.favoriteAlbums.map((albumId: string) => {
-    console.log('Creating request for album:', albumId);
     return this.spotifyService.getAlbumDetails(albumId).pipe(
-      catchError(error => {
-        console.error('Error fetching album:', albumId, error);
-        return of(null);
-      })
+      catchError(() => of(null))
     );
   });
 
   forkJoin(albumRequests).subscribe({
     next: (albums: any[]) => {
-      console.log('=== Albums received ===', albums);
       this.favoriteAlbumsDetails = albums.filter(album => album !== null);
     },
-    error: (error) => {
-      console.error('=== Error in forkJoin ===', error);
-    }
+    error: () => {}
   });
 }
 
@@ -206,9 +182,7 @@ getFavoriteAlbumsDetails() {
         });
         this.subscriptions.push(sub);
       }
-    }).catch((error) => {
-      console.error('Error loading stats:', error);
-    });
+    }).catch(() => {});
   }
 
   loadLists() {
@@ -222,7 +196,6 @@ getFavoriteAlbumsDetails() {
         this.lists = lists;
       },
       error: (error) => {
-        console.error('Error al cargar las listas:', error);
         // permission-denied es esperable acá: o el usuario cerró sesión mientras
         // este componente seguía montado, o el perfil es privado. En ambos casos
         // no tiene sentido molestar con un toast.
@@ -246,9 +219,7 @@ getFavoriteAlbumsDetails() {
     if (this.currentUserId && this.userId) {
       this.userService.addFollower(this.userId, this.currentUserId).then(() => {
         this.isFollowing = true; // Actualizar estado a "siguiendo"
-      }).catch((error) => {
-        console.error('Error al seguir al usuario:', error);
-      });
+      }).catch(() => {});
     }
   }
 
@@ -256,9 +227,7 @@ getFavoriteAlbumsDetails() {
     if (this.currentUserId && this.userId) {
       this.userService.removeFollower(this.userId, this.currentUserId).then(() => {
         this.isFollowing = false; // Actualizar estado a "no siguiendo"
-      }).catch((error) => {
-        console.error('Error al dejar de seguir al usuario:', error);
-      });
+      }).catch(() => {});
     }
   }
 
@@ -301,8 +270,7 @@ getFavoriteAlbumsDetails() {
     }));
 
     this.comparisonResults = detailedMatches;
-  } catch (error) {
-    console.error('Error al comparar perfiles:', error);
+  } catch {
   } finally {
     this.isComparing = false;
   }

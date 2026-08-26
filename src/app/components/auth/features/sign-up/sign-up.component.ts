@@ -77,7 +77,6 @@ async submit() {
     });
 
   } catch (error: any) {
-    console.error('Error en el registro:', error);
     // Un toque extra: mostrar el error real de Firebase (ej: email ya en uso)
     toast.error(error.message || 'Hubo un problema al crear tu cuenta');
   } finally {
@@ -95,7 +94,6 @@ async submitWithGoogle() {
       this.router.navigate(['/home']);
     });
   } catch (error) {
-    console.error('Google sign in error:', error);
     toast.error('Ocurrió un error.');
   }
 }

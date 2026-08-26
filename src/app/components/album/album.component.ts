@@ -84,8 +84,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           // Load reviews for this album
           this.loadAlbumReviews();
         },
-        error: (error) => {
-          console.error('Error fetching album details:', error);
+        error: () => {
           this.isLoading = false;
           toast.error('Error al cargar el álbum');
         }
@@ -100,9 +99,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   checkIfFavorite() {
     this.userService.getById(this.userId).then(user => {
       this.isFavorite = user?.favoriteAlbums?.includes(this.album.id) || false;
-    }).catch(error => {
-      console.error('Error checking favorite:', error);
-    });
+    }).catch(() => {});
   }
 
   loadAlbumReviews() {
@@ -114,9 +111,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
         this.updateAverage();
         this.loadUsersDetails(reviews); // <--- Llamada a cargar usuarios
       },
-      error: (error) => {
-        console.error('Error loading reviews:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -161,8 +156,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.isFavorite = false;
           toast.success('Álbum eliminado de favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al eliminar de favoritos');
         });
     } else {
@@ -171,8 +165,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.isFavorite = true;
           toast.success('Álbum agregado a favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al agregar a favoritos');
         });
     }
@@ -280,17 +273,15 @@ toggleLike(review: Review) {
     // Quitar Like
     review.likes = currentLikes.filter(id => id !== this.userId);
     this.reviewService.removeLike(review.id, this.userId)
-      .catch(error => {
+      .catch(() => {
         review.likes = currentLikes; // Revertir si falla
-        console.error('Error al quitar like:', error);
       });
   } else {
     // Dar Like
     review.likes = [...currentLikes, this.userId];
     this.reviewService.addLike(review.id, this.userId)
-      .catch(error => {
+      .catch(() => {
         review.likes = currentLikes; // Revertir si falla
-        console.error('Error al dar like:', error);
       });
   }
 }

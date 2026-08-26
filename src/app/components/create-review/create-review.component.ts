@@ -63,7 +63,6 @@ export class CreateReviewComponent {
 
   async submitReview() {
     if (!this.userId) {
-      console.error('Error: no se encontró el ID del usuario');
       toast.error('Debes iniciar sesión');
       return;
     }
@@ -99,8 +98,7 @@ export class CreateReviewComponent {
         this.comment = '';
         this.rating = 0;
         this.closeReview();
-      } catch (error) {
-        console.error('Error al actualizar la reseña:', error);
+      } catch {
         toast.error('Error al actualizar la reseña');
       } finally {
         this.isSubmitting = false;
@@ -144,8 +142,7 @@ export class CreateReviewComponent {
       this.comment = '';
       this.rating = 0;
       this.closeReview();
-    } catch (error) {
-      console.error('Error al crear la reseña:', error);
+    } catch {
       toast.error('Error al crear la reseña');
     } finally {
       this.isSubmitting = false;

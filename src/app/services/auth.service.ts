@@ -27,7 +27,6 @@ export class AuthService {
 
       return userCredential;
     } catch (error) {
-      console.error("Error al registrar el usuario:", error);
       throw error;
     }
   }
@@ -42,7 +41,6 @@ export class AuthService {
     provider.setCustomParameters({ prompt: 'select_account' });
 
     const result = await signInWithPopup(this._auth, provider);
-    console.log('Google sign in result:', result.user?.uid);
 
     // Check if user exists in Firestore, if not create them
     try {
@@ -58,10 +56,8 @@ export class AuthService {
           followers: [],
           following: [],
         });
-        console.log('Created new user in Firestore for Google sign-in');
       }
-    } catch (error) {
-      console.error('Error checking/creating user in Firestore:', error);
+    } catch {
     }
 
     return result;

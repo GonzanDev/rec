@@ -152,10 +152,7 @@ export class SpotifyService {
         });
 
         return this.http.get<any>(`${this.API_URL}/albums/${albumId}`, { headers }).pipe(
-          catchError((error) => {
-            console.error('Error al obtener detalles del álbum:', error);
-            return of(null);
-          })
+          catchError(() => of(null))
         );
       })
     );

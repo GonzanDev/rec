@@ -61,8 +61,7 @@ export class SettingsPageComponent implements OnInit, OnDestroy {
         this.isPrivate = !!user?.isPrivate;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error al cargar el perfil:', error);
+      error: () => {
         this.isLoading = false;
         toast.error('No se pudo cargar tu perfil');
       },
@@ -89,8 +88,7 @@ export class SettingsPageComponent implements OnInit, OnDestroy {
       const photoURL = await this.userService.uploadAvatar(this.userId, file);
       this.user = { ...(this.user as User), photoURL };
       toast.success('Foto de perfil actualizada');
-    } catch (error) {
-      console.error('Error al subir la foto de perfil:', error);
+    } catch {
       toast.error('Error al subir la foto de perfil');
     } finally {
       this.isUploadingAvatar = false;
@@ -114,8 +112,7 @@ export class SettingsPageComponent implements OnInit, OnDestroy {
       });
       toast.success('Cambios guardados');
       this.router.navigate(['/users', this.userId]);
-    } catch (error) {
-      console.error('Error al guardar los cambios:', error);
+    } catch {
       toast.error('Error al guardar los cambios');
     } finally {
       this.isSaving = false;

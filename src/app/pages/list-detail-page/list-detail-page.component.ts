@@ -96,7 +96,6 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          console.error('Error al cargar la lista:', error);
           this.isLoading = false;
           this.list = null;
           toast.error(error?.code === 'permission-denied' ? 'Esta lista es privada' : 'Error al cargar la lista');
@@ -199,8 +198,7 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
         this.isEditing = false;
         toast.success('Lista actualizada');
       })
-      .catch((error) => {
-        console.error('Error al actualizar la lista:', error);
+      .catch(() => {
         toast.error('Error al actualizar la lista');
       });
   }
@@ -235,8 +233,7 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
       .map((item) => resolvedById.get(`${item.type}:${item.id}`))
       .filter((r): r is ResolvedItem => !!r);
 
-    this.listService.setItems(listId, newItems).catch((error) => {
-      console.error('Error al actualizar los elementos:', error);
+    this.listService.setItems(listId, newItems).catch(() => {
       toast.error('Error al actualizar la lista');
       if (this.list) this.list = { ...this.list, items: previousItems };
       this.resolvedItems = previousResolved;
@@ -258,8 +255,7 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
     this.list = { ...this.list, items: newItems };
     this.resolvedItems = [...this.resolvedItems, { item: newListItem, data: picked.data }];
 
-    this.listService.setItems(listId, newItems).catch((error) => {
-      console.error('Error al agregar el elemento:', error);
+    this.listService.setItems(listId, newItems).catch(() => {
       toast.error('Error al agregar el elemento');
       if (this.list) {
         this.list = { ...this.list, items: this.list.items.filter((i) => !(i.type === picked.type && i.id === picked.id)) };
@@ -294,8 +290,7 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
       ? this.listService.removeLike(listId, this.currentUserId)
       : this.listService.addLike(listId, this.currentUserId);
 
-    request.catch((error) => {
-      console.error('Error al dar like a la lista:', error);
+    request.catch(() => {
       if (this.list) this.list.likes = currentLikes;
     });
   }
@@ -308,8 +303,7 @@ export class ListDetailPageComponent implements OnInit, OnDestroy {
       await this.listService.delete(this.list.id);
       toast.success('Lista eliminada');
       this.router.navigate(['/lists']);
-    } catch (error) {
-      console.error('Error al eliminar la lista:', error);
+    } catch {
       toast.error('Error al eliminar la lista');
     }
   }

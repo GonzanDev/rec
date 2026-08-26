@@ -42,8 +42,7 @@ export class AddToListComponent implements OnInit, OnDestroy {
         this.lists = lists;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error al cargar las listas:', error);
+      error: () => {
         this.isLoading = false;
       },
     });
@@ -69,8 +68,7 @@ export class AddToListComponent implements OnInit, OnDestroy {
       ? currentItems.filter((i) => !(i.type === this.itemType && i.id === this.itemId))
       : [...currentItems, this.newItem()];
 
-    this.listService.setItems(list.id, newItems).catch((error) => {
-      console.error('Error al actualizar la lista:', error);
+    this.listService.setItems(list.id, newItems).catch(() => {
       toast.error('Error al actualizar la lista');
     });
   }
@@ -102,8 +100,7 @@ export class AddToListComponent implements OnInit, OnDestroy {
       });
       this.newListTitle = '';
       toast.success('Lista creada');
-    } catch (error) {
-      console.error('Error al crear la lista:', error);
+    } catch {
       toast.error('Error al crear la lista');
     } finally {
       this.isCreating = false;

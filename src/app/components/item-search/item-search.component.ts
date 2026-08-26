@@ -62,8 +62,7 @@ export class ItemSearchComponent implements OnDestroy {
             tracks: response.tracks?.items || [],
           };
         },
-        error: (error) => {
-          console.error('Error al buscar:', error);
+        error: () => {
           this.isSearching = false;
         },
       });

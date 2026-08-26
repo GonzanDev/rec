@@ -74,7 +74,6 @@ export class ListsPageComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar las listas:', error);
         this.isLoading = false;
         toast.error('Error al cargar las listas: ' + (error?.message || error?.code || 'error desconocido'));
       },
@@ -159,8 +158,7 @@ export class ListsPageComponent implements OnInit, OnDestroy {
       this.newRanked = true;
       this.newItems = [];
       this.router.navigate(['/list', docRef.id]);
-    } catch (error) {
-      console.error('Error al crear la lista:', error);
+    } catch {
       toast.error('Error al crear la lista');
     } finally {
       this.isCreating = false;

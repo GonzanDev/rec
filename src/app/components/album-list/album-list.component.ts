@@ -100,8 +100,7 @@ export class AlbumListComponent implements OnInit, OnChanges {
         this.albums = albums;
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error(`Error fetching ${label}:`, error);
+      error: () => {
         this.isLoading = false;
         this.hasError = true;
       },
