@@ -1,7 +1,16 @@
-/* Container layout: Two columns on desktop */
+/* Container layout: single column on mobile; on desktop the sidebar sits
+   beside the header/stats/details, while the tracklist and reviews break
+   out to span the full width underneath. */
 .album-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "sidebar"
+    "header"
+    "stats"
+    "details"
+    "tracklist"
+    "reviews";
   gap: 2rem;
   padding: 2rem;
   width: 100%;
@@ -10,23 +19,29 @@
 
 @media (min-width: 768px) {
   .album-container {
-    flex-direction: row;
-    align-items: flex-start;
+    grid-template-columns: 200px 1fr;
+    grid-template-areas:
+      "sidebar header"
+      "sidebar stats"
+      "sidebar details"
+      "tracklist tracklist"
+      "reviews reviews";
+    align-items: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .album-container {
+    grid-template-columns: 240px 1fr;
   }
 }
 
 /* Sidebar (Cover + actions) */
 .album-sidebar {
-  flex: 0 0 200px;
+  grid-area: sidebar;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-@media (min-width: 1024px) {
-  .album-sidebar {
-    flex: 0 0 240px;
-  }
 }
 
 .cover-wrapper {
@@ -41,79 +56,111 @@
   display: block;
 }
 
-/* Actions */
-.album-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.action-btn {
-  background-color: var(--bg-card);
-  color: var(--text-main);
+/* Action buttons (favorito, reseñar, añadir a lista, compartir) — íconos
+   sueltos sin contenedor, para un look minimalista. */
+.icon-action-btn {
+  width: 32px;
+  height: 32px;
   border: none;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-weight: 500;
+  background: transparent;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
 }
 
-.action-btn:hover {
-  background-color: var(--bg-card-hover);
+.icon-action-btn:hover {
+  color: var(--text-main);
+  transform: translateY(-1px);
 }
 
-.action-btn.is-favorite {
+.icon-action-btn.is-favorite {
   color: var(--verde);
 }
 
-.action-btn.review-btn {
-  background-color: var(--verde);
-  color: var(--negro);
+.icon-action-btn.reviewed {
+  color: var(--verde);
 }
 
-.action-btn.review-btn:hover {
-  background-color: var(--verde-hover);
+.icon-action-btn.active {
+  color: var(--verde);
 }
 
-/* Share Links */
-.share-links {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
+/* Share dropdown */
+.share-wrapper {
+  position: relative;
 }
 
-.share-btn {
-  background-color: var(--bg-card);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.share-btn:hover {
-  background-color: var(--bg-card-hover);
-  color: var(--text-main);
-}
-
-/* Main Content */
-.album-main {
-  flex: 1;
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 950;
+  min-width: 180px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2px;
+  animation: dropdown-in 0.15s ease;
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.dropdown-item i {
+  width: 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: transparent;
+}
+
+.album-header {
+  grid-area: header;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.album-header-text {
+  min-width: 0;
 }
 
 .album-title {
@@ -148,6 +195,7 @@
 
 /* Stats */
 .album-stats {
+  grid-area: stats;
   display: flex;
   gap: 2rem;
   padding: 1rem 0;
@@ -184,13 +232,22 @@
 
 /* Details */
 .album-info-details {
+  grid-area: details;
   display: flex;
+  align-items: center;
   gap: 2rem;
 }
 
 .detail-item {
   display: flex;
   flex-direction: column;
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
 }
 
 .detail-label {
@@ -207,6 +264,10 @@
 }
 
 /* Tracklist */
+.track-list {
+  grid-area: tracklist;
+}
+
 .track-list h3, .reviews-header h3 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
@@ -316,6 +377,10 @@
 }
 
 /* Reviews */
+.reviews-section {
+  grid-area: reviews;
+}
+
 .review-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -440,13 +505,10 @@
   }
 
   .album-sidebar {
-    flex: 1 1 auto;
     align-items: center;
   }
 
-  .cover-wrapper,
-  .album-actions,
-  .share-links {
+  .cover-wrapper {
     max-width: 260px;
     width: 100%;
   }
@@ -455,12 +517,23 @@
     font-size: clamp(1.75rem, 7vw, 2.5rem);
   }
 
+  .album-header {
+    gap: 0.5rem;
+  }
+
   .album-stats {
     gap: 1.25rem;
   }
 
   .album-info-details {
+    flex-wrap: wrap;
     gap: 1.25rem;
+  }
+
+  .detail-actions {
+    margin-left: 0;
+    order: 3;
+    width: 100%;
   }
 
   /* La tabla de canciones se reestructura: número + título + duración en la

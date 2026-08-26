@@ -27,6 +27,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   userId: string = '';
   isFavorite: boolean = false;
   isLoading: boolean = true;
+  showShareMenu: boolean = false;
 
   private subscriptions: Subscription[] = [];
   private authState = inject(AuthStateService);
@@ -221,7 +222,15 @@ export class AlbumComponent implements OnInit, OnDestroy {
     return `${minutes} min`;
   }
 
-  shareWhatsApp() {
+  toggleShareMenu() {
+  this.showShareMenu = !this.showShareMenu;
+}
+
+closeShareMenu() {
+  this.showShareMenu = false;
+}
+
+shareWhatsApp() {
   const url = encodeURIComponent(window.location.href);
   window.open(`https://wa.me/?text=${url}`, '_blank');
 }
@@ -234,7 +243,7 @@ shareX() {
 
 copyLink() {
   navigator.clipboard.writeText(window.location.href);
-  alert('Link copiado al portapapeles');
+  toast.success('Link copiado al portapapeles');
 }
 
 private updateAverage(): void {
@@ -291,5 +300,10 @@ isLiked(review: Review): boolean {
   return review.likes?.includes(this.userId) || false;
 }
 
+// El usuario ya reseñó este álbum: el ícono de "Reseñar" se pinta de verde,
+// gris (color por defecto) si todavía no.
+hasReviewed(): boolean {
+  return this.reviews.some(review => review.userId === this.userId);
+}
 
 }
