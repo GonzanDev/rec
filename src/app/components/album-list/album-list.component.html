@@ -12,11 +12,7 @@
     <i class="fa fa-chevron-left"></i>
   </button>
 
-  <div #carousel class="mini-carousel"
-       (mousedown)="onMouseDown($event)"
-       (mouseleave)="onMouseLeave()"
-       (mouseup)="onMouseUp()"
-       (mousemove)="onMouseMove($event)">
+  <div #carousel class="mini-carousel">
     <!-- El elemento contenedor tiene el snap, pero NO el hover -->
     <div
       *ngFor="let album of albums"

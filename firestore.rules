@@ -74,6 +74,12 @@ service cloud.firestore {
         && onlyChangedFields(['following'])
         && toggledSelfOnly(listOrEmpty(resource.data, 'following'), listOrEmpty(request.resource.data, 'following'));
 
+      // A signed-in non-owner may toggle their own uid in `sentFollowRequests`. Used when target user accepts/declines a follow request.
+      allow update: if isSignedIn()
+        && !isOwner(userId)
+        && onlyChangedFields(['sentFollowRequests'])
+        && toggledSelfOnly(listOrEmpty(resource.data, 'sentFollowRequests'), listOrEmpty(request.resource.data, 'sentFollowRequests'));
+
       allow delete: if isOwner(userId);
     }
 

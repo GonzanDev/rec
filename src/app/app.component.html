@@ -15,9 +15,7 @@
         </a>
 
         <div class="nav-section-title desktop-only">Tu Biblioteca</div>
-        <a routerLink="/favorites" class="nav-item desktop-only">
-          <i class="fa fa-heart"></i> <span>Canciones Favoritas</span>
-        </a>
+
         <a routerLink="/saved" class="nav-item desktop-only">
           <i class="fa fa-bookmark"></i> <span>Álbumes Guardados</span>
         </a>
@@ -101,10 +99,7 @@
         <h3>Top 50</h3>
         <app-album-list layout="sidebar" listType="top50"></app-album-list>
       </div>
-      <div class="widget" style="margin-top: 1.5rem;">
-        <h3>Lanzamientos</h3>
-        <app-album-list layout="sidebar" listType="new"></app-album-list>
-      </div>
+
     </aside>
   </div>
 </ng-container>

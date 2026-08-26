@@ -18,9 +18,7 @@ export class AlbumListComponent implements OnInit, OnChanges {
   @Input() listType: 'featured' | 'top50' | 'new' = 'featured';
   @ViewChild('carousel') carousel!: ElementRef;
 
-  isDragging = false;
-  startX = 0;
-  scrollLeftPos = 0;
+
 
   isLoading = false;
   hasError = false;
@@ -159,32 +157,7 @@ private runCarouselScroll(container: HTMLElement, target: number) {
   container.scrollTo({ left: target, behavior: 'smooth' });
 }
 
-onMouseDown(e: MouseEvent) {
-  this.isDragging = true;
-  const container = this.carousel.nativeElement;
-  container.style.scrollSnapType = 'none'; // Disable snap while dragging
-  this.startX = e.pageX - container.offsetLeft;
-  this.scrollLeftPos = container.scrollLeft;
-}
 
-onMouseLeave() {
-  this.isDragging = false;
-  this.carousel.nativeElement.style.scrollSnapType = 'x mandatory';
-}
-
-onMouseUp() {
-  this.isDragging = false;
-  this.carousel.nativeElement.style.scrollSnapType = 'x mandatory';
-}
-
-onMouseMove(e: MouseEvent) {
-  if (!this.isDragging) return;
-  e.preventDefault();
-  const container = this.carousel.nativeElement;
-  const x = e.pageX - container.offsetLeft;
-  const walk = (x - this.startX) * 1.5; // Multiplicador de velocidad
-  container.scrollLeft = this.scrollLeftPos - walk;
-}
 
   viewAlbumDetails(albumId: string) {
     this.router.navigate([`/album`, albumId]);

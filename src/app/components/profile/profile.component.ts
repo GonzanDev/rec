@@ -76,10 +76,22 @@ isComparing: boolean = false;
 
     this.userId = params.get('userId')!;
     this.loadUserProfile(this.userId);
+    this.checkIfRequestSent();
   });
 
   this.subscriptions.push(sub);
 }
+
+  checkIfRequestSent() {
+    if (this.currentUserId && this.userId) {
+      this.userService.getUserProfile(this.currentUserId).pipe(take(1)).subscribe({
+        next: (currentUser) => {
+          const sent = currentUser?.sentFollowRequests || [];
+          this.requestSent = sent.includes(this.userId);
+        }
+      });
+    }
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());

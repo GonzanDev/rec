@@ -17,6 +17,7 @@ export interface User {
   followers?: string[];
   following?: string[];
   followRequests?: string[];
+  sentFollowRequests?: string[];
 }
 
 const PATH = 'users';
@@ -127,15 +128,25 @@ export class UserService {
 
   requestFollow(targetId: string, requesterId: string) {
     const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
     return updateDoc(targetDocRef, {
       followRequests: arrayUnion(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayUnion(targetId),
+      });
     });
   }
 
   cancelFollowRequest(targetId: string, requesterId: string) {
     const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
     return updateDoc(targetDocRef, {
       followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayRemove(targetId),
+      });
     });
   }
 
@@ -149,14 +160,20 @@ export class UserService {
     }).then(() => {
       return updateDoc(requesterDocRef, {
         following: arrayUnion(targetId),
+        sentFollowRequests: arrayRemove(targetId),
       });
     });
   }
 
   declineFollowRequest(targetId: string, requesterId: string) {
     const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
     return updateDoc(targetDocRef, {
       followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayRemove(targetId),
+      });
     });
   }
 

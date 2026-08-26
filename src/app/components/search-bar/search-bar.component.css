@@ -48,6 +48,7 @@
   z-index: 9999;
   max-height: 70vh;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 10px 0;
   display: none;
   border: 1px solid rgba(255,255,255,0.05);

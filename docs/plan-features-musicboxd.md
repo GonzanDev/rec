@@ -23,9 +23,7 @@ Prioridades elegidas por el usuario: tapar huecos funcionales, features visibles
 ## Antes que cualquier feature: dos correcciones
 
 Si el tiempo alcanza para poco, **esto rinde más que agregar nada**, porque son respuestas a preguntas que el tribunal casi seguro hace:
-
-1. **Quitar `password` de la interfaz `User` y de `AuthService.signUp()`** — `services/user.service.ts:9`, `services/auth.service.ts:20`. Firebase Auth ya guarda la contraseña con hash; duplicarla en texto plano en Firestore expone a los usuarios. Quince minutos.
-2. **Registrar las dos suscripciones que se escapan** — `components/album/album.component.ts:108` y `:130`. Falta `this.subscriptions.push(sub)`; hoy `ngOnDestroy` no las cancela y ambas escuchan observables que nunca completan. Dos líneas.
+pull
 
 ---
 
