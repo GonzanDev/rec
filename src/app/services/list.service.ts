@@ -68,6 +68,21 @@ export class ListService {
     );
   }
 
+  /**
+   * Latest public lists across all users. No `orderBy` here: combining it with
+   * the privacy filter would need a composite index, so we sort client-side.
+   */
+  getLatestPublic(limit: number): Observable<MusicList[]> {
+    const q = query(this.lists, where('privacy', '==', 'public'));
+    return (collectionData(q, { idField: 'id' }) as Observable<MusicList[]>).pipe(
+      map((lists) =>
+        [...lists]
+          .sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0))
+          .slice(0, limit)
+      )
+    );
+  }
+
   update(listId: string, updatedList: Partial<MusicList>) {
     const listDocRef = doc(this.firestore, `lists/${listId}`);
     // Firestore rejects `undefined` field values; translate them into an explicit field

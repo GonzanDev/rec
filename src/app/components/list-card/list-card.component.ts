@@ -18,6 +18,7 @@ const MAX_COVERS = 4;
 export class ListCardComponent implements OnChanges {
   @Input({ required: true }) list!: MusicList;
   @Input() ownerName?: string;
+  @Input() compact = false;
 
   covers: string[] = [];
 

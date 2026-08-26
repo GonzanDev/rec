@@ -1,0 +1,31 @@
+<div class="carousel-status" *ngIf="isLoading">
+  <div class="carousel-spinner"></div>
+</div>
+
+<div class="carousel-status" *ngIf="hasError && !isLoading">
+  <p>No se pudieron cargar las listas.</p>
+</div>
+
+<div class="mini-carousel-container" *ngIf="!isLoading && !hasError && lists.length > 0">
+  <button type="button" class="carousel-btn left" (click)="scrollLeft()" aria-label="Anterior">
+    <i class="fa fa-chevron-left"></i>
+  </button>
+
+  <div #carousel class="mini-carousel">
+    <app-list-card
+      *ngFor="let list of lists"
+      class="list-card-slide"
+      [list]="list"
+      [compact]="true"
+      [ownerName]="ownerNames[list.userId]">
+    </app-list-card>
+  </div>
+
+  <button type="button" class="carousel-btn right" (click)="scrollRight()" aria-label="Siguiente">
+    <i class="fa fa-chevron-right"></i>
+  </button>
+</div>
+
+<div class="carousel-status" *ngIf="!isLoading && !hasError && lists.length === 0">
+  <p>No hay listas públicas todavía.</p>
+</div>

@@ -1,4 +1,4 @@
-<a class="list-card hover-card" [routerLink]="['/list', list.id]">
+<a class="list-card hover-card" [class.compact]="compact" [routerLink]="['/list', list.id]">
   <div class="list-card-covers" [class.empty]="covers.length === 0">
     <ng-container *ngIf="covers.length > 0; else emptyCover">
       <img *ngFor="let cover of covers" [src]="cover" alt="" class="cover-tile" />
@@ -12,10 +12,8 @@
   <div class="list-card-info">
     <h4 class="list-card-title">{{ list.title }}</h4>
     <p class="list-card-desc" *ngIf="list.description">{{ list.description }}</p>
-    <div class="list-card-meta">
-      <span>{{ list.items.length || 0 }} elementos</span>
-      <span *ngIf="list.ranked === false">· Sin orden</span>
-      <span *ngIf="ownerName">· {{ ownerName }}</span>
+    <div class="list-card-meta" *ngIf="ownerName">
+      <span>{{ ownerName }}</span>
     </div>
     <div class="list-card-tags" *ngIf="list.tags && list.tags.length > 0">
       <span class="tag-chip" *ngFor="let tag of list.tags.slice(0, 3)">{{ tag }}</span>

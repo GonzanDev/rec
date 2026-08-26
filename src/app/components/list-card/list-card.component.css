@@ -39,6 +39,14 @@
   position: relative;
 }
 
+/* Variante compacta: portada del mismo tamaño que las tapas de discos del
+   carrusel de la barra lateral, centrada, con el texto a todo el ancho. */
+.list-card.compact .list-card-covers {
+  width: 160px;
+  height: 160px;
+  align-self: center;
+}
+
 .privacy-badge {
   position: absolute;
   top: 8px;
@@ -91,8 +99,6 @@
 .list-card-meta {
   font-size: 0.78rem;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
 }
 
 .list-card-tags {
