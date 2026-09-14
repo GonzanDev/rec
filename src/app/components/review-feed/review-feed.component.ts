@@ -51,7 +51,6 @@ export class ReviewFeedComponent implements OnInit, OnDestroy, OnChanges {
         this.currentUser = authState;
         this.loadReviews();
       } else {
-        console.error('Usuario no autenticado');
         this.isLoading = false;
       }
     });
@@ -82,8 +81,7 @@ private loadReviews(): void {
       this.reviewService.getReviewById(this.highlightReviewId)
     ).pipe(
       map(review => review ? [review] : []),
-      catchError(error => {
-        console.error('Error al obtener la reseña:', error);
+      catchError(() => {
         return of([]);
       })
     );
@@ -94,8 +92,7 @@ private loadReviews(): void {
     reviewsObservable = from(
       this.reviewService.getReviewsByUser(this.userId)
     ).pipe(
-      catchError(error => {
-        console.error('Error al obtener las reseñas:', error);
+      catchError(() => {
         return of([]);
       })
     );
@@ -111,8 +108,7 @@ else if (this.mode === 'following') {
         this.followingIds.includes(review.userId)
       );
     }),
-    catchError(error => {
-      console.error('Error al filtrar seguidos en cliente:', error);
+    catchError(() => {
       return of([]);
     })
   );
@@ -122,8 +118,7 @@ else if (this.mode === 'following') {
   else {
     reviewsObservable = this.reviewService.getAllReviews().pipe(
       map(docs => docs as Review[]),
-      catchError(error => {
-        console.error('Error al obtener las reseñas:', error);
+      catchError(() => {
         return of([]);
       })
     );
@@ -195,6 +190,9 @@ else if (this.mode === 'following') {
         }
       });
 
+      // Ocultar reseñas cuyo autor no se pudo cargar (perfil privado o borrado).
+      this.reviews = this.reviews.filter(review => this.usersInfo.has(review.userId));
+
       this.isLoading = false;
     });
   }
@@ -221,18 +219,16 @@ else if (this.mode === 'following') {
     if (isLiked) {
       review.likes = currentLikes.filter(id => id !== this.currentUser.uid);
       this.reviewService.removeLike(review.id, this.currentUser.uid)
-        .catch(error => {
+        .catch(() => {
           // Revert on error
           review.likes = currentLikes;
-          console.error('Error al quitar like:', error);
         });
     } else {
       review.likes = [...currentLikes, this.currentUser.uid];
       this.reviewService.addLike(review.id, this.currentUser.uid)
-        .catch(error => {
+        .catch(() => {
           // Revert on error
           review.likes = currentLikes;
-          console.error('Error al dar like:', error);
         });
     }
   }
@@ -246,7 +242,7 @@ else if (this.mode === 'following') {
     if (!comment?.trim()) return;
 
     this.reviewService.addComment(reviewId, this.currentUser.uid, comment)
-      .catch(error => console.error('Error al agregar comentario:', error));
+      .catch(() => {});
   }
 
   onEditRequested(review: Review) {
@@ -276,6 +272,6 @@ else if (this.mode === 'following') {
       .then(() => {
         this.reviews = this.reviews.filter(r => r.id !== review.id);
       })
-      .catch(error => console.error('Error al borrar la reseña:', error));
+      .catch(() => {});
   }
 }

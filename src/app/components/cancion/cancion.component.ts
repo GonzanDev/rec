@@ -49,9 +49,7 @@ export class CancionComponent {
         (data) => {
           this.song = data;
         },
-        (error) => {
-          console.error('Error fetching song details:', error);
-        }
+        () => {}
       );
   }
 

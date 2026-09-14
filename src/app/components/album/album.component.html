@@ -130,7 +130,7 @@
       <p>No hay reseñas para este álbum. ¡Sé el primero en escribir una!</p>
     </div>
 
-    <div class="review-grid">
+    <div class="review-grid" *ngIf="!usersLoading">
       <div *ngFor="let review of reviews" class="review-card">
         <div class="review-card-header">
           <a [routerLink]="['/users', review.userId]" class="review-author">

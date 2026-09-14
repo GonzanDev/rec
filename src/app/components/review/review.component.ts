@@ -166,8 +166,7 @@ export class ReviewComponent {
 
       toast.success('Reporte enviado correctamente');
       this.closeReportModal();
-    } catch (error) {
-      console.error('Error al enviar reporte:', error);
+    } catch {
       toast.error('Error al enviar el reporte');
     } finally {
       this.isSubmittingReport = false;
@@ -210,8 +209,6 @@ getCommentUserName(userId: string): string {
   // 3. Buscar en Firebase
   this.userNamesCache[userId] = 'Cargando...';
   this.reviewService.getUserById(userId).subscribe(user => {
-    console.log(`Datos recibidos del usuario ${userId}:`, user); // ESTO TE DIRÁ EL NOMBRE DEL CAMPO
-
     if (user) {
       // Probamos todas las variantes posibles de nombres en Firestore
       this.userNamesCache[userId] = user.displayName || user.name || user.username || 'Usuario';

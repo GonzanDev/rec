@@ -63,7 +63,6 @@ async submit() {
     await this._router.navigateByUrl('/home');
 
   } catch (error: any) {
-    console.error('Sign in error:', error);
     toast.error(this.messageForAuthError(error?.code));
   } finally {
     this.isLoading.set(false);
@@ -87,12 +86,10 @@ private messageForAuthError(code?: string): string {
 
  async submitWithGoogle(){
   try{
-    const result = await this.authService.signInWithGoogle();
-    console.log('Google sign in complete, user:', result.user?.uid);
+    await this.authService.signInWithGoogle();
     toast.success('Bienvenido');
     this._router.navigateByUrl('/home');
   }catch(error){
-    console.error('Google sign in error:', error);
     toast.error('Ocurrio un error.');
   }
 }

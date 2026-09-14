@@ -40,7 +40,6 @@ export class ArtistaComponent implements OnInit, OnDestroy {
     ).subscribe(authState => {
       if (authState) {
         this.userId = authState.uid;
-        console.log('User ID:', this.userId);
         // Check if artist is already a favorite after getting user
         if (this.artist?.id) {
           this.checkIfFavorite();
@@ -68,9 +67,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
             this.checkIfFavorite();
           }
         },
-        error: (error) => {
-          console.error(error);
-        }
+        error: () => {}
       });
     this.subscriptions.push(routeSub);
   }
@@ -78,9 +75,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
   checkIfFavorite() {
     this.userService.getById(this.userId).then(user => {
       this.isFavorite = !!user?.favoriteArtists?.includes(this.artist.id);
-    }).catch((error) => {
-      console.error('Error al verificar favorito:', error);
-    });
+    }).catch(() => {});
   }
 
   addToFavorites() {
@@ -100,8 +95,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
           this.isFavorite = false;
           toast.success('Artista eliminado de favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al eliminar de favoritos');
         });
     } else {
@@ -110,8 +104,7 @@ export class ArtistaComponent implements OnInit, OnDestroy {
           this.isFavorite = true;
           toast.success('Artista agregado a favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al agregar a favoritos');
         });
     }

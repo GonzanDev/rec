@@ -183,8 +183,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
             this.loadFavoriteArtists(profile?.favoriteArtists || []);
           }
         },
-        error: (error) => {
-          console.error('Error loading user profile:', error);
+        error: () => {
           this.isLoading = false;
         }
       });
@@ -201,10 +200,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
     const requests: Observable<any>[] = albumIds.map((albumId: string) =>
       this.spotifyService.getAlbumDetails(albumId).pipe(
-        catchError(error => {
-          console.error('Error fetching album:', albumId, error);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
 
@@ -213,8 +209,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.albums = albums.filter(album => album !== null);
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error in forkJoin (albums):', error);
+      error: () => {
         this.isLoading = false;
       }
     });
@@ -230,10 +225,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
 
     const requests: Observable<any>[] = artistIds.map((artistId: string) =>
       this.spotifyService.getArtistDetails(artistId).pipe(
-        catchError(error => {
-          console.error('Error fetching artist:', artistId, error);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
 
@@ -242,8 +234,7 @@ export class LibraryPageComponent implements OnInit, OnDestroy {
         this.artists = artists.filter(artist => artist !== null);
         this.isLoading = false;
       },
-      error: (error) => {
-        console.error('Error in forkJoin (artists):', error);
+      error: () => {
         this.isLoading = false;
       }
     });

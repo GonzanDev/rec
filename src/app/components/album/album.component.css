@@ -519,21 +519,45 @@
 
   .album-header {
     gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .album-header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .album-meta-top {
+    justify-content: center;
   }
 
   .album-stats {
     gap: 1.25rem;
+    justify-content: center;
+  }
+
+  .stat-box {
+    align-items: center;
   }
 
   .album-info-details {
     flex-wrap: wrap;
     gap: 1.25rem;
+    justify-content: center;
+  }
+
+  .detail-item {
+    align-items: center;
   }
 
   .detail-actions {
     margin-left: 0;
     order: 3;
     width: 100%;
+    justify-content: center;
   }
 
   /* La tabla de canciones se reestructura: número + título + duración en la

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Auth, authState, signOut } from '@angular/fire/auth';
 import { Observable } from 'rxjs';
 import { UserStateService } from './user-state.service';
+import { UserService } from '../../../services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { UserStateService } from './user-state.service';
 export class AuthStateService {
   private _auth = inject(Auth);
   private userStateService = inject(UserStateService);
+  private userService = inject(UserService);
 
   get authState$(): Observable<any> {
     return authState(this._auth);
@@ -30,16 +32,15 @@ export class AuthStateService {
 
   logOut() {
     return signOut(this._auth).then(() => {
-      console.log('Usuario cerrado sesión');
       this.userStateService.clearUserId();
     });
   }
 
   initAuthStateListener() {
     this.authState$.subscribe((user) => {
-      console.log("Auth state changed:", user?.uid ?? 'No user');
       if (user) {
         this.userStateService.setUserId(user.uid);
+        this.userService.removeLegacyPassword(user.uid);
       } else {
         this.userStateService.clearUserId();
       }

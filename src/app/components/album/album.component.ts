@@ -37,6 +37,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   formattedAverage: string = '0,0';
 
   usersInfo: Map<string, any> = new Map(); // datos usuarios de reseñas
+  usersLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -84,8 +85,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           // Load reviews for this album
           this.loadAlbumReviews();
         },
-        error: (error) => {
-          console.error('Error fetching album details:', error);
+        error: () => {
           this.isLoading = false;
           toast.error('Error al cargar el álbum');
         }
@@ -100,9 +100,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
   checkIfFavorite() {
     this.userService.getById(this.userId).then(user => {
       this.isFavorite = user?.favoriteAlbums?.includes(this.album.id) || false;
-    }).catch(error => {
-      console.error('Error checking favorite:', error);
-    });
+    }).catch(() => {});
   }
 
   loadAlbumReviews() {
@@ -114,9 +112,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
         this.updateAverage();
         this.loadUsersDetails(reviews); // <--- Llamada a cargar usuarios
       },
-      error: (error) => {
-        console.error('Error loading reviews:', error);
-      }
+      error: () => {}
     });
   }
 
@@ -125,6 +121,8 @@ export class AlbumComponent implements OnInit, OnDestroy {
     const userIds = [...new Set(reviews.map(r => r.userId))].filter(id => !this.usersInfo.has(id));
     
     if (userIds.length === 0) return;
+
+    this.usersLoading = true;
 
     const userRequests = userIds.map(id =>
       this.reviewService.getUserById(id).pipe(catchError(() => of(null)))
@@ -136,6 +134,11 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.usersInfo.set(id, users[index]);
         }
       });
+
+      this.usersLoading = false;
+      // Ocultar reseñas cuyo autor no se pudo cargar (perfil privado o borrado).
+      this.reviews = this.reviews.filter(review => this.usersInfo.has(review.userId));
+      this.updateAverage();
     });
   }
 
@@ -161,8 +164,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.isFavorite = false;
           toast.success('Álbum eliminado de favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al eliminar de favoritos');
         });
     } else {
@@ -171,8 +173,7 @@ export class AlbumComponent implements OnInit, OnDestroy {
           this.isFavorite = true;
           toast.success('Álbum agregado a favoritos');
         })
-        .catch((error) => {
-          console.error('Error:', error);
+        .catch(() => {
           toast.error('Error al agregar a favoritos');
         });
     }
@@ -280,17 +281,15 @@ toggleLike(review: Review) {
     // Quitar Like
     review.likes = currentLikes.filter(id => id !== this.userId);
     this.reviewService.removeLike(review.id, this.userId)
-      .catch(error => {
+      .catch(() => {
         review.likes = currentLikes; // Revertir si falla
-        console.error('Error al quitar like:', error);
       });
   } else {
     // Dar Like
     review.likes = [...currentLikes, this.userId];
     this.reviewService.addLike(review.id, this.userId)
-      .catch(error => {
+      .catch(() => {
         review.likes = currentLikes; // Revertir si falla
-        console.error('Error al dar like:', error);
       });
   }
 }

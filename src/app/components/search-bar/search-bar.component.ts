@@ -65,9 +65,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
                   this.userName = userProfile.username || null; // Asigna el nombre del usuario
                 }
               },
-              (error) => {
-                console.error('Error al obtener el perfil del usuario:', error);
-              }
+              () => {}
             );
         }
       }
@@ -98,8 +96,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
               this.searchResults.artists.length > 0;
           }
         },
-        (error) => {
-          console.error(error);
+        () => {
           this.showResults = false;
         }
       );
@@ -139,8 +136,6 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   goToProfile() {
     if (this.userId) {
       this.router.navigate([`/users/${this.userId}`]);
-    } else {
-      console.warn('El usuario no está autenticado');
     }
   }
 

@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import {NgxSonnerToaster} from 'ngx-sonner';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { AlbumListComponent } from './components/album-list/album-list.component';
+import { LatestListsComponent } from './components/latest-lists/latest-lists.component';
 import { AuthStateService } from './components/auth/data-access/auth-state.service';
 import { UserStateService } from './components/auth/data-access/user-state.service';
 import { UserService } from './services/user.service';
@@ -29,7 +30,8 @@ import { switchMap, map } from 'rxjs/operators';
     FormsModule, // Add FormsModule here
     NgxSonnerToaster,
     SearchBarComponent,
-    AlbumListComponent
+    AlbumListComponent,
+    LatestListsComponent
   ],
   standalone: true,
 })

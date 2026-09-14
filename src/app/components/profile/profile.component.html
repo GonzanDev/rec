@@ -33,6 +33,20 @@
     </div>
   </div>
 
+  <!-- Follow requests (own profile only) -->
+  <div *ngIf="userId === currentUserId && followRequests.length > 0" class="requests-section">
+    <div class="section-header">
+      <h3>Solicitudes de seguimiento</h3>
+    </div>
+    <div class="request-item" *ngFor="let req of followRequests">
+      <span class="request-username">{{ req.username }}</span>
+      <div class="request-actions">
+        <button class="pill-btn primary" (click)="acceptFollowRequest(req.id)">Aceptar</button>
+        <button class="pill-btn outline" (click)="declineFollowRequest(req.id)">Rechazar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Stats -->
   <div *ngIf="stats.total > 0" class="stats-section">
     <div class="section-header">
@@ -148,6 +162,10 @@
 <div *ngIf="!user && isPrivateBlocked" class="loading-state">
   <i class="fa fa-lock" style="font-size: 2rem; opacity: 0.5;"></i>
   <p>Esta cuenta es privada. Seguila para ver su perfil.</p>
+  <button *ngIf="!requestSent" class="pill-btn primary" [disabled]="isSendingRequest" (click)="sendFollowRequest()">
+    {{ isSendingRequest ? 'Enviando...' : 'Solicitar seguimiento' }}
+  </button>
+  <span *ngIf="requestSent" class="hint">Solicitud enviada</span>
 </div>
 
 <div *ngIf="!user && !isPrivateBlocked && !isLoading" class="loading-state">

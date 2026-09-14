@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Firestore, collection, docData, doc } from '@angular/fire/firestore';
-import { arrayRemove, arrayUnion, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, deleteField, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 
@@ -19,6 +19,8 @@ export interface User {
   followers?: string[];
   following?: string[];
   role?: UserRole;
+  followRequests?: string[];
+  sentFollowRequests?: string[];
 }
 
 const PATH = 'users';
@@ -77,6 +79,15 @@ export class UserService {
     });
   }
 
+  async removeLegacyPassword(userId: string) {
+    const userDocRef = doc(this.firestore, `users/${userId}`);
+    const docSnapshot = await getDoc(userDocRef);
+    if (docSnapshot.exists() && 'password' in docSnapshot.data()) {
+      return updateDoc(userDocRef, { password: deleteField() });
+    }
+    return;
+  }
+
   addFavoriteAlbum(userId: string, albumId: string) {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return updateDoc(userDocRef, {
@@ -93,7 +104,6 @@ export class UserService {
 
   addFavoriteArtist(userId: string, artistId: string) {
     const userDocRef = doc(this.firestore, `users/${userId}`);
-    console.log("User: ", userId, " Artist: ", artistId);
     return updateDoc(userDocRef, {
       favoriteArtists: arrayUnion(artistId),
 
@@ -133,6 +143,57 @@ export class UserService {
     });
   }
 
+  requestFollow(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayUnion(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayUnion(targetId),
+      });
+    });
+  }
+
+  cancelFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayRemove(targetId),
+      });
+    });
+  }
+
+  acceptFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
+
+    return updateDoc(targetDocRef, {
+      followers: arrayUnion(requesterId),
+      followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        following: arrayUnion(targetId),
+        sentFollowRequests: arrayRemove(targetId),
+      });
+    });
+  }
+
+  declineFollowRequest(targetId: string, requesterId: string) {
+    const targetDocRef = doc(this.firestore, `users/${targetId}`);
+    const requesterDocRef = doc(this.firestore, `users/${requesterId}`);
+    return updateDoc(targetDocRef, {
+      followRequests: arrayRemove(requesterId),
+    }).then(() => {
+      return updateDoc(requesterDocRef, {
+        sentFollowRequests: arrayRemove(targetId),
+      });
+    });
+  }
+
   isFollowing(currentUserId: string, userId: string): Observable<boolean> {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return new Observable<boolean>((observer) => {
@@ -145,8 +206,7 @@ export class UserService {
           observer.next(false);
         }
         observer.complete();
-      }).catch((error) => {
-        console.error('Error al verificar el seguimiento:', error);
+      }).catch(() => {
         observer.next(false);
         observer.complete();
       });
