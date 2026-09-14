@@ -82,7 +82,8 @@
           <!-- En mobile no hay sidebar izquierdo visible, así que el acceso al
                perfil vive acá, pegado a la búsqueda, en vez de flotar suelto. -->
           <div class="profile-menu header-profile-menu mobile-only">
-            <button type="button" class="header-profile-btn" (click)="toggleProfileMenu($event)" aria-label="Menú de perfil">
+            <button type="button" class="header-profile-btn" (click)="toggleProfileMenu($event)"
+              aria-label="Menú de perfil">
               <div class="profile-avatar">
                 <img *ngIf="photoURL$ | async as photoURL" [src]="photoURL" alt="">
                 <i *ngIf="!(photoURL$ | async)" class="fa fa-user"></i>
@@ -107,23 +108,6 @@
         </div>
       </main>
 
-    <!-- Sidebar Derecho (Top 50 / Sugerencias) -->
-    <aside class="sidebar-right">
-      <div class="widget">
-        <h3>Destacados</h3>
-        <app-album-list layout="sidebar" listType="featured"></app-album-list>
-      </div>
-      <div class="widget" style="margin-top: 1.5rem;">
-        <h3>Últimas listas</h3>
-        <app-latest-lists></app-latest-lists>
-      </div>
-      <div class="widget" style="margin-top: 1.5rem;">
-        <h3>Top 50</h3>
-        <app-album-list layout="sidebar" listType="top50"></app-album-list>
-      </div>
-
-    </aside>
-  </div>
       <!-- Sidebar Derecho (Top 50 / Sugerencias) -->
       <aside class="sidebar-right">
         <div class="widget">
@@ -131,15 +115,32 @@
           <app-album-list layout="sidebar" listType="featured"></app-album-list>
         </div>
         <div class="widget" style="margin-top: 1.5rem;">
+          <h3>Últimas listas</h3>
+          <app-latest-lists></app-latest-lists>
+        </div>
+        <div class="widget" style="margin-top: 1.5rem;">
           <h3>Top 50</h3>
           <app-album-list layout="sidebar" listType="top50"></app-album-list>
         </div>
-        <div class="widget" style="margin-top: 1.5rem;">
-          <h3>Lanzamientos</h3>
-          <app-album-list layout="sidebar" listType="new"></app-album-list>
-        </div>
+
       </aside>
     </div>
+    <!-- Sidebar Derecho (Top 50 / Sugerencias) -->
+    <aside class="sidebar-right">
+      <div class="widget">
+        <h3>Destacados</h3>
+        <app-album-list layout="sidebar" listType="featured"></app-album-list>
+      </div>
+      <div class="widget" style="margin-top: 1.5rem;">
+        <h3>Top 50</h3>
+        <app-album-list layout="sidebar" listType="top50"></app-album-list>
+      </div>
+      <div class="widget" style="margin-top: 1.5rem;">
+        <h3>Lanzamientos</h3>
+        <app-album-list layout="sidebar" listType="new"></app-album-list>
+      </div>
+    </aside>
+
   </ng-template>
 </ng-container>
 
@@ -149,4 +150,4 @@
   </div>
 </ng-template>
 
-<ngx-sonner-toaster/>
+<ngx-sonner-toaster />
