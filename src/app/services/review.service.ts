@@ -112,6 +112,14 @@ export class ReviewService {
     });
   }
 
+  // Elimina un comentario puntual (usado por moderación de admin)
+  removeComment(reviewId: string, comment: { userId: string; content: string; timestamp: any }) {
+    const reviewDocRef = doc(this.firestore, `reviews/${reviewId}`);
+    return updateDoc(reviewDocRef, {
+      comments: arrayRemove(comment),
+    });
+  }
+
 // En review.service.ts
 getReviewsByFollowing(followingIds: string[]): Observable<Review[]> {
   if (!followingIds || followingIds.length === 0) {

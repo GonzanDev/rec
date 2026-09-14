@@ -4,6 +4,8 @@ import { arrayRemove, arrayUnion, getDoc, setDoc, updateDoc } from 'firebase/fir
 import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 
+export type UserRole = 'user' | 'admin';
+
 export interface User {
   id?: string;
   email: string;
@@ -16,6 +18,7 @@ export interface User {
   favoriteArtists?: string[];
   followers?: string[];
   following?: string[];
+  role?: UserRole;
 }
 
 const PATH = 'users';
@@ -58,6 +61,20 @@ export class UserService {
   getUserProfile(userId: string): Observable<any> {
     const userDocRef = doc(this.firestore, `users/${userId}`);
     return docData(userDocRef);
+  }
+
+  isAdmin(userId: string): Observable<boolean> {
+    return new Observable<boolean>((observer) => {
+      this.getById(userId)
+        .then((user) => {
+          observer.next(user?.role === 'admin');
+          observer.complete();
+        })
+        .catch(() => {
+          observer.next(false);
+          observer.complete();
+        });
+    });
   }
 
   addFavoriteAlbum(userId: string, albumId: string) {

@@ -1,0 +1,121 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h2><i class="fa fa-shield"></i> Panel de administración</h2>
+    <p class="subtitle">Revisá y moderá los reportes hechos por los usuarios</p>
+  </div>
+
+  <div class="filter-tabs">
+    <button
+      *ngFor="let filter of filters"
+      type="button"
+      class="filter-tab"
+      [class.active]="statusFilter === filter.value"
+      (click)="setFilter(filter.value)"
+    >
+      {{ filter.label }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="state-message">
+    <i class="fa fa-spinner fa-spin"></i> Cargando reportes...
+  </div>
+
+  <div *ngIf="!isLoading && reports.length === 0" class="state-message">
+    <i class="fa fa-check-circle"></i> No hay reportes en esta categoría.
+  </div>
+
+  <div class="report-list" *ngIf="!isLoading && reports.length > 0">
+    <div class="report-card" *ngFor="let report of reports">
+      <div class="report-card-header">
+        <span class="badge type-badge">{{ report.type === 'review' ? 'Reseña' : 'Comentario' }}</span>
+        <span class="badge reason-badge">{{ reasonLabels[report.reason] }}</span>
+        <span class="badge status-badge" [ngClass]="'status-' + report.status">{{ statusLabels[report.status] }}</span>
+        <span class="report-date">{{ report.timestamp.toDate() | date: 'short' }}</span>
+      </div>
+
+      <div class="report-meta">
+        Reportado por <strong>{{ report.reporterUsername }}</strong>
+        <span *ngIf="report.description"> — "{{ report.description }}"</span>
+      </div>
+
+      <div class="reported-content" *ngIf="report.review; else contentMissing">
+        <div class="content-author">
+          Autor: <strong>{{ report.reviewAuthorUsername }}</strong>
+        </div>
+
+        <ng-container *ngIf="report.type === 'review'">
+          <div class="content-rating">
+            <i class="fa fa-star"></i> {{ report.review.rating }}/5
+          </div>
+          <p class="content-text">{{ report.review.comment }}</p>
+        </ng-container>
+
+        <ng-container *ngIf="report.type === 'comment'">
+          <p class="content-text" *ngIf="report.reportedComment; else commentMissing">
+            "{{ report.reportedComment.content }}"
+          </p>
+          <ng-template #commentMissing>
+            <p class="content-text muted">Este comentario ya no existe.</p>
+          </ng-template>
+        </ng-container>
+
+        <a class="view-link" [routerLink]="['/album', report.review.albumId]">
+          <i class="fa fa-external-link"></i> Ver álbum
+        </a>
+      </div>
+      <ng-template #contentMissing>
+        <p class="content-text muted">La reseña original ya no existe.</p>
+      </ng-template>
+
+      <div class="report-actions">
+        <button
+          type="button"
+          class="action-btn danger"
+          (click)="confirmDelete(report)"
+          [disabled]="report.type === 'review' ? !report.review : !report.reportedComment"
+        >
+          <i class="fa fa-trash"></i> Eliminar contenido
+        </button>
+        <button
+          type="button"
+          class="action-btn outline"
+          *ngIf="report.status !== 'dismissed'"
+          (click)="markAs(report, 'dismissed')"
+        >
+          <i class="fa fa-times"></i> Descartar
+        </button>
+        <button
+          type="button"
+          class="action-btn outline"
+          *ngIf="report.status !== 'reviewed'"
+          (click)="markAs(report, 'reviewed')"
+        >
+          <i class="fa fa-check"></i> Marcar revisado
+        </button>
+        <button
+          type="button"
+          class="action-btn outline"
+          *ngIf="report.status !== 'pending'"
+          (click)="markAs(report, 'pending')"
+        >
+          <i class="fa fa-undo"></i> Reabrir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="reportToDelete" (click)="cancelDelete()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <h3>¿Eliminar contenido reportado?</h3>
+    <p>
+      Esta acción va a eliminar
+      {{ reportToDelete && reportToDelete.type === 'review' ? 'la reseña' : 'el comentario' }}
+      reportado de forma permanente.
+    </p>
+    <div class="modal-actions">
+      <button type="button" class="action-btn outline" (click)="cancelDelete()">Cancelar</button>
+      <button type="button" class="action-btn danger" (click)="deleteReportedContent()">Eliminar</button>
+    </div>
+  </div>
+</div>

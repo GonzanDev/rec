@@ -36,6 +36,7 @@ import { switchMap, map } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   userId$: any;
   photoURL$: Observable<string | null>;
+  isAdmin$: Observable<boolean>;
   profileMenuOpen = false;
 
   constructor(
@@ -50,6 +51,9 @@ export class AppComponent implements OnInit {
       switchMap((userId: string | null) =>
         userId ? this.userService.getUserProfile(userId).pipe(map((u: any) => u?.photoURL || null)) : of(null)
       )
+    );
+    this.isAdmin$ = this.userId$.pipe(
+      switchMap((userId: string | null) => (userId ? this.userService.isAdmin(userId) : of(false)))
     );
   }
 

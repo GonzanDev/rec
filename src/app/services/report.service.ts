@@ -6,7 +6,7 @@ import {
   doc,
   updateDoc,
 } from '@angular/fire/firestore';
-import { addDoc, query, where, Timestamp } from 'firebase/firestore';
+import { addDoc, query, where, orderBy, Timestamp } from 'firebase/firestore';
 import { Observable } from 'rxjs';
 
 export type ReportType = 'review' | 'comment';
@@ -81,6 +81,18 @@ export class ReportService {
   // Get all pending reports (for admin use)
   getPendingReports(): Observable<Report[]> {
     const q = query(this.reports, where('status', '==', 'pending'));
+    return collectionData(q, { idField: 'id' }) as Observable<Report[]>;
+  }
+
+  // Get every report, newest first (for the admin dashboard)
+  getAllReports(): Observable<Report[]> {
+    const q = query(this.reports, orderBy('timestamp', 'desc'));
+    return collectionData(q, { idField: 'id' }) as Observable<Report[]>;
+  }
+
+  // Get reports filtered by status, newest first (for the admin dashboard)
+  getReportsByStatus(status: ReportStatus): Observable<Report[]> {
+    const q = query(this.reports, where('status', '==', status), orderBy('timestamp', 'desc'));
     return collectionData(q, { idField: 'id' }) as Observable<Report[]>;
   }
 

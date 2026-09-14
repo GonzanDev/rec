@@ -11,6 +11,15 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isSignedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function roleUnchanged() {
+      return request.resource.data.get('role', null) == resource.data.get('role', null);
+    }
+
     function onlyChangedFields(fields) {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields);
     }
@@ -47,14 +56,19 @@ service cloud.firestore {
       // Owner can edit their own profile. Never allowed to newly introduce a password
       // field — but don't permanently lock out accounts that already have a legacy one
       // sitting in their doc from an old version of signUp(); just forbid adding one.
+      // Owners can never change their own `role` — only an admin can promote/demote.
       allow update: if isOwner(userId)
-        && (!('password' in request.resource.data) || 'password' in resource.data);
+        && (!('password' in request.resource.data) || 'password' in resource.data)
+        && (roleUnchanged() || isAdmin());
 
       // Any other signed-in user may only toggle themselves in/out of `followers`.
       allow update: if isSignedIn()
         && !isOwner(userId)
         && onlyChangedFields(['followers'])
         && toggledSelfOnly(listOrEmpty(resource.data, 'followers'), listOrEmpty(request.resource.data, 'followers'));
+
+      // Admins may grant/revoke the admin role, and nothing else, on any user doc.
+      allow update: if isAdmin() && onlyChangedFields(['role']);
 
       allow delete: if isOwner(userId);
     }
@@ -64,8 +78,10 @@ service cloud.firestore {
 
       allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
 
-      // Owner can fully edit/delete their own review.
-      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Owner can fully edit their own review; owner or admin can delete it
+      // (admins delete reported reviews as part of moderation).
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
 
       // Any other signed-in user may only toggle their own uid in `likes`.
       allow update: if isSignedIn()
@@ -79,6 +95,17 @@ service cloud.firestore {
         && onlyChangedFields(['comments'])
         && request.resource.data.comments.size() == listOrEmpty(resource.data, 'comments').size() + 1
         && request.resource.data.comments[request.resource.data.comments.size() - 1].userId == request.auth.uid;
+
+      // Admins may edit the `comments` array only, to remove reported comments.
+      allow update: if isAdmin() && onlyChangedFields(['comments']);
+    }
+
+    match /reports/{reportId} {
+      // Any signed-in user can file a report, only as themselves.
+      allow create: if isSignedIn() && request.resource.data.reporterId == request.auth.uid;
+
+      // Only admins can view and triage reports.
+      allow read, update: if isAdmin();
     }
 
     match /lists/{listId} {

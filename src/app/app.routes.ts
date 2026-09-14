@@ -12,7 +12,8 @@ import { CreateReviewComponent } from './components/create-review/create-review.
 
 import { SignInComponent } from './components/auth/features/sign-in/sign-in.component';
 import { SignUpComponent } from './components/auth/features/sign-up/sign-up.component';
-import { privateGuard, publicGuard } from './auth.guard';
+import { privateGuard, publicGuard, adminGuard } from './auth.guard';
+import { AdminDashboardPageComponent } from './pages/admin-dashboard-page/admin-dashboard-page.component';
 
 import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
 import { SettingsPageComponent } from './pages/settings-page/settings-page.component';
@@ -50,7 +51,7 @@ export const routes: Routes = [
     canActivate: [privateGuard()],
   },
 
-  { path: 'create-review', component: CreateReviewComponent },
+  { path: 'create-review', component: CreateReviewComponent, canActivate: [privateGuard()] },
 
   {
     path: 'users/:userId',
@@ -62,6 +63,12 @@ export const routes: Routes = [
     path: 'settings',
     component: SettingsPageComponent,
     canActivate: [privateGuard()],
+  },
+
+  {
+    path: 'admin',
+    component: AdminDashboardPageComponent,
+    canActivate: [adminGuard()],
   },
 
   {

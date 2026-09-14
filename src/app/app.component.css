@@ -350,6 +350,49 @@ app-search-bar {
   display: none;
 }
 
+.admin-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-navbar);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-shell-header .sidebar-logo {
+  margin-bottom: 0;
+}
+
+.admin-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--bg-card-hover);
+  color: var(--text-main);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-logout-btn:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.admin-shell-content {
+  flex: 1;
+}
+
 .unauth-layout {
   min-height: 100vh;
   display: flex;
